@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Imports\AxyValueImport;
+use App\Imports\GeneralDataImport;
 use App\Imports\TableValueImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,7 +29,7 @@ class AxyValueController extends Controller
     public function store(Request $request)
     {
         $file = $request->file('file');
-        Excel::import(new TableValueImport, $file);
+        Excel::import(new GeneralDataImport, $file);
 
         return redirect()->route('axyvalues.import.create')->with('success', 'Importación exitosa!');
     }

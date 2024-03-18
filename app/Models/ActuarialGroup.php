@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ActuarialGroup extends Model
 {
@@ -18,4 +19,14 @@ class ActuarialGroup extends Model
         'code',
         'name',
     ];
+
+    /**
+     * Get all of the studies for the ActuarialGroup
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studies(): HasMany
+    {
+        return $this->hasMany(Study::class);
+    }
 }

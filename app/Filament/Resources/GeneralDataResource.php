@@ -17,13 +17,15 @@ class GeneralDataResource extends Resource
 {
     protected static ?string $model = GeneralData::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard';
 
-    protected static ?string $navigationLabel = 'Datos generales';
+    protected static ?string $navigationLabel = 'Factores';
 
-    protected static ?string $slug = 'datos-generales';
+    protected static ?string $slug = 'factores';
 
-    protected static ?string $modelLabel = 'Datos generales';
+    protected static ?string $modelLabel = 'Factores';
+
+    protected static ?string $navigationGroup = 'Datos generales';
 
     public static function form(Form $form): Form
     {

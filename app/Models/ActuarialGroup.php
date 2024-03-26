@@ -29,4 +29,14 @@ class ActuarialGroup extends Model
     {
         return $this->hasMany(Study::class);
     }
+
+    /**
+     * Get all of the company_studies for the ActuarialGroup
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function company_studies(): HasMany
+    {
+        return $this->hasMany(CompanyStudy::class);
+    }
 }

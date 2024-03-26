@@ -20,11 +20,11 @@ class StudyResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
 
-    protected static ?string $navigationLabel = 'Estudios';
+    protected static ?string $navigationLabel = 'Estudios-old';
 
-    protected static ?string $slug = 'estudios';
+    protected static ?string $slug = 'estudios-old';
 
-    protected static ?string $modelLabel = 'Estudios';
+    protected static ?string $modelLabel = 'Estudios-old';
 
     public static function form(Form $form): Form
     {

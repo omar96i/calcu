@@ -17,7 +17,7 @@ class ActuarialGroupResource extends Resource
 {
     protected static ?string $model = ActuarialGroup::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
 
     protected static ?string $navigationLabel = 'Grupos actuariales';
 

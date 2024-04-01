@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\CompanyStudyResource\Pages;
 
 use App\Filament\Resources\CompanyStudyResource;
+use App\Imports\AuxImport;
 use App\Imports\CompanyStudyImport;
 use App\Models\Company;
 use Filament\Actions;
@@ -34,7 +35,9 @@ class ListCompanyStudies extends ListRecords
 
 
     public function save(){
-        Excel::import(new CompanyStudyImport(intval($this->company_id)), $this->file);
+        //Excel::import(new CompanyStudyImport(intval($this->company_id)), $this->file);
+        Excel::import(new AuxImport(), $this->file);
+
         $this->dispatch('close-modal', id: 'study_dates');
     }
 }

@@ -27,6 +27,8 @@ class CompanyStudy extends Model
         'income_base_quotation',
         'allowance_value',
         'allowance_14',
+        'pension_situation',
+        'pension_class',
     ];
 
     /**

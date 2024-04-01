@@ -35,8 +35,7 @@ class ListCompanyStudies extends ListRecords
 
 
     public function save(){
-        //Excel::import(new CompanyStudyImport(intval($this->company_id)), $this->file);
-        Excel::import(new AuxImport(), $this->file);
+        Excel::import(new CompanyStudyImport(intval($this->company_id)), $this->file);
 
         $this->dispatch('close-modal', id: 'study_dates');
     }

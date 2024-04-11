@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AxyValueController;
+use App\Models\CompanyStudyAux;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/test', function(){
+    $company = CompanyStudyAux::get();
+    return view('table', compact('company'));
+    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('table', compact('company'));
+    return $pdf->download('ejemplo.pdf');
+});
 
 Route::get('/axyvalues/import', [AxyValueController::class, 'create'])->name('axyvalues.import.create');
 Route::post('/axyvalues/import', [AxyValueController::class, 'store'])->name('axyvalues.import.store');

@@ -14,6 +14,12 @@ class AuxImport implements ToModel
     */
     public function model(array $row)
     {
+        $date1 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[7]);
+        $newDate1 = $date1->format('Y-m-d');
+        $date2 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[9]);
+        $newDate2 = $date2->format('Y-m-d');
+        $date3 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[12]);
+        $newDate3 = $date3->format('Y-m-d');
         return new CompanyStudyAux([
             'col1' => $row[0],
             'col2' => $row[1],
@@ -22,12 +28,12 @@ class AuxImport implements ToModel
             'col5' => $row[4],
             'col6' => $row[5],
             'col7' => $row[6],
-            'col8' => $row[7],
+            'col8' => $newDate1,
             'col9' => $row[8],
-            'col10' => $row[9],
+            'col10' => $newDate2,
             'col11' => $row[10],
             'col12' => $row[11],
-            'col13' => $row[12],
+            'col13' => $newDate3,
             'col14' => $row[13],
             'col15' => $row[14],
             'col16' => $row[15],

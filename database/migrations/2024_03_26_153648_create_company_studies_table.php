@@ -29,6 +29,8 @@ return new class extends Migration
             $table->string('income_base_quotation')->nullable();
             $table->string('allowance_value')->nullable();
             $table->string('allowance_14')->nullable();
+            $table->string('pension_situation')->default('3');
+            $table->string('pension_class')->default(random_int(1, 5));
             $table->timestamps();
         });
     }

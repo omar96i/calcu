@@ -20,7 +20,9 @@ class Tables extends Page
 
     public function mount(){
         $this->axy_tables = AxyName::with('axy_values')->get();
-        $this->tables = Table::with('table_values')->get();
+        $this->tables = Table::with(['table_values' => function($query) {
+            $query->orderBy('id', 'desc');
+        }])->get();
     }
 
 }

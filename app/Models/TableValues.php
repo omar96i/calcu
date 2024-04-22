@@ -17,8 +17,30 @@ class TableValues extends Model
      */
     protected $fillable = [
         'table_id',
-        'x',
-        'lx',
+        'interest_rate_id',
+        'gender',
+        's',
+        'ls',
+        'ds',
+        'qs',
+        'ps',
+        'empty',
+        'es',
+        'mus',
+        'ds_',
+        'cs',
+        'ns',
+        'ms',
+        'as',
+        'as_',
+        'as12',
+        'as2',
+        'as12_',
+        'as2_',
+        'p0',
+        'p1',
+        'as__',
+        'empty_',
     ];
 
     /**

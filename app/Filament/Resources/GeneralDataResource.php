@@ -35,8 +35,7 @@ class GeneralDataResource extends Resource
                     ->required()
                     ->maxLength(191),
                 Forms\Components\DatePicker::make('calculation_date')->label('Fecha de cálculo')
-                    ->required()
-                    ->maxLength(191),
+                    ->required(),
                 Forms\Components\TextInput::make('minimum_salary')->label('Salario Mínimo')
                     ->required()
                     ->maxLength(191),

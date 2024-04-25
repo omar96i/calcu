@@ -25,5 +25,9 @@ class DatabaseSeeder extends Seeder
         $this->call(InterestRatesSeeder::class);
         $this->call(ActuarialGroupSeeder::class);
         $this->call(TableSeeder::class);
+        $this->call(FacASeeder::class);
+        $this->call(DTFPSeeder::class);
+        $this->call(IPCSeeder::class);
+        $this->call(NationalAvarageSalarySeeder::class);
     }
 }

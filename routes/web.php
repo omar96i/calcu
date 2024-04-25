@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AxyValueController;
+use App\Http\Controllers\BonosACOntroller;
 use App\Models\CompanyStudyAux;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,7 @@ Route::get('/test', function(){
 
 Route::get('/axyvalues/import', [AxyValueController::class, 'create'])->name('axyvalues.import.create');
 Route::post('/axyvalues/import', [AxyValueController::class, 'store'])->name('axyvalues.import.store');
+
+Route::get('/bonus_a/import', [BonosAController::class, 'create'])->name('bonus_a.import.create');
+Route::post('/bonus_a/import', [BonosAController::class, 'store'])->name('bonus_a.import.store');
+

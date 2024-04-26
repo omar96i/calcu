@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class NationalAverageSalary extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'age',
+        'smn',
+    ];
 }

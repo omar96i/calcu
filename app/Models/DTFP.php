@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class DTFP extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+       'date',
+       'ipc',
+       'accumulated',
+       'dtfp_3',
+       'dtfp_4',
+    ];
 }

@@ -23,7 +23,6 @@
                     <th>FR (2)</th>
                     <th>FR (3)</th>
                     <th>EDAD REFERENCIA</th>
-                    <th>EDAD REFERENCIA</th>
                     <th>Int.</th>
                     <th>t</th>
                     <th>Tiempo empresa a fc</th>
@@ -39,8 +38,8 @@
                     <th>IPC Fc</th>
                     <th>SR</th>
                     <th>SALARIO DE REFERENCIA</th>
-                    <th>PENSION DE REFERENCIA</th>
-                    <th>AUXILIO FUNERARIO</th>
+                    <th>PESION DE REFERENCIA</th>
+                    <th>AUXILIO FUNERARIO</th> 
                     <th>FAC1</th>
                     <th>FAC1 - Aj.</th>
                     <th>FAC2</th>
@@ -71,16 +70,153 @@
                         <td>{{ $item->departure_date }}</td>
                         <td>{{ $item->liquidated_days }}</td>
                         <td>{{ $item->base_salary }}</td>
+
                         @php
-                            $item_fb = strtotime($item->entry_date) > strtotime($parameters_fb) ? $item->entry_date : (strtotime($item->departure_date) <= strtotime($parameters_fb) ? $item->departure_date : $parameters_fb);
+                            $item_fb = strtotime($item->entry_date) > strtotime($parameters_fb) ? $item->entry_date : (strtotime($item->departure_date) <= strtotime($parameters_fb) &&  $item->departure_date != 0 ? $item->departure_date : $parameters_fb);
                         @endphp
                         <td>{{ $item_fb }}</td>
-                        @php
-                            $indice = array_search('TELECOM', array_column($this->parameters_tele, 'tele'));
-                            $fc = $indice !== false ? $this->parameters_tele[$indice]['fc'] : null;
 
+                        @php
+                            $indice = array_search($item->entity, array_column($this->parameters_tele, 'tele'));
+                            $item_fc = $indice !== false ? $this->parameters_tele[$indice]['fc'] : null;
                         @endphp
                         <td>{{ $item_fc }}</td>
+
+                        @php
+                            $diff = strtotime($item_fc) - strtotime($item->birthdate);
+                            $item_edad_fc =  floor($diff / (60 * 60 * 24)) / 365.25;
+                        @endphp
+                        <td>{{ number_format($item_edad_fc, 2) }}</td>
+
+                        @php
+                            $item_fr1 = $item->gender == 'F' ? 60 : 62;
+                            $item_fr2 = ($item->gender == 'M' && $item_edad_fc > 55) ? $item_edad_fc + (3500/365.25) : ($item->gender == 'F' && $item_edad_fc > 50 ? $item_edad_fc + (3500/365.25) : $item_fr1);
+                            $item_fr3 = + $item_edad_fc + (7000 - (floor((strtotime($item_fc) - strtotime($item->entry_date)) / (60 * 60 * 24)) - $item->liquidated_days)) / 365.25
+                        @endphp
+                        <td>{{ number_format($item_fr1, 1) }}</td>
+                        <td>{{ number_format($item_fr2, 1) }}</td>
+                        <td>{{ number_format($item_fr3, 2) }}</td>
+
+                        @php
+                            $item_edad_referencia = max($item_fr1, $item_fr2, $item_fr3);
+                            $item_int = $item_edad_referencia - intVal($item_edad_referencia)
+                        @endphp
+                        <td>{{number_format($item_edad_referencia, 1)}}</td>
+                        <td>{{number_format($item_int, 1)}}</td>
+
+                        @php
+                            $item_t = + (floor((strtotime($item_fc) - strtotime($item->entry_date)) / (60 * 60 * 24)) - $item->liquidated_days + 1) / 365.25
+                        @endphp
+                        <td>{{ number_format($item_t, 10)}}</td>
+
+                        @php
+                            $item_tiempo_empresa = strtotime($item->departure_date) > strtotime($item->entry_date) ? (floor((strtotime($item_fc) - strtotime($item->entry_date)) / (60 * 60 * 24)) + 1 - $item->liquidated_days) / 365.25 : (floor((strtotime($item->departure_date) - strtotime($item->entry_date)) / (60 * 60 * 24)) + 1 - $item->liquidated_days) / 365.25
+                        @endphp
+                        <td>{{ number_format($item_tiempo_empresa, 10)}}</td>
+
+                        @php
+                            $item_t1 = ($item_t - (3652.5 / 365.25)) > 0 ? $item_t - (3652.5 / 365.25) : 0
+                        @endphp
+                        <td>{{ number_format($item_t1, 10)}}</td>
+
+                        @php
+                            $item_n = + $item_edad_referencia - $item_edad_fc
+                        @endphp
+                        <td>{{ number_format($item_n, 2)}}</td>
+
+                        @php
+                            $item_nt = $item_t + $item_n
+                        @endphp
+                        <td>{{ number_format($item_nt, 2)}}</td>
+
+                        @php
+                            $get_smn = $this->getSmn($item_edad_referencia)->smn;
+                            $get_smn_1 = $this->getSmn($item_edad_referencia + 1)->smn;
+                            $get_smn_edad_fc = $this->getSmn($item_edad_fc)->smn;
+                            $get_smn_edad_fc_1 = $this->getSmn($item_edad_fc + 1)->smn;
+                            $item_smn = ($get_smn * (1 - $item_int) + $get_smn_1 * $item_int) / ($get_smn_edad_fc * (1 - ($item_edad_fc - intVal($item_edad_fc))) + $get_smn_edad_fc_1 * ($item_edad_fc - intVal($item_edad_fc)));
+                        @endphp
+                        <td>{{ number_format($item_smn, 5)}}</td>
+
+                        @php
+                            $item_f1 = 0.45 + 0.03 * $item_t1 + 0.03 * $item_n;
+                            $item_f2 = 0.9;
+                            $item_f3 = 0.75;
+                        @endphp
+                        <td>{{ number_format($item_f1, 5)}}</td>
+                        <td>{{ $item_f2 }}</td>
+                        <td>{{ $item_f3 }}</td>
+
+                        @php
+                            $item_f = min($item_f1, $item_f2, $item_f3);
+                        @endphp
+                        <td>{{ $item_f }}</td>
+                        
+                        @php
+                            $get_dtfp = $this->getAccumulatedDTFP($item_fb);
+                            $get_dtfp_30 = $this->getAccumulatedDTFP((new DateTime($item_fb))->modify('+30 days'));
+                            $item_ipc_fb = (int)date('j', strtotime($item_fb)) >= 30 ?  $get_dtfp : ((30 - (int)date('j', strtotime($item_fb))) * $get_dtfp + (int)date('j', strtotime($item_fb)) * $get_dtfp_30) / 30;
+                        @endphp 
+                        <td>{{ number_format($item_ipc_fb, 7) }}</td>
+
+                        @php
+                            $item_ipc_fc = $this->getAccumulatedDTFP($item_fc);
+                        @endphp 
+                        <td>{{ number_format($item_ipc_fc, 6) }}</td>
+                        
+                        @php
+                            $item_sr = $item_ipc_fc / $item_ipc_fb * $item->base_salary * $item_smn;
+                        @endphp 
+                        <td>{{ number_format($item_sr, 0) }}</td>
+
+                        @php
+                            $salario_minimo = $this->getMinimumSalary($item_fc);
+                            $item_salario_referenca = $item_sr > 20 * $salario_minimo ? 20 * $salario_minimo : ($item_sr < $salario_minimo ? $salario_minimo : $item_sr);
+                        @endphp 
+                        <td>{{ number_format($item_salario_referenca, 0) }}</td>
+
+                        @php
+                            $item_pesion_referenca = $item_salario_referenca * $item_f < $salario_minimo ? $salario_minimo : ($item_salario_referenca * $item_f > $salario_minimo * 15 ? $salario_minimo * 15 : $item_salario_referenca * $item_f);
+                        @endphp 
+                        <td>{{ number_format($item_pesion_referenca, 0) }}</td>
+
+                        @php
+                            $item_auxilio_funerario = $item_pesion_referenca > 10 * $salario_minimo ? 10 * $salario_minimo : ($item_pesion_referenca < 5 * $salario_minimo ? 5 * $salario_minimo : $item_pesion_referenca);
+                        @endphp 
+                        <td>{{ number_format($item_auxilio_funerario, 0) }}</td>
+
+                        @php
+                            $getFac = $this->getFac($item_edad_referencia);
+                            $item_fac1 = $item->gender == 'M' ? $getFac->man_fac_1 : $getFac->woman_fac_1;
+                        @endphp 
+                        <td>{{ number_format($item_fac1, 6) }}</td>
+
+                        @php
+                            $getFac_1 = $this->getFac($item_edad_referencia + 1);
+                            $item_fac1_aj = $item->gender == 'M' ? $item_fac1 * (1 - $item_int) + $item_int * $getFac->man_fac_1 : $item_fac1 * (1 - $item_int) + $item_int * $getFac->woman_fac_1;
+                        @endphp 
+                        <td>{{ number_format($item_fac1_aj, 6) }}</td>
+
+                        @php
+                            $item_fac2 = $item->gender == 'M' ? $getFac->man_fac_2 : $getFac->woman_fac_2;
+                        @endphp 
+                        <td>{{ number_format($item_fac2, 6) }}</td>
+
+                        @php
+                            $item_fac2_aj = $item->gender == 'M' ? $item_fac2 * (1 - $item_int) + $item_int * $getFac_1->man_fac_2 : $item_fac2 * (1 - $item_int) + $item_int * $getFac_1->woman_fac_2;
+                        @endphp 
+                        <td>{{ number_format($item_fac2_aj, 6) }}</td>
+
+                        @php
+                            $item_fac3 = ((1.03 ** ($item_t)) - 1) / ((1.03 ** ($item_nt)) - 1);
+                        @endphp 
+                        <td>{{ number_format($item_fac3, 11) }}</td>
+
+                        {{-- @php
+                            $item_fecha_redencion = 
+                            =+G2+S2*365,25+1
+                        @endphp 
+                        <td>{{ $item_fecha_redencion }}</td> --}}
                     </tr>
                 @endforeach
 

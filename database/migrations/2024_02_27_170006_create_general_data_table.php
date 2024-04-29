@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('general_data', function (Blueprint $table) {
             $table->id();
-            $table->year('calculation_year');
-            $table->date('calculation_date');
-            $table->float('minimum_salary', 10,2);
-            $table->float('administration_expenses');
-            $table->float('k_growth', 8,3);
-            $table->float('technical_rate', 8,2);
-            $table->float('expected_inflation_rate', 8,2);
-            $table->float('estimated_rate', 8,2);
-            $table->tinyInteger('age_difference');
-            $table->float('safety_factor');
-            $table->float('annual_cpi');
+            $table->year('calculation_year')->nullable();
+            $table->date('calculation_date')->nullable();
+            $table->float('minimum_salary', 10,2)->nullable();
+            $table->float('administration_expenses')->nullable();
+            $table->float('k_growth', 8,3)->nullable();
+            $table->float('technical_rate', 8,2)->nullable();
+            $table->float('expected_inflation_rate', 8,2)->nullable();
+            $table->float('estimated_rate', 8,2)->nullable();
+            $table->tinyInteger('age_difference')->nullable();
+            $table->float('safety_factor')->nullable();
+            $table->float('annual_cpi')->nullable();
             $table->timestamps();
         });
     }

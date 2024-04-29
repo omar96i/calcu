@@ -212,11 +212,94 @@
                         @endphp 
                         <td>{{ number_format($item_fac3, 11) }}</td>
 
-                        {{-- @php
-                            $item_fecha_redencion = 
-                            =+G2+S2*365,25+1
+                        @php
+                            $item_fecha_redencion =  date("Y-m-d", strtotime($item->birthdate . " + " . $item_edad_referencia . " years"));
                         @endphp 
-                        <td>{{ $item_fecha_redencion }}</td> --}}
+                        <td>{{ $item_fecha_redencion }}</td>
+
+                        @php
+                            $j2 = new DateTime($item->departure_date);
+                            $n2 = new DateTime($item_fc);
+                            $i2 = new DateTime($item->entry_date);
+                            $k2 = $item->liquidated_days;
+                            $u2 = $item_t;
+
+                            if ($j2->format('Y-m-d') != '0000-00-00') {
+                                $min_j2_n2 = min($j2, $n2);
+                                $diferencia_dias = $min_j2_n2->diff($i2)->days - $k2 + 1;
+                                $item_participacion_empresa = ($diferencia_dias) / ($u2 * 365.25);
+                            } else {
+                                $diferencia_dias = $n2->diff($i2)->days - $k2 + 1;
+                                $item_participacion_empresa = ($diferencia_dias) / ($u2 * 365.25);
+                            }
+                        @endphp 
+                        <td>{{ number_format(($item_participacion_empresa * 100) ,2) . '%'}}</td> 
+
+                        @php
+                            $AL3 = $item_fac1_aj;
+                            $AI3 = $item_pesion_referenca;
+                            $AN3 = $item_fac2_aj;
+                            $AJ3 = $item_auxilio_funerario;
+                            $AO3 = $item_fac3;
+
+                            if (($AL3 * $AI3 + $AN3 * $AJ3) * $AO3 < 0) {
+                                $item_bono_basico = 0;
+                            } else {
+                                $item_bono_basico = ($AL3 * $AI3 + $AN3 * $AJ3) * $AO3;
+                            }
+
+                        @endphp 
+                        <td>{{ number_format($item_bono_basico) }}</td>
+
+                        @php
+                            $item_cuota_empresa = + $item_bono_basico * $item_participacion_empresa;
+                        @endphp 
+                        <td>{{ number_format($item_cuota_empresa) }}</td>
+
+                        @php
+                            $AP2 = new DateTime($item_fecha_redencion);
+                            $FCal = new DateTime('2023-12-31');
+
+                            // Obtener valores de la tabla DTFP
+                            $valor1_FCal = $this->getDTFP($FCal->format('Y-m-d'))->dtfp_4;
+                            $valor1_AP2 = $this->getDTFP($AP2->format('Y-m-d'))->dtfp_4;
+                            $valor2_N2 = $this->getDTFP($item_fc)->dtfp_4;
+                            $valor3_FCal = $this->getDTFP($FCal->format('Y-m-d'))->accumulated;
+                            $valor4_AP2 = $this->getDTFP($AP2->format('Y-m-d'))->accumulated;
+
+                            // Verificar la condición AP2 > FCal
+                            if ($AP2 > $FCal) {
+                                $item_bono_fecha_calculo = $item_bono_basico * ($valor1_FCal / $valor2_N2);
+                            } else {
+                                $item_bono_fecha_calculo = $item_bono_basico * ($valor1_AP2 / $valor2_N2) * ($valor3_FCal / $valor4_AP2);
+                            }
+                            // =IF(AP2>FCal;+AR2*(VLOOKUP(FCal;DTFP!$A$2:$E$835;5)/VLOOKUP($N2;DTFP!$A$2:$E$835;5)); AR2*(VLOOKUP(AP2;DTFP!$A$2:$E$835;5)/VLOOKUP($N2;DTFP!$A$2:$E$835;5))*(VLOOKUP(FCal;DTFP!$A$2:$E$835;3)/VLOOKUP($AP2;DTFP!$A$2:$E$835;3)) )
+                        @endphp 
+                        <td>{{ number_format($item_bono_fecha_calculo, 0) }}</td>
+
+                        @php
+                            $item_cuota_parte_empresa = $item_participacion_empresa * $item_bono_fecha_calculo;
+                        @endphp
+                        <td>{{ number_format($item_cuota_parte_empresa, 0) }}</td>
+
+                        <td>{{ (new DateTime($item_fecha_redencion))->format('Y') }}</td>
+
+                        @php
+                            $AV2 = (new DateTime($item_fecha_redencion))->format('Y');
+                            $FCal = new DateTime('2023-12-31');
+                            $AU2 = $item_cuota_parte_empresa;
+
+                            $year_FCal = $FCal->format('Y');
+
+                            if ($AV2 <= $year_FCal) {
+                                $item_bonos_vencidos = $item_cuota_parte_empresa;
+                            } else {
+                                $item_bonos_vencidos = 0;
+                            }
+
+                        @endphp
+                        <td>{{ number_format($item_bonos_vencidos, 0) }}</td>
+
                     </tr>
                 @endforeach
 

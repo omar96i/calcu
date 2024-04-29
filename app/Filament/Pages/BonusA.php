@@ -58,6 +58,15 @@ class BonusA extends Page
         return isset($record) ? $record->accumulated : 0;
     }
 
+    public function getDTFP($date)
+    {
+        $record = DTFP::whereDate('date', '<=', $date)
+            ->orderBy('date', 'desc')
+            ->first();
+
+        return isset($record) ? $record : 0;
+    }
+
     public function getMinimumSalary($item_fc)
     {
         $item_fc = Carbon::parse($item_fc);

@@ -36,6 +36,8 @@ class BonusB extends Page
 
     public $m;
 
+    public $n;
+
     public $o;
 
     public $s;
@@ -196,8 +198,14 @@ class BonusB extends Page
     public function getSB($salary){
         // Primero, buscamos los valores correspondientes en DTFP y Salarios Min.
 
-        $dtfp_o = $this->dtfp->firstWhere('date', $this->o);
-        $dtfp_m = $this->dtfp->firstWhere('date', $this->m);
+        $dtfp_o = DTFP::whereDate('date', '<=', $this->o)
+        ->orderByRaw("ABS(DATEDIFF(date, '{$this->o}'))")
+        ->first();
+
+        $dtfp_m = DTFP::whereDate('date', '<=', $this->m)
+        ->orderByRaw("ABS(DATEDIFF(date, '{$this->m}'))")
+        ->first();
+        
         $salario_min = collect($this->salary_min)->firstWhere('year', date('Y', strtotime($this->o)));
 
         // Luego, realizamos las operaciones de BUSCARV y SI.ERROR.
@@ -206,7 +214,7 @@ class BonusB extends Page
         // Realizamos la multiplicación.
         $multiplicacion = $buscarv_o / $buscarv_m * $salary;
         // Finalmente, devolvemos el máximo entre la multiplicación y el salario mínimo.
-        return max($multiplicacion, $salario_min['Salario']);
+        return number_format(max($multiplicacion, $salario_min['Salario']));
     }
 
     public function getEFC($birthdate){

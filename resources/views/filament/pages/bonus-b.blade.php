@@ -81,6 +81,7 @@
                             {{ $this->getFC($item->entity) }}
                         </td>
                         <td>
+                            {{ $this->getSB($item->base_salary) }}
                         </td>
                         <td>
                             {{ $this->getEFC($item->birthdate) }}

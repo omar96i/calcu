@@ -194,7 +194,6 @@ class BonusB extends Page
         $this->o = $this->Fco;
         return $this->Fco;
     }
-
     public function getSB($salary){
         // Primero, buscamos los valores correspondientes en DTFP y Salarios Min.
 
@@ -205,7 +204,7 @@ class BonusB extends Page
         $dtfp_m = DTFP::whereDate('date', '<=', $this->m)
         ->orderByRaw("ABS(DATEDIFF(date, '{$this->m}'))")
         ->first();
-        
+
         $salario_min = collect($this->salary_min)->firstWhere('year', date('Y', strtotime($this->o)));
 
         // Luego, realizamos las operaciones de BUSCARV y SI.ERROR.
@@ -214,6 +213,7 @@ class BonusB extends Page
         // Realizamos la multiplicación.
         $multiplicacion = $buscarv_o / $buscarv_m * $salary;
         // Finalmente, devolvemos el máximo entre la multiplicación y el salario mínimo.
+        $this->n = max($multiplicacion, $salario_min['Salario']);
         return number_format(max($multiplicacion, $salario_min['Salario']));
     }
 
@@ -227,8 +227,8 @@ class BonusB extends Page
         $years = $difference->y + $difference->m / 12 + $difference->d / 365.25;
 
         // Redondeamos el resultado a dos decimales.
-        $years = round($years, 2);
         $this->p = $years;
+        $years = round($years, 2);
         return $years;
     }
 
@@ -340,6 +340,7 @@ class BonusB extends Page
             $result = $resultDate->format('Y-m-d');
         }
         $this->u = $result;
+        $this->t = $result;
         return $result;
     }
 
@@ -366,7 +367,7 @@ class BonusB extends Page
             $this->w = $this->p;
             return number_format($this->p, 2); // Redondear a dos decimales
         } else {
-            $this->w = $result;
+            $this->w = number_format($result,2);
             return number_format($result, 2); // Redondear a dos decimales
         }
     }
@@ -374,12 +375,16 @@ class BonusB extends Page
     public function getInt()
     {
         // Redondear hacia abajo y eliminar la parte decimal de $this->w
-        $integerPart = floor($this->w);
+        $integerPart = intval($this->w);
 
         // Calcular la diferencia entre $this->w y su parte entera
         $difference = $this->w - $integerPart;
         $this->x = $difference;
-        return number_format($difference,2);
+        if($this->x >= 1){
+            $this->x = 0;
+            return number_format(0, 4);
+        }
+        return number_format($difference,4);
     }
 
     public function getTimeTotal($I, $K, $L){
@@ -403,18 +408,22 @@ class BonusB extends Page
 
     public function getN1()
     {
-        // Convertir las fechas $this->o y $this->v a objetos DateTime
         $ODate = new DateTime($this->o);
         $VDate = new DateTime($this->v);
 
-        // Calcular la diferencia en días entre las fechas y truncar el resultado
-        $difference = $VDate->diff($ODate)->days;
-        $truncatedDifference = intval($difference); // Truncar el resultado eliminando la parte decimal
+        // Invertimos el orden de las fechas si $ODate es posterior a $VDat
 
-        // Obtener el valor máximo entre 0 y el resultado truncado
-        $result = max(0, $truncatedDifference);
-        $this->aa = $result;
-        return $result;
+        // Obtiene la diferencia entre las fechas (con el orden corregido)
+        $interval = $VDate->diff($ODate);
+
+        // Obtiene la cantidad de días en la diferencia
+        $daysDifference = $interval->days;
+        if($ODate > $VDate){
+            $this->aa = 0;
+            return 0;
+        }
+        $this->aa = $daysDifference;
+        return $daysDifference;
     }
 
     public function getTCompany($I, $J, $K, $L)
@@ -471,8 +480,9 @@ class BonusB extends Page
     }
     // Esta funcion es generica
     public function getAF(){
-        $this->af = 114423;
-        return 114423;
+        $this->af = $this->n;
+        $this->af++; // Incrementa af en 1
+        return $this->af;
     }
 
     public function getAG(){
@@ -649,7 +659,7 @@ class BonusB extends Page
         $AJ = $this->aj;
         $AI = $this->ai;
         $AK = $this->ak;
-        $N = $this->af;
+        $N = $this->n;
         $AL = $this->al;
         $AA = $this->aa;
 
@@ -707,67 +717,54 @@ class BonusB extends Page
             return 1;
         }
     }
-
+    public $aq;
     public function getAQ()
     {
-        // // Obtener los valores de las variables
-        // $an2 = $this->an;
-        // $am2 = $this->am;
-        // $Fcal = '2022-12-31'; // Este es un date
-        // $O2 = $this->o;
+        // Obtener los valores de las variables
 
-        // // Realizar la consulta para obtener los datos de DTFP
-        // $DTFP = $this->dtfp;
+        $an2 = new DateTime($this->an);
+        $Fcal = new DateTime('2022-12-31'); // Objeto DateTime
+        $O2 = new DateTime($this->o);
+        $am2 = $this->am;
+        $ap =  $this->ap;
+        // 68.448,93706
 
-        // // Variables para almacenar los resultados de las búsquedas
-        // $busqueda1 = 0;
-        // $busqueda2 = 0;
+        // 2.870,65126
+        $busqueda2 = $this->getDTFP($O2->format('Y-m-d'))->dtfp_4;
 
-        // // Buscar valores en DTFP
-        // foreach ($DTFP as $row) {
-        //     if ($row->date == $Fcal) {
-        //         $busqueda1 = $row->dtfp_3; // Buscar valor en la columna DTFP_3
-        //     }
-        //     if ($row->date == $an2) {
-        //         $busqueda2 = $row->dtfp_3; // Buscar valor en la columna DTFP_3
-        //     }
-        // }
-        // // Calcular el resultado de la fórmula
-        // $resultado = 0;
-        // $valorO2 = $this->buscarValor($O2, $DTFP);
-        // $valorAn2 = $this->buscarValor($an2, $DTFP);
+        // Calcular el resultado de la fórmula
+        $resultado = 0;
+        if ($an2 > $Fcal) {
+            $busqueda1 = $this->getDTFP($Fcal->format('Y-m-d'))->dtfp_4;
+            $resultado = $am2 * ($busqueda1 / $busqueda2);
+        }else {
+            $busqueda1 = $this->getDTFP($an2->format('Y-m-d'))->dtfp_4;
+            $valorFcal = $this->getDTFP($Fcal->format('Y-m-d'))->accumulated;
+            // 4677.377384
+            $valorAn2 = $this->getDTFP($an2->format('Y-m-d'))->accumulated;
 
-        // if ($an2 > $Fcal && $valorO2 != 0) {
-        //     $resultado = ($am2 * $busqueda1) / $valorO2;
-        // } elseif ($valorO2 != 0 && $valorAn2 != 0) {
-        //     $resultado = ($am2 * $valorAn2 * $busqueda1) / ($valorO2 * $valorAn2);
-        // }
-
-        // // Multiplicar el resultado por el valor en 'BONO B '!$AP2 (no está claro dónde se obtiene este valor)
-        // dd($resultado);
-        return "Sin datos aun";
-    }
-
-    private function buscarValor($date, $DTFP)
-    {
-        $closestDate = null;
-        $closestValue = null;
-        $closestDiff = PHP_INT_MAX;
-
-        foreach ($DTFP as $row) {
-            // Calcular la diferencia de días entre la fecha buscada y la fecha en la base de datos
-            $diff = abs(strtotime($row->date) - strtotime($date));
-
-            // Actualizar el valor más cercano si la diferencia es menor que el valor actual
-            if ($diff < $closestDiff) {
-                $closestDate = $row->date;
-                $closestValue = $row->dtfp_3; // Cambiar a dtfp_4 si se necesita buscar en otra columna
-                $closestDiff = $diff;
-            }
+            //1958,862419
+            $resultado = $am2*$busqueda1/$busqueda2*$valorFcal/$valorAn2*$this->ap;
         }
-
-        return $closestValue;
+        // ¿Qué sucede si ninguna de las condiciones se cumple?
+        // Si no hay un caso claro, podrías agregar un else aquí.
+        $this->aq = $resultado;
+        return number_format(intval($resultado));
     }
+
+
+
+    public function getDTFP($date)
+    {
+        $record = DTFP::where('date', '<=', $date)
+            ->orderByDesc('date')
+            ->first();
+
+
+
+        return isset($record) ? $record : 0;
+    }
+
     public $ar;
     public function getAR($I)
     {
@@ -836,22 +833,29 @@ class BonusB extends Page
 
         return $resultado;
     }
-
+    public $av;
     public function getAV(){
-        return "Falta datos";
+        $resultado = $this->at * $this->aq;
+        $this->av = $resultado;
+        return $resultado;
     }
-
+    public $aw;
     public function getAW(){
         $fechaAN = new DateTime($this->an);
 
         // Extraer el año de la fecha
-        $año = $fechaAN->format('Y');
-
-        return $año;
+        $year = $fechaAN->format('Y');
+        $this->aw = $year;
+        return $year;
     }
 
     public function getAX(){
-        return "faltan datos";
+        $Fcal = new DateTime('2022-12-31');
+        $valorAW2 = $this->aw;
+        $valorAV2 = $this->av;
+        $yearFcal = $Fcal->format('Y');
+        $resultado = (intval($valorAW2) <= $yearFcal) ? $valorAV2 : 0;
+        return $resultado;
     }
 
 }

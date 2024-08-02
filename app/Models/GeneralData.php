@@ -27,4 +27,9 @@ class GeneralData extends Model
         'safety_factor',
         'annual_cpi',
     ];
+
+    public function generaldata(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

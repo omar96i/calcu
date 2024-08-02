@@ -25,6 +25,8 @@ class ActuarialGroupResource extends Resource
 
     protected static ?string $modelLabel = 'grupos actuariales';
 
+    protected static ?string $navigationGroup = 'Datos Configuracion';
+
     public static function form(Form $form): Form
     {
         return $form

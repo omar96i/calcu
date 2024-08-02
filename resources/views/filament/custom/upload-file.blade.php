@@ -21,13 +21,15 @@
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="companySelect">Seleccionar Empresa</label>
                         <select id="companySelect" wire:model="company_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             <!-- Aquí puedes agregar tus opciones -->
-
-                            <option value="">Selecciona una empresa</option>
-                            @foreach ($companies as $company)
-                                <option value="{{ $company->id }}">{{ $company->name }}</option>
-                            @endforeach
-                            <!-- etc. -->
+                             
+                            <option value="{{$companies->name}}">{{$companies->name}}</option>
+                           
+                            
                         </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="fileUpload">Subir Archivo</label>
+                        
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="fileUpload">Subir Archivo</label>

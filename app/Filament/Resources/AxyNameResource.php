@@ -26,6 +26,8 @@ class AxyNameResource extends Resource
 
     protected static ?string $modelLabel = 'Axy titulos';
 
+    protected static ?string $navigationGroup = 'Datos Configuracion';
+
     public static function form(Form $form): Form
     {
         return $form

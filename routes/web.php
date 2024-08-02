@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\AxyValueController;
-use App\Http\Controllers\BonosACOntroller;
+use App\Http\Controllers\BonosAController;
 use App\Models\CompanyStudyAux;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LayoffController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/', function(){
+    return redirect('/company');
+});
 
 Route::get('/test', function(){
     $company = CompanyStudyAux::get();
@@ -29,3 +35,7 @@ Route::post('/axyvalues/import', [AxyValueController::class, 'store'])->name('ax
 Route::get('/bonus_a/import', [BonosAController::class, 'create'])->name('bonus_a.import.create');
 Route::post('/bonus_a/import', [BonosAController::class, 'store'])->name('bonus_a.import.store');
 
+Route::get('/pdf/generate/user/{user}',[UserController::class,'PdfController'])->name('pdf.example');
+Route::get('/pdf/generate2/user/{user}',[UserController::class,'PdfController2'])->name('pdf.example_int');
+
+// Route::get('/layoffs',[LayoffController::class,'layoffs'])->name('layoffs');

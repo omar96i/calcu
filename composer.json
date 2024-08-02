@@ -11,6 +11,8 @@
         "php": "^8.1",
         "barryvdh/laravel-dompdf": "^2.1",
         "bezhansalleh/filament-language-switch": "^2.0",
+        "bezhansalleh/filament-panel-switch": "^1.0",
+        "bezhansalleh/filament-shield": "^3.0",
         "fabpot/goutte": "^4.0",
         "filament/filament": "^3.0-stable",
         "guzzlehttp/guzzle": "^7.2",
@@ -19,6 +21,8 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.0",
         "maatwebsite/excel": "^3.1",
+        "pxlrbt/filament-excel": "*",
+        "shanerbaner82/panel-roles": "^0.0.3",
         "spatie/laravel-permission": "^5.11"
     },
     "require-dev": {

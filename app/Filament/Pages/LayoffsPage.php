@@ -19,6 +19,10 @@ class LayoffsPage extends Page
 
     protected static ?string $modelLabel = 'Cesantias';
 
+    protected static ?string $navigationGroup = 'Datos Empresa';
+
+    protected static ?int $navigationSort = 5;
+
     public $file;
 
     public $loading = false;

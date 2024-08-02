@@ -25,7 +25,9 @@ class GeneralDataResource extends Resource
 
     protected static ?string $modelLabel = 'Factores';
 
-    protected static ?string $navigationGroup = 'Datos generales';
+    protected static ?string $navigationGroup = 'Datos Empresa';
+
+    protected static ?int $navigationSort = 8;
 
     public static function form(Form $form): Form
     {

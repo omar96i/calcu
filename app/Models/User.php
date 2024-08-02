@@ -9,10 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Spatie\Permission\Traits\HasRoles;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 
 class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasPanelShield;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +25,16 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
-    ];
+        'nit',
+        'phone',
+        'address',
+        'city',
+        'type',
+        'country',
+        'national_legal_considerations',
+        'international_legal_considerations',
+        'liquidated'
+        ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,5 +59,10 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
+    }
+
+    public function parametros(): BelongsTo
+    {
+        return $this->belongsTo(GeneralData::class);
     }
 }

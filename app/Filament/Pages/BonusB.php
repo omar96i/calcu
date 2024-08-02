@@ -16,6 +16,10 @@ class BonusB extends Page
 
     protected static string $view = 'filament.pages.bonus-b';
 
+    protected static ?string $navigationGroup = 'Datos Empresa';
+
+    protected static ?int $navigationSort = 4;
+
     public $bonusB;
 
     public $baseDate = '1992-06-30';

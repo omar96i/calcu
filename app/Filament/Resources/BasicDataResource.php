@@ -24,7 +24,9 @@ class BasicDataResource extends Resource
     protected static ?string $slug = 'parametros';
 
     protected static ?string $modelLabel = 'Parametros';
-    protected static ?string $navigationGroup = 'Datos generales';
+    protected static ?string $navigationGroup = 'Datos Empresa';
+
+    protected static ?int $navigationSort = 9;
 
 
     public static function form(Form $form): Form

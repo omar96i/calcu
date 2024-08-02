@@ -12,6 +12,8 @@ class Tables extends Page
 
     protected static string $view = 'filament.pages.tables';
 
+    protected static ?string $navigationGroup = 'Datos Configuracion';
+
 
     public $axy_tables;
     public $tables;

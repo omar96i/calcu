@@ -19,6 +19,10 @@ class TitleCalculation extends Page
 
     protected static ?string $modelLabel = 'Calculos de titulos';
 
+    protected static ?string $navigationGroup = 'Datos Empresa';
+
+    protected static ?int $navigationSort = 7;
+
     public $file;
 
     public $loading = false;

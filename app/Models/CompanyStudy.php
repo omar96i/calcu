@@ -50,4 +50,8 @@ class CompanyStudy extends Model
     {
         return $this->belongsTo(ActuarialGroup::class);
     }
+    public function user_company(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

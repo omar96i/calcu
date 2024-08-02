@@ -1,5 +1,20 @@
 <x-filament-panels::page>
     <x-filament::tabs>
+     <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
+            2019
+        </x-filament::tabs.item> 
+        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
+            2020
+        </x-filament::tabs.item> 
+        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
+            2021
+        </x-filament::tabs.item> 
+        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
+            2022
+        </x-filament::tabs.item> 
+        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
+            2023
+        </x-filament::tabs.item> 
         <x-filament::tabs.item wire:click="setPage('K')" :active="$page === 'K'" icon="heroicon-m-clipboard">
             K
         </x-filament::tabs.item>

@@ -14,6 +14,8 @@ class TablesStudyPage extends Page
 
     protected static string $view = 'filament.pages.tables-study-page';
 
+    protected static ?string $navigationGroup = 'Datos Configuracion';
+
     public $company;
 
     public $tableHombre;

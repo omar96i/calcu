@@ -17,6 +17,8 @@ class MortMPage extends Page
 
     protected static ?string $modelLabel = 'Masculino';
 
+    protected static ?string $navigationGroup = 'Datos Configuracion';
+
     public $diferencia = 5;
 
     public $numero = 0.048;

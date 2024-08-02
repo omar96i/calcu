@@ -20,6 +20,10 @@ class FiveYearCalculationPage extends Page
 
     protected static ?string $modelLabel = 'Calculo quinquenio';
 
+    protected static ?string $navigationGroup = 'Datos Empresa';
+
+    protected static ?int $navigationSort = 6;
+
     public $file;
 
     public $loading = false;

@@ -25,12 +25,14 @@ class CompanyStudyResource extends Resource
 
     protected static ?string $modelLabel = 'estudios';
 
+    protected static ?string $navigationGroup = 'Datos Configuracion';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('company_id')
-                    ->relationship('company', 'name')
+                    ->relationship('user_company', 'name')
                     ->required(),
                 Forms\Components\Select::make('actuarial_group_id')
                     ->relationship('actuarial_group', 'name')

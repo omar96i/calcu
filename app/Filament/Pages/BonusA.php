@@ -16,6 +16,10 @@ class BonusA extends Page
 
     protected static string $view = 'filament.pages.bonus-a';
 
+    protected static ?string $navigationGroup = 'Datos Empresa';
+
+    protected static ?int $navigationSort = 3;
+
     public $bonus;
 
     public $parameters_fb;

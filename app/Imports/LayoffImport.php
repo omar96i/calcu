@@ -4,9 +4,17 @@ namespace App\Imports;
 
 use App\Models\Layoff;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithStartRow;
 
 class LayoffImport implements ToModel
 {
+    /**
+    * @return int
+    */
+    public function startRow(): int
+    {
+        return 2;
+    }
     /**
     * @param array $row
     *
@@ -14,12 +22,14 @@ class LayoffImport implements ToModel
     */
     public function model(array $row)
     {
-
+        
         $date1 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3]);
         $newDate1 = $date1->format('Y-m-d');
+    
+        
         $date2 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4]);
         $newDate2 = $date2->format('Y-m-d');
-
+    
         return new Layoff([
             'cc' => $row[0],
             'full_name' => $row[1],

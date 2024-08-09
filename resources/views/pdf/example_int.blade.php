@@ -369,140 +369,102 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
 <p>Calculo Actuarial Normal Internacional - NIIF</p>
 <p>Resolucion 533 del 2015 de la contaduria general de la nacion, version 09</p>
 <table>
-  <tr>
-    <th>Grupo pensionales</th>
+<tr>
+<th>Grupo pensionales</th>
     <th>No personas</th>
     <th>Reserva Causante</th>
-    <th>Reserva Sobrevivencia</th>
+     <th>Reserva Sobrevivencia</th>
    
     <th>Reserva Auxilio Funerario</th>
    
-    <th>Reserva Empresa a 31/12/2023</th>
-    <th>Reserva de cotizaciones</th>
-    <th>Suma de reserva + cotizaiones a dic 2023</th>
-    
+    <th>Reserva + Cotizaciones a dic 2023</th>
+    <th>Reserva cuotas partes por cobrar</th>
+    <th>Reserva neta de cuotas partes por cobrar</th> 
   </tr>
+@foreach ($sumaPorUserId as $dato) 
+            
+     
+            
+          
+        
+
   <tr>
    
-    <td>PERSONAL JUBILADO TOTALMENTE POR LA EMPRESA</td>
-    <td>1</td>
+    <td> {{$dato->col3}}</td>
+    <td>{{$dato->total_count}}</td>
 
-    <td>$77.326.650</td>
-    <td>$20.650.164</td>
-    <td>$1.690.420</td>
-    <td>$99.622.234</td>
-
-    <td>$</td>
-    <td>$99.622.234</td>
+    <td>${{number_format($dato->total_amount, 0, '.', '.')}}</td>
     
-
+    
+    
     
   </tr>
-  <tr>
-   
-    <td>PERSONAL POR LA EMPRESA Y EN EXPECTATIVA DE COLPENSIONES</td>
-    <td>20</td>
-
-    <td>$4.226.519.551</td>
-    <td>$1.346.574.298</td>
-    <td>$</td>
-    <td>$5.573.093.849</td>
-
-    <td>$65.494.435</td>
-    <td>$5.638.588.285</td>
-   
-  </tr>
-
-  <tr>
+  {{-- <tr>
    
     <td>PERSONAL JUBILADO CON PENSION COMPARTIDA</td>
-    <td>61</td>
+    <td>91</td>
 
-    <td>$6.505.698.168</td>
-    <td>$1.810.284.049</td>
+    <td>$8.104.119.280</td>
+    <td>$4.976.729.859</td>
     <td>$</td>
-    <td>$8.315.982.217</td>
+    <td>$13.080.849.139</td>
+
+    <td>$956.039.692</td>
+    <td>$12.124.809.447</td>
+   
+  </tr>
+
+  <tr>
+   
+    <td>PESONAL BENEFICIARIO VITALICIO TOTALMENTE A CARGO DE LA EMPRESA</td>
+    <td>3</td>
+
+    <td>$435.333.574</td>
+    <td>$</td>
+    <td>$</td>
+    <td>$435.333.574</td>
 
     <td>$</td>
-    <td>$8.315.982.217</td>
+    <td>$435.333.574</td>
     
   </tr>
 
   <tr>
    
     <td>PERSONAL BENEFICIARIO VITALICIO COMPARTIDO CON COLPENSIONES</td>
-    <td>21</td>
+    <td>107</td>
 
-    <td>$2.728.183.259</td>
+    <td>$16.189.169.013</td>
     <td>$</td>
     <td>$</td>
-    <td>$2.728.183.259</td>
+    <td>$16.189.169.013</td>
 
-    <td></td>
-    <td>$2.728.183.259</td>
+    <td>$1.438.294.798</td>
+    <td>$14.750.874.215</td>
     
-  </tr>
-  <tr>
-   
-    <td><b>Total General</b></td>
-    <td><b>103</b></td>
-
-    <td><b>$13.537.727.629</b></td>
-    <td><b>$3.177.463.510</b></td>
-    <td><b>$1.690.420</b></td>
-    <td><b>$16.716.881.559</b></td>
-
-    <td><b>$65.494.435</b></td>
-    <td><b>$16.782.375.995</b></td>
-    
-  </tr>
-  <tr>
-   
-    <td><b>RESERVA DE PRIMA DE ANTIGUEDAD</b></td>
-    <td><b>213</b></td>
-
-    <td><b></b></td>
-    <td><b></b></td>
-    <td><b></b></td>
-    <td><b></b></td>
-
-    <td><b></b></td>
-    <td><b>$3.079.403.619</b></td>
-    
-  </tr>
-  <tr>
-   
-    <td><b>RESERVA DE CESANTIAS RETROACTIVAS</b></td>
-    <td><b>24</b></td>
-
-    <td><b></b></td>
-    <td><b></b></td>
-    <td><b></b></td>
-    <td><b></b></td>
-
-    <td><b></b></td>
-    <td><b>$1.363.826.067</b></td>
-    
-  </tr>
-  <tr>
-   
-    <td><b>TOTAL RESERVAS</b></td>
-    <td><b>340</b></td>
-
-    <td><b></b></td>
-    <td><b></b></td>
-    <td><b></b></td>
-    <td><b></b></td>
-
-    <td><b></b></td>
-    <td><b>$21.225.605.681</b></td>
-    
-  </tr>
+  {{-- </tr> --}}
+  
   
     
+ @endforeach  
+ <tr>
    
+    <td><b>Total General</b></td>
+    <td><b>{{$conteoTotal}}</b></td>
+
+    <td><b>${{number_format($sumTotal, 0, '.', '.')}}</b></td>
+    <td><b>$5.074.378.639</b></td>
+    <td><b>$</b></td>
+    <td><b>$29.971.627.086</b></td>
+
+    <td><b>$2.394.334.490</b></td>
+    <td><b>$27.677.292.596</b></td>
+    
+  </tr> 
 </table>
-        @endforeach
+
+ @endforeach
+      
 
 <h3>7.REVELACIONES CONTABLES:</h3>
 

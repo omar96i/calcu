@@ -23,6 +23,7 @@ use App\Filament\Pages\BonusB;
 use App\Filament\Pages\LayoffsPage;
 use App\Filament\Pages\TitleCalculation;
 use App\Filament\Resources\UserResource;
+use App\Filament\Pages\FiveYearCalculationPage;
 
 class CompanyPanelProvider extends PanelProvider
 {
@@ -43,7 +44,8 @@ class CompanyPanelProvider extends PanelProvider
                 BonusA::class,
                 BonusB::class,
                 LayoffsPage::class,
-                TitleCalculation::class
+                TitleCalculation::class,
+                FiveYearCalculationPage::class
                 
             ])
             ->resources([

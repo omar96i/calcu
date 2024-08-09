@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
-            
+
             ->visible(fn (): bool => auth()->user()?->hasAnyRole([
                 'super_admin',
             ]));
@@ -43,6 +43,9 @@ class AppServiceProvider extends ServiceProvider
                 'company' => 'heroicon-m-document',
             ], $asImage = false);
         });
-       
+
+        Schema::defaultStringLength(191);
+
+
     }
 }

@@ -16,6 +16,7 @@ class Study extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'actuarial_group_id',
         'cc',
         'name',
@@ -44,6 +45,7 @@ class Study extends Model
         'allowance_14',
         'school_help',
         'pension_requirement_date',
+        'date_format',
     ];
 
 

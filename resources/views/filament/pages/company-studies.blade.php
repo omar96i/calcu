@@ -2,26 +2,26 @@
     <x-filament::tabs>
          <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
             2019
-        </x-filament::tabs.item> 
+        </x-filament::tabs.item>
         <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
             2020
-        </x-filament::tabs.item> 
+        </x-filament::tabs.item>
         <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
             2021
-        </x-filament::tabs.item> 
+        </x-filament::tabs.item>
         <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
             2022
-        </x-filament::tabs.item> 
+        </x-filament::tabs.item>
         <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
             2023
-        </x-filament::tabs.item> 
+        </x-filament::tabs.item>
         <x-filament::tabs.item wire:click="setPage('calculopension')" :active="$page === 'calculopension'" icon="heroicon-m-clipboard">
             Información Base
         </x-filament::tabs.item>
         <x-filament::tabs.item wire:click="setPage('quinquenio')" :active="$page === 'quinquenio'" icon="heroicon-m-clipboard">
             Calculo Pension
         </x-filament::tabs.item>
-        
+
         <x-filament::tabs.item icon="heroicon-m-arrow-up-tray" wire:click="openModal()">
             Importar datos
         </x-filament::tabs.item>
@@ -44,7 +44,7 @@
                 Información Base
             </x-slot>
 
-            <livewire:company-studies/>
+            <livewire:studies-table/>
         </x-filament::section>
     @endif
 

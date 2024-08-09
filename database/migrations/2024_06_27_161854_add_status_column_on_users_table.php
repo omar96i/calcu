@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('national_legal_considerations');
-            $table->string('international_legal_considerations');
-            $table->string('liquidated');
+            $table->string('national_legal_considerations')->default('sin datos');
+            $table->string('international_legal_considerations')->default('sin datos');
+            $table->string('liquidated')->default('sin datos');
         });
     }
 
@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            
+
         });
     }
 };

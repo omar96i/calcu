@@ -8,6 +8,13 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class StudyImport implements ToModel
 {
+
+    public $date;
+
+    public function __construct($date)
+    {
+        $this->date = $date;
+    }
     /**
     * @param array $row
     *
@@ -24,6 +31,7 @@ class StudyImport implements ToModel
         $newDate3 = $date3->format('Y-m-d');
         $group = ActuarialGroup::where('name', $row[2])->get()->first();
         return new Study([
+            'user_id' => auth()->user()->id,
             'actuarial_group_id' => ($group)? $group->id : 1,
             'cc' => $row[0],
             'name' => $row[1],
@@ -51,6 +59,7 @@ class StudyImport implements ToModel
             'allowance_iss' => $row[24],
             'allowance_14' => $row[25],
             'school_help' => $row[26],
+            'date_format' => $this->date,
         ]);
     }
 }

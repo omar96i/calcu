@@ -7,6 +7,8 @@ use App\Imports\CompanyStudyImport;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use App\Filament\Pages\Settings;
+use App\Imports\StudyImport;
+use App\Models\Study;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CompanyStudies extends Page
@@ -33,6 +35,13 @@ class CompanyStudies extends Page
 
     public $data;
 
+    public $date = '2023-01-01';
+
+    public $studies;
+
+    public function mount(){
+        $this->studies = Study::where('user_id', auth()->user()->id)->get();
+    }
 
     public function getTitle(): string
     {
@@ -51,7 +60,7 @@ class CompanyStudies extends Page
 
         if($this->file){
             $this->loading = true;
-            Excel::import(new CompanyStudyImport(auth()->user()->id), $this->file);
+            Excel::import(new StudyImport($this->date), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()

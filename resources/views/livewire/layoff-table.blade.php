@@ -46,61 +46,101 @@
             </thead>
             <tbody>
                 @foreach ($data as $index => $aux)
-                    <tr>
-                        <td class="px-4 py-2 border">{{ $aux->cc }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->full_name }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->sex }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->date_birth }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->date_entry }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->suspension }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->import_salary }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->advance }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getI($aux->date_entry) }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->import_salary }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getK($aux->date_entry, $aux->suspension) }}</td>
-                        <td class="px-4 py-2 border">{{ $L }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getM($aux->date_birth) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getN($aux->import_salary) }}</td>
-                        <td class="px-4 py-2 border">{{ number_format($table[$index]) }}{{ $this->getO($table[$index]) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getP($aux->sex, $aux->date_birth) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getQ() }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getR() }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getS($aux->date_birth) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getT() }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getU($aux->import_salary) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getV($aux->sex, $aux->advance) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getW() }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getX()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getY()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getZ()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAA()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAB()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAC()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAD()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAE()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAF()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAG()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAH()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAI()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAJ()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAK()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAL()}}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAM()}}</td>
-
-
-
-                    </tr>
+                    @if ($aux->status == 'incomplete')
+                        <tr>
+                            <td class="px-4 py-2 border">{{ $aux->cc }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->full_name }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->sex }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->date_birth }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->date_entry }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->suspension }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->import_salary }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->advance }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getI($aux->date_entry) }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->import_salary }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getK($aux->date_entry, $aux->suspension) }}</td>
+                            <td class="px-4 py-2 border">{{ $L }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getM($aux->date_birth) }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getN($aux->import_salary) }}</td>
+                            <td class="px-4 py-2 border">
+                                {{ number_format($table[$index]) }}{{ $this->getO($table[$index]) }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getP($aux->sex, $aux->date_birth) }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getQ() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getR() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getS($aux->date_birth) }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getT() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getU($aux->import_salary) }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getV($aux->sex, $aux->advance) }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getW() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getX() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getY() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getZ() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAA() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAB() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAC() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAD() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAE() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAF() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAG() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAH() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAI() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAJ() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAK() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAL() }}</td>
+                            <td class="px-4 py-2 border">{{ $this->getAM() }}</td>
+                            @php
+                                $this->updateState($aux->id);
+                            @endphp
+                        </tr>
+                    @else
+                        <tr>
+                            <td class="px-4 py-2 border">{{ $aux->cc }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->full_name }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->sex }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->date_birth }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->date_entry }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->suspension }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->import_salary }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->advance }}</td>
+                            <td class="px-4 py-2 border">{{ $aux->days_worked}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->calculation_base}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->days_calculation_base}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->regime}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->age_fc}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->severance_liquidation}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->accumulated_severances}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->retire_date}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->days}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->retire_year}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->age_fr}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->year_to_work}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->settlement_value}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->value_charge}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2023}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2024}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2025}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2026}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2027}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2028}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2029}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2030}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2031}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2032}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2033}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2034}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2035}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2036}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2037}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2038}}</td>
+                            <td class="px-4 py-2 border">{{ $aux->liquidation_2039}}</td>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>
     </div>
     <div class="mt-4 flex justify-center">
-        <x-filament::pagination
-            :paginator="$data"
-            :page-options="['all']"
-            :current-page-option-property="'perPage'"
-            extreme-links
-            class="sm:flex sm:items-between"
-        />
+        <x-filament::pagination :paginator="$data" :page-options="['all']" :current-page-option-property="'perPage'" extreme-links
+            class="sm:flex sm:items-between" />
     </div>
 </div>

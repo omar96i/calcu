@@ -483,85 +483,155 @@ class LayoffTable extends Component
         return number_format($result);
     }
 
+    public $X;
     public function getX(){
         $result = $this->T == $this->X3 ? $this->V : 0;
+        $this->X = $result;
         return number_format($result);
     }
 
+    public $Y;
     public function getY(){
         $result = $this->T == $this->Y3 ? $this->V : 0;
+        $this->Y = $result;
         return number_format($result);
     }
+
+    public $Z;
 
     public function getZ(){
         $result = $this->T == $this->Z3 ? $this->V : 0;
+        $this->Z = $result;
         return number_format($result);
     }
 
+    public $AA;
     public function getAA(){
         $result = $this->T == $this->AA3 ? $this->V : 0;
+        $this->AA = $result;
         return number_format($result);
     }
 
+    public $AB;
     public function getAB(){
         $result = $this->T == $this->AB3 ? $this->V : 0;
+        $this->AB = $result;
         return number_format($result);
     }
 
+    public $AC;
     public function getAC(){
         $result = $this->T == $this->AC3 ? $this->V : 0;
+        $this->AC = $result;
         return number_format($result);
     }
 
+    public $AD;
     public function getAD(){
         $result = $this->T == $this->AD3 ? $this->V : 0;
+        $this->AD = $result;
         return number_format($result);
     }
 
+    public $AE;
     public function getAE(){
         $result = $this->T == $this->AE3 ? $this->V : 0;
+        $this->AE = $result;
         return number_format($result);
     }
 
+    public $AF;
     public function getAF(){
         $result = $this->T == $this->AF3 ? $this->V : 0;
+        $this->AF = $result;
         return number_format($result);
     }
 
+    public $AG;
     public function getAG(){
         $result = $this->T == $this->AG3 ? $this->V : 0;
+        $this->AG = $result;
         return number_format($result);
     }
 
+    public $AH;
     public function getAH(){
         $result = $this->T == $this->AH3 ? $this->V : 0;
+        $this->AH = $result;
         return number_format($result);
     }
 
+    public $AI;
     public function getAI(){
         $result = $this->T == $this->AI3 ? $this->V : 0;
+        $this->AI = $result;
         return number_format($result);
     }
 
+    public $AJ;
     public function getAJ(){
         $result = $this->T == $this->AJ3 ? $this->V : 0;
+        $this->AJ = $result;
         return number_format($result);
     }
 
+    public $AK;
     public function getAK(){
         $result = $this->T == $this->AK3 ? $this->V : 0;
+        $this->AK = $result;
         return number_format($result);
     }
 
+    public $AL;
     public function getAL(){
         $result = $this->T == $this->AL3 ? $this->V : 0;
+        $this->AL = $result;
         return number_format($result);
     }
 
+    public $AM;
     public function getAM(){
         $result = $this->T == $this->AM3 ? $this->V : 0;
+        $this->AM = $result;
         return number_format($result);
     }
 
-
+    public function updateState($id){
+        $layoff = Layoff::find($id);
+        $layoff->update([
+            'user_id' => auth()->user()->id,
+            'days_worked' => $this->I,
+            'calculation_base' => $layoff->import_salary,
+            'days_calculation_base' => $this->K,
+            'regime' => $this->L,
+            'age_fc' => $this->M,
+            'severance_liquidation' => $this->N,
+            'accumulated_severances' => $this->O,
+            'retire_date' => $this->P,
+            'days' => $this->Q,
+            'retire_year' => $this->R,
+            'age_fr' => $this->S,
+            'year_to_work' => $this->T,
+            'settlement_value' => $this->U,
+            'value_charge' => $this->V,
+            'liquidation_2023' => $this->W,
+            'liquidation_2024' => $this->X,
+            'liquidation_2025' => $this->Y,
+            'liquidation_2026' => $this->Z,
+            'liquidation_2027' => $this->AA,
+            'liquidation_2028' => $this->AB,
+            'liquidation_2029' => $this->AC,
+            'liquidation_2030' => $this->AD,
+            'liquidation_2031' => $this->AE,
+            'liquidation_2032' => $this->AF,
+            'liquidation_2033' => $this->AG,
+            'liquidation_2034' => $this->AH,
+            'liquidation_2035' => $this->AI,
+            'liquidation_2036' => $this->AJ,
+            'liquidation_2037' => $this->AK,
+            'liquidation_2038' => $this->AL,
+            'liquidation_2039' => $this->AM,
+            'status' => 'completed'
+        ]);
+    }
 }

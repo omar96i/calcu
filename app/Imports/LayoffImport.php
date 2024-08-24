@@ -22,14 +22,14 @@ class LayoffImport implements ToModel
     */
     public function model(array $row)
     {
-        
+
         $date1 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3]);
         $newDate1 = $date1->format('Y-m-d');
-    
-        
+
+
         $date2 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4]);
         $newDate2 = $date2->format('Y-m-d');
-    
+
         return new Layoff([
             'cc' => $row[0],
             'full_name' => $row[1],

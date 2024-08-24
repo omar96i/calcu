@@ -451,6 +451,7 @@ class FiveYearCalculation extends Component
         return null;
     }
 
+    public $V;
     public function getV()
     {
         // Obtener los valores de las propiedades
@@ -462,8 +463,34 @@ class FiveYearCalculation extends Component
         $suma = $X + $Z + $AB;
 
         // Retornar el máximo entre 0 y la suma calculada
+        $this->V =  $suma;
         return number_format(max(0, $suma),0);
     }
 
+
+    public function updateState($id){
+        $five = ModelsFiveYearCalculation::find($id);
+        $five->update([
+            'user_id' => auth()->user()->id,
+            'five_l' => $this->L,
+            'five_m' => $this->M,
+            'five_n' => $this->N,
+            'five_o' => $this->O,
+            'five_p' => $this->P,
+            'five_q' => $this->Q,
+            'five_r' => $this->R,
+            'five_s' => $this->S,
+            'five_t' => $this->T,
+            'five_u' => $this->U,
+            'five_v' => $this->V,
+            'five_w' => $this->W,
+            'five_x' => $this->X,
+            'five_y' => $this->Y,
+            'five_z' => $this->Z,
+            'five_aa' => $this->AA,
+            'five_ab' => $this->AB,
+            'status' => 'complete',
+        ]);
+    }
 }
 

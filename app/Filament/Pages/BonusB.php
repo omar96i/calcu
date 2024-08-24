@@ -404,9 +404,10 @@ class BonusB extends Page
         return $result;
     }
 
+    public $z;
     public function getTimeTotalYears(){
         $result = $this->y / 365.25;
-
+        $this->z = $result;
         return $result;
     }
 
@@ -450,9 +451,10 @@ class BonusB extends Page
         return $result;
     }
 
+    public $ac;
     public function getTCompanyYears(){
         $result = $this->ab / 365.25;
-
+        $this->ac = $result;
         return $result;
     }
 
@@ -831,10 +833,11 @@ class BonusB extends Page
         return $resultado;
     }
 
+    public $au;
     public function getAU(){
         // Calcular el resultado multiplicando los dos valores
         $resultado = $this->am * $this->at;
-
+        $this->au = $resultado;
         return $resultado;
     }
     public $av;
@@ -853,13 +856,57 @@ class BonusB extends Page
         return $year;
     }
 
+    public $ax;
     public function getAX(){
         $Fcal = new DateTime('2022-12-31');
         $valorAW2 = $this->aw;
         $valorAV2 = $this->av;
         $yearFcal = $Fcal->format('Y');
         $resultado = (intval($valorAW2) <= $yearFcal) ? $valorAV2 : 0;
+        $this->ax = $resultado;
         return $resultado;
+    }
+
+    public function updateState($id){
+        $bonus = ModelsBonusB::find($id);
+        $bonus->update([
+            'user_id' => auth()->user()->id,
+            'bonus_b_m' => $this->m,
+            'bonus_b_n' => $this->n,
+            'bonus_b_o' => $this->o,
+            'bonus_b_p' => $this->p,
+            'bonus_b_q' => $this->q,
+            'bonus_b_r' => $this->r,
+            'bonus_b_s' => $this->s,
+            'bonus_b_t' => $this->t,
+            'bonus_b_v' => $this->v,
+            'bonus_b_w' => $this->w,
+            'bonus_b_x' => $this->x,
+            'bonus_b_y' => $this->y,
+            'bonus_b_z' => $this->z,
+            'bonus_b_aa' => $this->aa,
+            'bonus_b_ab' => $this->ab,
+            'bonus_b_ac' => $this->ac,
+            'bonus_b_ad' => $this->ad,
+            'bonus_b_af' => $this->af,
+            'bonus_b_ag' => $this->ag,
+            'bonus_b_ah' => $this->ah,
+            'bonus_b_ai' => $this->ai,
+            'bonus_b_aj' => $this->aj,
+            'bonus_b_ak' => $this->ak,
+            'bonus_b_al' => $this->al,
+            'bonus_b_am' => $this->am,
+            'bonus_b_an' => $this->an,
+            'bonus_b_ao' => $this->ao,
+            'bonus_b_ap' => $this->ap,
+            'bonus_b_aq' => $this->aq,
+            'bonus_b_ar' => $this->ar,
+            'bonus_b_as' => $this->as,
+            'bonus_b_at' => $this->at,
+            'bonus_b_av' => $this->av,
+            'bonus_b_aw' => $this->aw,
+            'bonus_b_ax' => $this->ax,
+        ]);
     }
 
 }

@@ -40,7 +40,7 @@ class CompanyStudies extends Page
     public $studies;
 
     public function mount(){
-        $this->studies = Study::where('user_id', auth()->user()->id)->get();
+        $this->studies = Study::get();
     }
 
     public function getTitle(): string

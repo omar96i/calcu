@@ -30,18 +30,7 @@
                     <th class="px-4 py-2 border">Mesada ISS</th>
                     <th class="px-4 py-2 border">Mesada 14</th>
                     <th class="px-4 py-2 border">Auxilio Escolaridad</th>
-                    <th class="px-4 py-2 border">Fecha de requisitos Pensión RPM</th>
-                    <th class="px-4 py-2 border">Edad Hoy X</th>
-                    <th class="px-4 py-2 border">Edad Pension X</th>
-                    <th class="px-4 py-2 border">Edad Pension Rpm X</th>
-                    <th class="px-4 py-2 border">Edad Pension Y</th>
-                    <th class="px-4 py-2 border">Dx+n/Dx</th>
-                    <th class="px-4 py-2 border">Dx+n y+n/Dxy </th>
-                    <th class="px-4 py-2 border">Renta + Prima 13 Mesadas AK </th> 
-                    <th class="px-4 py-2 border">Mesada 14 (AL)</th> 
-                    <th class="px-4 py-2 border">Auxilio Funerario(AM)</th> 
-                    <th class="px-4 py-2 border">factor x/y (AN)</th> 
-                    
+                    <th class="px-4 py-2 border">Fecha</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,21 +60,20 @@
                         <td class="px-4 py-2 border">{{ $aux->months_to_quote }}</td>
                         <td class="px-4 py-2 border">{{ $aux->funeral_aid }}</td>
                         <td class="px-4 py-2 border">{{ $aux->additional_weeks }}</td>
-                        <td class="px-4 py-2 border">{{ $aux->allowance_iss }}</td>
+                        <td class="px-4 py-2 border">{{ round($aux->allowance_iss) }}</td>
                         <td class="px-4 py-2 border">{{ $aux->allowance_14 }}</td>
                         <td class="px-4 py-2 border">{{ $aux->school_help }}</td>
-                        {{-- <td class="px-4 py-2 border">{{ $aux->date_format }}</td> --}}
+                        <td class="px-4 py-2 border">{{ $aux->date_format }}</td>
                         <td class="px-4 py-2 border">{{ $this->getAD($aux->sex, $aux->pension_situation, $aux->birth_date) }}</td>
                         <td class="px-4 py-2 border">{{ $this->getAE($aux->birth_date) }}</td>
                         <td class="px-4 py-2 border">{{ $this->getAF($aux->pension_class, $aux->birth_date) }}</td>
                         <td class="px-4 py-2 border">{{ $this->getAG($aux->pension_situation, $aux->birth_date) }}</td>
-                         <td class="px-4 py-2 border">{{ $this->getAH($aux->date_of_birth_spouse) }}</td>
+                        <td class="px-4 py-2 border">{{ $this->getAH($aux->date_of_birth_spouse) }}</td>
                         <td class="px-4 py-2 border">{{ $this->getAI($aux->sex, $aux->pension_situation) }}</td>
-                        {{--<td class="px-4 py-2 border">{{ $this->getAJ($aux->sex, $aux->pension_situation, $aux->allowance_iss) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAK($aux->sex, $aux->pension_situation, $aux->allowance_iss) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAL($aux->sex, $aux->pension_situation, $aux->counter_rpm, $aux->allowance_iss) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAN($aux->sex, $aux->pension_class,$aux->causative_state, $aux->counter_rpm) }}</td>
-                        <td class="px-4 py-2 border">{{ $this->getAO($aux->pension_situation,$aux->allowance_iss) }}</td> --}}
+                        <td class="px-4 py-2 border">{{ $this->getAJ($aux->sex, $aux->pension_situation, $aux->allowance_iss) }}</td>
+                        <td class="px-4 py-2 border">{{ round($this->getAK($aux->sex, $aux->pension_situation, $aux->allowance_iss),2) }}</td>
+
+
 
                     </tr>
                 @endforeach

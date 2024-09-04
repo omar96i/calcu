@@ -2,13 +2,16 @@
 
 namespace App\Filament\Pages;
 
+use App\Imports\BonusAImport;
 use App\Models\BonusA as ModelsBonusA;
 use App\Models\DTFP;
 use App\Models\Fac_A;
 use App\Models\GeneralData;
 use App\Models\NationalAverageSalary;
 use Carbon\Carbon;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BonusA extends Page
 {
@@ -25,6 +28,12 @@ class BonusA extends Page
     public $parameters_fb;
     public $parameters_tele;
     public $smn;
+
+    public $file;
+
+    public $loading = false;
+
+    public $page = 'bonus-a';
 
     public function mount()
     {
@@ -48,7 +57,33 @@ class BonusA extends Page
 
     public function getSmn($item_edad_referencia)
     {
-        return $record = NationalAverageSalary::where('age', floor($item_edad_referencia))->first();
+        return $record = NationalAverageSalary::where('age', intval($item_edad_referencia))->first();
+    }
+
+    public function openModal()
+    {
+        $this->dispatch('open-modal', id: 'upload-file');
+    }
+
+    public function setPage($newPage)
+    {
+        $this->page = $newPage;
+    }
+
+    public function importData()
+    {
+
+        if ($this->file) {
+            $this->loading = true;
+            Excel::import(new BonusAImport(), $this->file);
+            Notification::make()
+                ->title('Importación completa')
+                ->success()
+                ->send();
+            $this->dispatch('close-modal', id: 'upload-file');
+            $this->file = null;
+        }
+        $this->loading = false;
     }
 
     public function getAccumulatedDTFP($item_fb)
@@ -126,7 +161,7 @@ class BonusA extends Page
         $bonus_a_at,
         $bonus_a_au,
         $bonus_a_av,
-    ){
+    ) {
         $bonus = ModelsBonusA::find($id);
         $bonus->update([
             'user_id' => auth()->user()->id,

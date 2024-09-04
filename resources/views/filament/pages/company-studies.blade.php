@@ -1,72 +1,114 @@
 <x-filament-panels::page>
     <x-filament::tabs>
-         <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
-            2019
-        </x-filament::tabs.item>
-        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
-            2020
-        </x-filament::tabs.item>
-        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
-            2021
-        </x-filament::tabs.item>
-        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
-            2022
-        </x-filament::tabs.item>
-        <x-filament::tabs.item wire:click="setPage('parametros')" :active="$page === 'parametros'" icon="heroicon-m-clipboard">
-            2023
-        </x-filament::tabs.item>
         <x-filament::tabs.item wire:click="setPage('calculopension')" :active="$page === 'calculopension'" icon="heroicon-m-clipboard">
             Información Base
         </x-filament::tabs.item>
-        <x-filament::tabs.item wire:click="setPage('quinquenio')" :active="$page === 'quinquenio'" icon="heroicon-m-clipboard">
-            Calculo Pension
-        </x-filament::tabs.item>
-
         <x-filament::tabs.item icon="heroicon-m-arrow-up-tray" wire:click="openModal()">
             Importar datos
         </x-filament::tabs.item>
     </x-filament::tabs>
-    @if ($page == 'parametros')
-        {{-- Parametros content --}}
-        <x-filament::section>
-            <x-slot name="heading">
-                Parametros
-            </x-slot>
-
-            {{-- Content --}}
-        </x-filament::section>
-    @endif
-
     @if ($page == 'calculopension')
         {{-- Calculo content --}}
         <x-filament::section>
             <x-slot name="heading">
                 Información Base
             </x-slot>
+            <div class="gap-4">
+                <div>
+                    <label for="">Selecciona el año</label>
+                    <x-filament::input.wrapper>
+                        <x-filament::input.select wire:model.live="year_calculation">
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
+                <div class="mt-3">
+                    <label for="">Calcular?</label>
+                    <x-filament::input.wrapper>
+                        <x-filament::input.select wire:model.live="calcular">
+                            <option value="SI">SI</option>
+                            <option value="NO">NO</option>
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
+                @if ($calcular == 'SI')
+                    <x-filament::fieldset class="mt-3">
+                        <x-slot name="label">
+                            Valores requeridos para calcular
+                        </x-slot>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="mt-3">
+                                <label for="">Parametros</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="parametrosd17" />
+                                </x-filament::input.wrapper>
+                            </div>
+                            <div class="mt-3">
+                                <label for="">SMMLV</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="smmlv" />
+                                </x-filament::input.wrapper>
+                            </div>
+                            <div class="mt-3">
+                                <label for="">K_</label>
 
-            <livewire:studies-table/>
-        </x-filament::section>
-    @endif
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="K_" />
+                                </x-filament::input.wrapper>
+                            </div>
+                            <div class="mt-3">
+                                <label for="">J</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="j" />
+                                </x-filament::input.wrapper>
+                            </div>
+                            <div class="mt-3">
+                                <label for="">JS</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="js" />
+                                </x-filament::input.wrapper>
+                            </div>
+                            <div class="mt-3">
+                                <label for="">JM</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="jm" />
+                                </x-filament::input.wrapper>
+                            </div>
+                            <div class="mt-3">
+                                <label for="">I</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="i" />
+                                </x-filament::input.wrapper>
+                            </div>
+                            <div class="mt-3">
+                                <label for="">TTM</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="text" wire:model.live="TTM" />
+                                </x-filament::input.wrapper>
+                            </div>
+                        </div>
 
-    @if ($page == 'quinquenio')
-        {{-- Quinquenios presentacion content --}}
-        <x-filament::section>
-            <x-slot name="heading">
-                Quinquenios presentacion
-            </x-slot>
+                    </x-filament::fieldset>
+                @endif
 
-            <livewire:company-studie />
-        </x-filament::section>
-    @endif
 
-    @if ($page == 'novedades')
-        {{-- Novedades content --}}
-        <x-filament::section>
-            <x-slot name="heading">
-                Novedades
-            </x-slot>
+            </div>
+            <x-filament::button class="w-full mt-3" icon="heroicon-m-magnifying-glass">
+                    Buscar
+                </x-filament::button>
 
-            {{-- Content --}}
+            {{-- <livewire:studies-table /> --}}
         </x-filament::section>
     @endif
 
@@ -80,10 +122,7 @@
                 Archivo
             </x-slot>
             <x-filament::input.wrapper>
-                <x-filament::input
-                    type="file"
-                    wire:model="file"
-                />
+                <x-filament::input type="file" wire:model="file" />
             </x-filament::input.wrapper>
 
         </x-filament::fieldset>
@@ -98,4 +137,3 @@
         @endif
     </x-filament::modal>
 </x-filament-panels::page>
-

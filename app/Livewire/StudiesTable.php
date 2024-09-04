@@ -38,6 +38,8 @@ class StudiesTable extends Component
 
     public $i = 0.06793;
 
+    public $TTM = 0.0054917;
+
     public $fac_hom = [
         [15, 373.142, 169.4628, 5709080.91, 10006.1950, 15.3000, 14.3000, 15.0389, 14.7030, 14.4604, 13.7500, 209.8722, 194.7662, 0.0268, 15.1060],
         [16, 349.238, 162.2828, 5335938.78, 9836.7322, 15.2788, 14.2788, 15.0172, 14.6816, 14.4396, 13.7296, 209.5700, 194.4856, 0.0282, 15.0844],
@@ -1179,7 +1181,7 @@ class StudiesTable extends Component
     {
         $BH = $this->BH; // Valor de BH
         $BJ = $this->BJ; // Valor de BJ
-        $K_ = 0.04;      // Valor de K_
+        $K_ =$this->K_;      // Valor de K_
 
         // Verifica si G es 4 o 5
         if ($G == 4 || $G == 5) {
@@ -1234,7 +1236,7 @@ class StudiesTable extends Component
     public function getBM($G, $T)
     {
         $BH = $this->BH;  // Valor de BH
-        $K_ = 0.04;       // Valor de K_ (4%)
+        $K_ = $this->K_;       // Valor de K_ (4%)
         $T = floatval($T); // Valor de T
 
         // Calcula el resultado basado en G5
@@ -1421,7 +1423,58 @@ class StudiesTable extends Component
         return $BV + $BW + $BX;
     }
 
-    public function updateState($id){
+    public $BZ;
+
+    public function getBZ($H, $X)
+    {
+        if ($H == 3) {
+            $this->BZ = $X;
+            return $X;
+        } else {
+            $this->BZ = 0;
+            return 0;
+        }
+    }
+
+
+    public function getCA($R)
+    {
+        $BZ = $this->BZ; // Por ejemplo, 20
+        $SMMLV = $this->smmlv; // Salario mínimo legal, por ejemplo
+        $TTM = $this->TTM; // Tasa técnica mensual
+
+        if ($BZ > 0) {
+            $percentage = 0.16;
+
+            if ($R > 4 * $SMMLV) {
+                $percentage += 0.01;
+            }
+
+            if ($R >= 16 * $SMMLV) {
+                $additional_percentage = 0.002 * min(max(intval($R / $SMMLV - 15), 0), 5);
+                $percentage += $additional_percentage;
+            }
+
+            $VA_value = intval(round($this->calculateVA($TTM, $BZ, 1)));
+            $result = $R * $percentage * $VA_value;
+        } else {
+            $result = 0;
+        }
+
+        return $result;
+    }
+
+    function calculateVA($rate, $nper, $pmt, $fv = 0, $type = 0)
+    {
+        if ($rate != 0) {
+            return ($pmt * (1 - pow(1 + $rate, -$nper)) / $rate) + ($fv * pow(1 + $rate, -$nper));
+        } else {
+            return ($pmt * $nper) + $fv;
+        }
+    }
+
+    public function updateState($id)
+    {
         $studio = Study::find($id);
         $studio->update([
             'user_id' => auth()->user()->id,

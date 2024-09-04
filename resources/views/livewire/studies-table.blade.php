@@ -1,4 +1,5 @@
 <div>
+
     <div class="overflow-x-auto">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -125,6 +126,8 @@
                         <td class="px-4 py-2 border">{{ $this->getBW() }}</td> <!--Pendiente de revision-->
                         <td class="px-4 py-2 border">{{ $this->getBX() }}</td>
                         <td class="px-4 py-2 border">{{ $this->getBY() }}</td>
+                        <td class="px-4 py-2 border">{{ $this->getBZ($aux->pension_situation, $aux->months_to_quote) }}</td>
+                        <td class="px-4 py-2 border">{{ $this->getCA($aux->allowance_value) }}</td>
                         @php
                             $this->updateState($aux->id);
                         @endphp

@@ -2,14 +2,16 @@
 
 namespace App\Filament\Pages;
 
+use App\Imports\BonusBImport;
 use App\Models\BonusB as ModelsBonusB;
 use App\Models\DTFP;
 use App\Models\FacB;
 use App\Models\GeneralData;
 use DateInterval;
 use DateTime;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-
+use Maatwebsite\Excel\Facades\Excel;
 class BonusB extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -85,6 +87,12 @@ class BonusB extends Page
     public $ak;
 
     public $al;
+
+    public $file;
+
+    public $loading = false;
+
+    public $page = 'bonus-b';
 
 
 
@@ -174,6 +182,29 @@ class BonusB extends Page
             ['FC' => 'Telenariño', 'Fecha' => '1994-04-01'],
             ['FC' => 'Teletolima', 'Fecha' => '1994-04-01']
         ];
+    }
+
+    public function openModal(){
+        $this->dispatch('open-modal', id: 'upload-file');
+    }
+
+    public function setPage($newPage){
+        $this->page = $newPage;
+    }
+
+    public function importData(){
+
+        if($this->file){
+            $this->loading = true;
+            Excel::import(new BonusBImport(), $this->file);
+            Notification::make()
+                ->title('Importación completa')
+                ->success()
+                ->send();
+            $this->dispatch('close-modal', id: 'upload-file');
+            $this->file = null;
+        }
+        $this->loading = false;
     }
 
     public function getFB($date1, $date2){

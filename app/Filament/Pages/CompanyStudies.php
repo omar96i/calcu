@@ -39,6 +39,26 @@ class CompanyStudies extends Page
 
     public $studies;
 
+    public $parametrosd17 = 0;
+
+    public $smmlv = 1160000;
+
+    public $K_ = 0.04;
+
+    public $j = 0.11064;
+
+    public $js = 0.05387;
+
+    public $jm = 0.00878;
+
+    public $i = 0.06793;
+
+    public $TTM = 0.0054917;
+
+    public $calcular = "NO";
+
+    public $year_calculation = '2023';
+
     public function mount(){
         $this->studies = Study::get();
     }

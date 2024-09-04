@@ -94,6 +94,10 @@ class Study extends Model
         'studies_bw',
         'studies_bx',
         'studies_by',
+        'studies_bz',
+        'studies_baz',
+        'studies_cg',
+        'year'
     ];
 
 

@@ -59,7 +59,7 @@ class StudyImport implements ToModel
             'allowance_iss' => $row[24],
             'allowance_14' => $row[25],
             'school_help' => $row[26],
-            'date_format' => $this->date,
+            'year' => $this->date,
         ]);
     }
 }

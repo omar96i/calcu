@@ -17,7 +17,7 @@
                 <div>
                     <label for="">Selecciona el año</label>
                     <x-filament::input.wrapper>
-                        <x-filament::input.select wire:model.live="year_calculation">
+                        <x-filament::input.select wire:model.live="year_calculation" wire:change="closeTable()">
                             <option value="2019">2019</option>
                             <option value="2020">2020</option>
                             <option value="2021">2021</option>
@@ -104,11 +104,13 @@
 
 
             </div>
-            <x-filament::button class="w-full mt-3" icon="heroicon-m-magnifying-glass">
-                    Buscar
-                </x-filament::button>
+            <x-filament::button class="w-full mt-3" icon="heroicon-m-magnifying-glass" wire:click="showTableFunct()">
+                Buscar
+            </x-filament::button>
+            @if ($showTable)
+                <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_" :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM" :recalcular="$calcular"/>
+            @endif
 
-            {{-- <livewire:studies-table /> --}}
         </x-filament::section>
     @endif
 
@@ -117,6 +119,13 @@
         <x-slot name="heading">
             Importar datos
         </x-slot>
+        <div class="mt-3">
+            <label for="">Año a calcular</label>
+
+            <x-filament::input.wrapper>
+                <x-filament::input type="text" wire:model.live="yeartoimport" />
+            </x-filament::input.wrapper>
+        </div>
         <x-filament::fieldset>
             <x-slot name="label">
                 Archivo

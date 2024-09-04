@@ -59,8 +59,22 @@ class CompanyStudies extends Page
 
     public $year_calculation = '2023';
 
+    public $showTable = false;
+
+    public $yeartoimport;
+
+
     public function mount(){
         $this->studies = Study::get();
+    }
+
+    public function showTableFunct(){
+        $this->showTable = true;
+    }
+
+    public function closeTable(){
+        $this->showTable = false;
+
     }
 
     public function getTitle(): string
@@ -80,7 +94,7 @@ class CompanyStudies extends Page
 
         if($this->file){
             $this->loading = true;
-            Excel::import(new StudyImport($this->date), $this->file);
+            Excel::import(new StudyImport($this->yeartoimport), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()

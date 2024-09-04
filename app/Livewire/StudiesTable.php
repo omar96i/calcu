@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Axy;
+use App\Models\GeneralData;
 use App\Models\Axy_hi_mv;
 use App\Models\Axy_hv_mi;
 use App\Models\Dxy;
@@ -39,6 +40,32 @@ class StudiesTable extends Component
     public $i = 0.06793;
 
     public $TTM = 0.0054917;
+
+    public $recalcular;
+
+    public function mount($fecha, $parametro = false, $smmlv = false, $k = false, $j = false, $js = false, $jm = false, $i = false, $ttm = false, $recalcular){
+        $this->fecha_calculo = $fecha;
+        if($recalcular == 'NO'){
+            $this->parametrosd17 = $parametro;
+            $this->smmlv = $smmlv;
+            $this->K_ = $k;
+            $this->j = $j;
+            $this->js = $js;
+            $this->jm = $jm;
+            $this->i = $i;
+            $this->TTM = $ttm;
+        }
+
+        $this->recalcular = $recalcular;
+    }
+
+    public function render()
+    {
+        $data = Study::with('actuarial_group')
+        ->where('year', $this->fecha_calculo)
+        ->paginate($this->perPage);
+        return view('livewire.studies-table', ['data' => $data]);
+    }
 
     public $fac_hom = [
         [15, 373.142, 169.4628, 5709080.91, 10006.1950, 15.3000, 14.3000, 15.0389, 14.7030, 14.4604, 13.7500, 209.8722, 194.7662, 0.0268, 15.1060],
@@ -240,10 +267,7 @@ class StudiesTable extends Component
 
 
 
-    public function render()
-    {
-        return view('livewire.studies-table', ['data' => Study::with('actuarial_group')->paginate($this->perPage)]);
-    }
+
 
     public $AD;
 
@@ -1181,7 +1205,7 @@ class StudiesTable extends Component
     {
         $BH = $this->BH; // Valor de BH
         $BJ = $this->BJ; // Valor de BJ
-        $K_ =$this->K_;      // Valor de K_
+        $K_ = $this->K_;      // Valor de K_
 
         // Verifica si G es 4 o 5
         if ($G == 4 || $G == 5) {
@@ -1424,17 +1448,59 @@ class StudiesTable extends Component
     }
 
     public $BZ;
-
     public function getBZ($H, $X)
     {
+
+        // Verificar si $H es igual a 3
         if ($H == 3) {
             $this->BZ = $X;
-            return $X;
+            return $X; // Retorna $X si $H es igual a 3
         } else {
             $this->BZ = 0;
-            return 0;
+            return 0; // Retorna 0 si $H no es igual a 3
         }
     }
+
+    public $BAZ;
+
+    public function getBAZ($R)
+
+    {
+        $BZ = $this->BZ; // Por ejemplo, 20
+        $SMMLV = $this->smmlv; // Salario mínimo legal, por ejemplo
+        $TTM = $this->TTM; // Tasa técnica mensual
+
+        if ($BZ > 0) {
+            $percentage = 0.16;
+
+            if ($R > 4 * $SMMLV) {
+                $percentage += 0.01;
+            }
+
+            if ($R >= 16 * $SMMLV) {
+                $additional_percentage = 0.002 * min(max(intval($R / $SMMLV - 15), 0), 5);
+                $percentage += $additional_percentage;
+            }
+
+            $VA_value = intval(round($this->calculateVA($TTM, $BZ, 1)));
+            $result = $R * $percentage * $VA_value;
+        } else {
+            $result = 0;
+        }
+        $this->BAZ = $result;
+        return $result;
+    }
+    public $CG;
+
+    public function getCG($Q, $R, $S, $T, $U, $V, $AB)
+    {
+        $resultado = ($R + $S) * $V + 0 * 12 + 0 + $AB + $Q * 0.16 * 12;
+
+        $this->CG = $resultado;
+        return $resultado;
+    }
+
+
 
 
     public function getCA($R)
@@ -1526,6 +1592,9 @@ class StudiesTable extends Component
             'studies_bw' => $this->BW,
             'studies_bx' => $this->BX,
             'studies_by' => $this->BY,
+            'studies_bz' => $this->BZ,
+            'studies_baz' => $this->BAZ,
+            'studies_cg' => $this->CG,
         ]);
     }
 }

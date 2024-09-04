@@ -2,14 +2,19 @@
 
 namespace App\Livewire;
 
+use App\Models\Axy;
+use App\Models\GeneralData;
+use App\Models\Axy_hi_mv;
+use App\Models\Axy_hv_mi;
+use App\Models\Dxy;
+use App\Models\Fach_inv;
+use App\Models\Facm_inv;
 use App\Models\Study;
 use App\Models\Table;
 use Carbon\Carbon;
 use DateTime;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Log;
-
 
 class StudiesTable extends Component
 {
@@ -264,9 +269,9 @@ class StudiesTable extends Component
             $result = $result->format('Y-m-d');
 
             // Actualizar el campo $AD con el resultado calculado
-            $this->AD = $result;
+
         }
-        
+        $this->AD = $result;
         return $result;
     }
 
@@ -373,596 +378,1174 @@ class StudiesTable extends Component
         // Inicializar la variable de resultado
         $result = 0;
 
-    // Verificar si $L es mayor a 0
-    if ($L->isAfter(Carbon::create(0))) {
-        $days_difference = $fecha_calculo->diffInDays($L) + 1;
-        $result = floor(($days_difference / $Dias_año) + 0.5);
+        // Verificar si $L es mayor a 0
+        if ($L->isAfter(Carbon::create(0))) {
+            $days_difference = $fecha_calculo->diffInDays($L) + 1;
+            $result = floor(($days_difference / $Dias_año) + 0.5);
+        }
+        $this->AH = $result + 1;
+        return $result + 1;
     }
 
-    // Sumar 1 año al resultado final
-    $result += 1;
-
-    $this->AH = $result;
-    return $result;
-}
-    // public $AI;
-    // public function getAI($F, $H){
-    //      //Verificar si H es igual a 3
-    //      if ($H == 3) {
-    //         // Verificar si AG es mayor que 0
-    //         if ($this->AG > 0) {
-    //             // Obtener el valor máximo entre AE y AG
-    //             $maxValue = max($this->AE, $this->AG);
-                
-    //             // Realizar la búsqueda en la tabla Fac_hom o Fac_muj según el valor de F
-    //             $tabla = $F == 1 ? Fac_hom::class : Fac_muj::class;
-
-    //             // Buscar los valores en la tabla seleccionada
-    //             $valorMax = $this->buscarValor($tabla, $maxValue);
-    //             $valorAE = $this->buscarValor($tabla, $this->AE);
-
-    //             // Calcular el factor
-    //             if ($valorAE != 0) {
-    //                 $factor = $valorMax / $valorAE;
-    //                 return $factor;
-    //             }
-    //         }
-    //     }
-    //     return 0;
-    // }
-
-    // // Función pública para buscar un valor en la tabla especificada
-    // private function buscarValor($tabla, $valor)
-    // {
-    //     // Obtener el nombre del campo en la tabla basado en el índice 2
-    //     $campo = $this->obtenerCampoPorIndice(2);
-
-    //     // Verificar que el campo existe en la tabla
-    //     if (!$campo || !in_array($campo, $this->getColumnNames($tabla))) {
-    //         Log::error("Campo '{$campo}' no encontrado en la tabla {$tabla}");
-    //         return 0;
-    //     }
-
-    //     // Buscar el valor en la tabla
-    //     $record = $tabla::where($campo, $valor)->first();
-
-    //     // Verificar si el registro existe
-    //     if ($record) {
-    //         // Retornar el valor del campo encontrado
-    //         return $record->$campo;
-    //     }
-
-    //     return 0; // Valor por defecto si no se encuentra
-    // }
-
-    // // Función para obtener los nombres de las columnas de una tabla
-    // private function getColumnNames($modelo)
-    // {
-    //     // Obtener el nombre de la tabla del modelo
-    //     $tabla = (new $modelo)->getTable();
-
-    //     // Obtener las columnas de la tabla
-    //     return \Schema::getColumnListing($tabla);
-    // }
-
-    // // Función pública para obtener el nombre del campo en la base de datos
-    // private function obtenerCampoPorIndice($indice)
-    // {
-    //     $camposFacHom = [
-    //         'Fac_hom_a', 'Fac_hom_b', 'Fac_hom_c', 'Fac_hom_d', 'Fac_hom_e',
-    //         'Fac_hom_f', 'Fac_hom_g', 'Fac_hom_h', 'Fac_hom_i', 'Fac_hom_j',
-    //         'Fac_hom_k', 'Fac_hom_l', 'Fac_hom_m', 'Fac_hom_n', 'Fac_hom_o',
-    //     ];
-
-    //     $camposFacMuj = [
-    //         'Fac_muj_a', 'Fac_muj_b', 'Fac_muj_c', 'Fac_muj_d', 'Fac_muj_e',
-    //         'Fac_muj_f', 'Fac_muj_g', 'Fac_muj_h', 'Fac_muj_i', 'Fac_muj_j',
-    //         'Fac_muj_k', 'Fac_muj_l', 'Fac_muj_m', 'Fac_muj_n', 'Fac_muj_o',
-    //     ];
-
-    //     // Seleccionar el campo basado en el índice
-    //     if ($indice >= 1 && $indice <= count($camposFacHom)) {
-    //         return $camposFacHom[$indice - 1];
-    //     } elseif ($indice >= 1 && $indice <= count($camposFacMuj)) {
-    //         return $camposFacMuj[$indice - 1];
-    //     }
-
-    //     return null; // Valor por defecto si el índice no es válido
-    // }
-
-
-
-
     public $AI;
-
     public function getAI($F, $H)
     {
         $AE = $this->AE;
         $AG = $this->AG;
-    
-        // Obtener el valor máximo entre AE y AG
+
         $maxValue = max($AE, $AG);
-    
-        // Verificar si H es igual a 3 y AG es mayor que 0
-        if ($H == 3 && $AG > 0) {
-            // Seleccionar el modelo basado en F
-            $facArray = $F == 1 ? $this->fac_hom : $this->fac_muj;
-    
-            // Calcular el factor usando la función buscarValor
-            $factor = $this->calcularFactor($facArray, $maxValue, $AE);
-    
-            // Asignar el valor calculado a $AI
-            $this->AI = $factor;
-            return $factor;
+
+        // Función para buscar el valor en el array dado un número
+
+
+        // Obtener el factor basado en F y H
+        if ($H == 3) {
+            if ($AG > 0) {
+                $factor = $F == 1
+                    ? $this->buscarValor($this->fac_hom, $maxValue) / $this->buscarValor($this->fac_hom, $AE)
+                    : $this->buscarValor($this->fac_muj, $maxValue) / $this->buscarValor($this->fac_muj, $AE);
+
+
+                $this->AI = round($factor, 4);
+                return round($factor, 4);
+            }
         }
-    
-        // Asignar 0 a $AI y retornarlo si no se cumple la condición
         $this->AI = 0;
         return 0;
     }
 
-    // Método público para calcular el factor usando buscarValor
-    private function calcularFactor($array, $maxValue, $AE)
+    public function buscarValor($array, $numero)
     {
-        // Buscar valores en el array
-        $maxValueInArray = $this->buscarValor($array, $maxValue);
-        $AEInArray = $this->buscarValor($array, $AE);
-
-        // Asegurarse de que los valores obtenidos son numéricos
-        if (is_numeric($maxValueInArray) && is_numeric($AEInArray) && $AEInArray != 0) {
-            return $maxValueInArray / $AEInArray;
-        }
-
-        return 0;
-    }
-
-    // Método público para buscar un valor en el array dado un número
-    private function buscarValor($array, $numero)
-    {
-        foreach ($array as $key => $value) {
-            if ($numero <= $key) {
-                // Verificar que $value es un número
-                if (is_numeric($value)) {
-                    return $value;
-                } 
+        foreach ($array as $fila) {
+            if ($fila[0] == $numero) {
+                return $fila[1]; // Ajusta el índice según la columna deseada
             }
         }
-
-        // Loggear advertencia si no se encuentra una coincidencia
-        Log::warning("No se encontró un valor para el número {$numero}");
-
-        // Valor predeterminado si no se encuentra una coincidencia
-        return 1;
+        return null; // Valor no encontrado
     }
 
     public $AJ;
 
-    public function getAJ($F, $H, $AA){
-        // Convertir $AD en una instancia de Carbon
-        $fechaAD = Carbon::parse($this->AD);
-
+    public function getAJ($F, $H, $AA)
+    {
+        $AD = $this->AD;
+        $AE = $this->AE;
+        $AG = $this->AG;
+        $AH = $this->AH;
+        $AA = intval($AA);
         if ($H == 3) {
-            if ($AA > 0 && $fechaAD->isPast()) {
-                $maxValue = max($this->AG, $this->AE);
-                $diferencia = max(0, $this->AG - $this->AE);
-                $indice = $this->AH + $diferencia - 13;
 
-                if ($F == 1) {
-                    $valorMax = $this->buscarValorEnDxy($maxValue, $indice, 'v');
-                    $valorAE = $this->buscarValorEnDxy($this->AE, $this->AH - 13, 'v');
-                    return $valorMax / $valorAE;
-                } else {
-                    $valorMax = $this->buscarValorEnDxy($maxValue, $indice, 'h');
-                    $valorAE = $this->buscarValorEnDxy($this->AE, $this->AH - 13, 'h');
-                    return $valorMax / $valorAE;
+            if ($AA > 0 && !empty($AD)) {
+                $maxAEAG = max($AE, $AG);
+                $diffAGAE = max(0, $AG - $AE);
+
+                // Ajuste para la búsqueda en la columna correcta
+                $columnaMax = $AH + $diffAGAE - 13; // Ajuste -13 en vez de -15
+                $columnaAE = $AH - 13; // Ajuste -13 en vez de -15
+
+                // Verificamos que las columnas sean válidas
+                if ($columnaMax > 0 && $columnaAE > 0) {
+                    if ($F == 1) {
+                        $valor_max = $this->buscarEnDxy(intval($maxAEAG), intval($columnaMax));
+                        $valor_AE = $this->buscarEnDxy(intval($AE), intval($columnaAE));
+                    } else {
+                        $valor_max = $this->buscarEnDxyHorizontal(intval($maxAEAG), intval($columnaMax));
+                        $valor_AE = $this->buscarEnDxyHorizontal(intval($AE), intval($columnaAE));
+                    }
+
+                    // Evitamos división por cero
+                    if ($valor_AE !== null && $valor_AE != 0) {
+                        $this->AJ = round($valor_max / $valor_AE, 4);
+                        return round($valor_max / $valor_AE, 4);
+                    } else {
+                        $this->AJ = 0;
+                        return 0;
+                    }
                 }
             }
         }
+        $this->AJ = 0;
         return 0;
     }
 
-    // Función pública para buscar valores en el modelo Dxy
-    public function buscarValorEnDxy($valor, $indice, $tipo)
+    private function buscarEnDxy($valor, $columna)
     {
-        $campo = $this->obtenerCampoPorIndiceee($indice);
-
-        $dxy = Dxy::where($tipo == 'v' ? 'id' : $campo, $valor)
-                    ->first();
-
-        if ($dxy && isset($dxy->$campo)) {
-            return $dxy->$campo;
-        }
-
-        return 1; // Valor predeterminado si no se encuentra
+        // Convierte el número de columna a letras
+        $column = 'dxy_' . $this->numeroACadenaColumna($columna);
+        return Dxy::where('dxy_a', $valor)->value($column);
     }
 
-    // Función pública para obtener el nombre del campo en la base de datos
-    public function obtenerCampoPorIndiceee($indice)
+
+    private function buscarEnDxyHorizontal($valor, $columna)
     {
-        $letras = range('a', 'z');
-        if ($indice <= 26) {
-            return 'dxy_' . $letras[$indice - 1];
-        } else {
-            $primeraLetra = $letras[floor(($indice - 1) / 26)];
-            $segundaLetra = $letras[($indice - 1) % 26];
-            return 'dxy_' . $primeraLetra . $segundaLetra;
-        }
+        $column = 'dxy_' . $this->numeroACadenaColumna($columna);
+        return Dxy::where($column, $valor)->value('dxy_a');
     }
 
-    
+    function numeroACadenaColumna($numero)
+    {
+        $letras = '';
+        while ($numero > 0) {
+            $numero--;
+            $letras = chr($numero % 26 + 65) . $letras;
+            $numero = intdiv($numero, 26);
+        }
+        return strtolower($letras); // Devuelve en minúsculas
+    }
+
     public $AK;
-
     public function getAK($F, $H, $AA)
-{
-    // Convertir $AD a una instancia de Carbon
-    $fechaAD = Carbon::parse($this->AD);
+    {
+        // Convertimos AA a un número entero
+        $AA = intval($AA);
 
-    // Verificar la condición para aplicar el cálculo
-    if ($AA > 0 && $fechaAD->isToday() && $H == 3) {
-        // Obtener el valor usando la búsqueda vertical
-        $valorBuscado = $this->buscarValorEnTabla($this->AG, $F);
+        // Asumimos que $AD, $AG, $AI y $parametrosd17 ya están definidos en la clase
+        $AD = $this->AD;
+        $AG = intval($this->AG);
+        $AI = $this->AI;
+        $parametrosd17 = $this->parametrosd17;
 
-        // Calcular el resultado
-        $resultado = $valorBuscado * $this->AI * $AA;
-
-        // Asignar el resultado a $AK
-        $this->AK = $resultado;
-
-        return $resultado;
-    }
-
-    // Asignar 0 a $AK si no se cumple la condición
-    $this->AK = 0;
-    return 0;
-}
-
-// Función pública para buscar el valor en el modelo adecuado
-public function buscarValorEnTabla($valor, $F)
-{
-    // Determinar el modelo basado en F
-    $modelClass = $F == 1 ? Fac_hom::class : Fac_muj::class;
-    $campo = $this->obtenerCampoPorIndicee(13, $F); // Cambia el índice según sea necesario
-
-    if ($campo === null) {
-        Log::error("Campo no válido para índice 13 en el modelo {$modelClass}.");
-        return 0;
-    }
-
-    // Obtener una instancia del modelo
-    $modelInstance = new $modelClass;
-
-    // Verificar si el campo existe en el modelo
-    if (!in_array($campo, $modelInstance->getFillable())) {
-        Log::error("El campo {$campo} no existe en el modelo {$modelClass}.");
-        return 0; // Valor por defecto si el campo no existe
-    }
-
-    // Realizar la búsqueda en el modelo correspondiente
-    $record = $modelClass::where($campo, $valor)->first();
-
-    // Verificar si el registro existe y si el campo es accesible
-    if ($record && $record->hasAttribute($campo)) {
-        return $record->$campo;
-    }
-
-    Log::warning("No se encontró el valor {$valor} para el campo {$campo} en el modelo {$modelClass}.");
-    return 0; // Valor por defecto si no se encuentra
-}
-
-// Función pública para obtener el nombre del campo en la base de datos
-public function obtenerCampoPorIndicee($indice, $F)
-{
-    $campos = [
-        Fac_hom::class => [
-            'Fac_hom_a', 'Fac_hom_b', 'Fac_hom_c', 'Fac_hom_d', 'Fac_hom_e',
-            'Fac_hom_f', 'Fac_hom_g', 'Fac_hom_h', 'Fac_hom_i', 'Fac_hom_j',
-            'Fac_hom_k', 'Fac_hom_l', 'Fac_hom_m', 'Fac_hom_n', 'Fac_hom_o',
-        ],
-        Fac_muj::class => [
-            'Fac_muj_a', 'Fac_muj_b', 'Fac_muj_c', 'Fac_muj_d', 'Fac_muj_e',
-            'Fac_muj_f', 'Fac_muj_g', 'Fac_muj_h', 'Fac_muj_i', 'Fac_muj_j',
-            'Fac_muj_k', 'Fac_muj_l', 'Fac_muj_m', 'Fac_muj_n', 'Fac_muj_o',
-        ]
-    ];
-
-    // Obtener el modelo basado en el parámetro $F
-    $modelClass = $F == 1 ? Fac_hom::class : Fac_muj::class;
-
-    // Seleccionar el campo basado en el índice
-    if (isset($campos[$modelClass]) && $indice >= 1 && $indice <= count($campos[$modelClass])) {
-        return $campos[$modelClass][$indice - 1];
-    }
-
-    // Loggear advertencia si el índice no es válido
-    Log::error("Índice no válido: {$indice} para el modelo {$modelClass}.");
-    return null; // Valor por defecto si el índice no es válido
-}
-
-    public $AL;
-
-    public function getAL($F, $H, $W, $AA){
-        // Convertir $AD a una instancia de Carbon
-        $fechaAD = Carbon::parse($this->AD);
-        
-        // Porcentaje ajustado (0% convertido a decimal es 0)
-        $parametrosD17 = 0; 
-
-        // Verificar las condiciones AA > 0, AD > 0 y W = 14
-        if ($AA > 0 && $fechaAD->isToday() && $W == 14) {
-            // Verificar si H es igual a 3
+        // Verificamos la condición inicial
+        if ($AA > 0 && !empty($AD)) {
+            // Verificamos si H es igual a 3
             if ($H == 3) {
-                // Obtener el valor usando la búsqueda vertical
-                $valorBuscado = $this->buscarValorEnTabla($this->AG, $F);
-                
-                // Calcular el resultado
-                $resultado = $valorBuscado * $this->AI * $AA * (1 + $parametrosD17);
-                
-                // Asignar el resultado a $AK
-                $this->AK = $resultado;
-                
-                return $resultado;
+                // Seleccionamos el array correcto basado en F
+                $arraySeleccionado = ($F == 1) ? $this->fac_hom : $this->fac_muj;
+
+                // Buscamos el valor en la columna 13 del array seleccionado
+                $valorBuscado = $this->buscarV($AG, $arraySeleccionado, 13);
+
+                // Si se encuentra el valor, realizamos la operación
+                if ($valorBuscado !== null) {
+                    $this->AK = intval($valorBuscado * $AI * $AA * (1 + $parametrosd17));
+                    return intval($valorBuscado * $AI * $AA * (1 + $parametrosd17));
+                }
             }
         }
-        
-        // Asignar 0 a $AK si no se cumple la condición
+
+        // Si alguna condición no se cumple, devolvemos 0
         $this->AK = 0;
         return 0;
     }
 
-    // Función pública para buscar el valor en el modelo adecuado
-    public function buscarValorEnTablaL($valor, $F)
+    private function buscarV($valor, $array, $columna)
     {
-        // Determinar el modelo y el campo basado en F
-        $model = $F == 1 ? Fac_hom::class : Fac_muj::class;
-        $campo = $this->obtenerCampoPorIndiceL(15); // Cambia el índice según sea necesario
-
-        if ($campo === null) {
-            Log::error("Campo no válido para índice 15.");
-            return 0;
+        foreach ($array as $fila) {
+            if ($fila[0] == $valor) {
+                return $fila[$columna - 1];
+            }
         }
-
-        // Realizar la búsqueda en el modelo correspondiente
-        $record = $model::where($campo, $valor)->first();
-
-        // Verificar si el registro existe
-        if ($record && isset($record->$campo)) {
-            return $record->$campo;
-        }
-
-        Log::warning("No se encontró el valor para {$valor} en el campo {$campo}.");
-        return 0; // Valor por defecto si no se encuentra
+        return null;
     }
 
-    // Función pública para obtener el nombre del campo en la base de datos
-    public function obtenerCampoPorIndiceL($indice)
+    public $AL;
+
+    public function getAL($F, $W, $AA)
     {
-        $camposFacHom = [
-            'Fac_hom_a', 'Fac_hom_b', 'Fac_hom_c', 'Fac_hom_d', 'Fac_hom_e',
-            'Fac_hom_f', 'Fac_hom_g', 'Fac_hom_h', 'Fac_hom_i', 'Fac_hom_j',
-            'Fac_hom_k', 'Fac_hom_l', 'Fac_hom_m', 'Fac_hom_n', 'Fac_hom_o',
-        ];
+        // Definimos las variables locales
+        $AD = $this->AD;
+        $AG = intval($this->AG);
+        $AI = $this->AI;
+        $parametros17 = $this->parametrosd17;
+        $AA = intval($AA);
 
-        $camposFacMuj = [
-            'Fac_muj_a', 'Fac_muj_b', 'Fac_muj_c', 'Fac_muj_d', 'Fac_muj_e',
-            'Fac_muj_f', 'Fac_muj_g', 'Fac_muj_h', 'Fac_muj_i', 'Fac_muj_j',
-            'Fac_muj_k', 'Fac_muj_l', 'Fac_muj_m', 'Fac_muj_n', 'Fac_muj_o',
-        ];
+        // Verificamos la condición inicial
+        if ($AA > 0 && !empty($AD) && $W == 14) {
+            // Seleccionamos el array correcto basado en F
+            $arraySeleccionado = ($F == 1) ? $this->fac_hom : $this->fac_muj;
 
-        // Seleccionar el campo basado en el índice
-        if ($indice >= 1 && $indice <= count($camposFacHom)) {
-            return $camposFacHom[$indice - 1];
-        } elseif ($indice >= 1 && $indice <= count($camposFacMuj)) {
-            return $camposFacMuj[$indice - 1];
+            // Buscamos el valor en la columna 15 del array seleccionado
+            $valorBuscado = $this->buscarV($AG, $arraySeleccionado, 15);
+
+            // Si se encuentra el valor, realizamos la operación
+            if ($valorBuscado !== null) {
+                $this->AL = $valorBuscado * $AI * $AA * (1 + $parametros17);
+                return $valorBuscado * $AI * $AA * (1 + $parametros17);
+            }
         }
 
-        // Loggear advertencia si el índice no es válido
-        Log::error("Índice no válido: {$indice}");
-        return null; // Valor por defecto si el índice no es válido
-    }
-
-    public $AM;
-
-public function getAM($F, $G, $H, $AA)
-{
-    // Convertir $AD a una instancia de Carbon
-    $fechaAD = Carbon::parse($this->AD);
-
-    // Verificar condiciones básicas
-    if ($AA > 0 && $fechaAD->isToday()) {
-        // Verificar si G no es 4 o 5
-        if ($G != 4 && $G != 5) {
-            // Verificar si H es 2 o 3
-            $condicionH = ($H == 2 || $H == 3) ? 1 : 0;
-
-            // Obtener el valor usando la búsqueda vertical
-            $valorBuscado = $this->buscarValorEnTablaM($F, $this->AE);
-
-            // Obtener el salario mínimo del modelo GeneralData para el año 2023
-            $smmlv = GeneralData::where('calculation_year', 2023)
-                                ->value('minimum_salary');
-
-            // Asegurarse de que $smmlv tenga un valor predeterminado si no se encuentra
-            $smmlv = $smmlv ?? 0;
-
-            // Calcular el valor máximo permitido
-            $maximoPermitido = max($smmlv * 5, min($smmlv * 10, $AA));
-
-            // Calcular el resultado
-            return $condicionH * $valorBuscado * $maximoPermitido;
-        }
-    }
-
-    return 0;
-}
-
-// Función pública para buscar el valor en el modelo adecuado
-public function buscarValorEnTablaM($F, $valor)
-{
-    // Determinar el modelo y el campo basado en F
-    $modelClass = $F == 1 ? Fac_hom::class : Fac_muj::class;
-    $campo = $this->obtenerCampoPorIndiceeM(14); // Cambia el índice según sea necesario
-
-    if ($campo === null) {
+        // Si alguna condición no se cumple o ocurre un error, devolvemos 0
+        $this->AL = 0;
         return 0;
     }
 
-    // Realizar la búsqueda en el modelo correspondiente
-    $record = $modelClass::where($campo, $valor)->first();
+    public $AM;
+    public function getAM($F, $G, $H, $AA)
+    {
+        $AA = intval($AA);
+        $AD = $this->AD;
+        $AE = intval($this->AE);
+        $smmlv = $this->smmlv;
 
-    // Verificar si el registro existe y si el campo es accesible
-    return $record && isset($record->$campo) ? $record->$campo : 0;
-}
+        // Verificar las condiciones iniciales
+        if ($AA > 0 && !empty($AD)) {
+            // Verificar las condiciones adicionales
+            if (($G != 4 && $G != 5) && ($H == 2 || $H == 3)) {
+                // Seleccionar el array correcto basado en F
+                $arraySeleccionado = ($F == 1) ? $this->fac_hom : $this->fac_muj;
 
-// Función pública para obtener el nombre del campo en la base de datos
-public function obtenerCampoPorIndiceeM($indice, $F)
-{
-    $campos = [
-        Fac_hom::class => [
-            'Fac_hom_a', 'Fac_hom_b', 'Fac_hom_c', 'Fac_hom_d', 'Fac_hom_e',
-            'Fac_hom_f', 'Fac_hom_g', 'Fac_hom_h', 'Fac_hom_i', 'Fac_hom_j',
-            'Fac_hom_k', 'Fac_hom_l', 'Fac_hom_m', 'Fac_hom_n', 'Fac_hom_o',
-        ],
-        Fac_muj::class => [
-            'Fac_muj_a', 'Fac_muj_b', 'Fac_muj_c', 'Fac_muj_d', 'Fac_muj_e',
-            'Fac_muj_f', 'Fac_muj_g', 'Fac_muj_h', 'Fac_muj_i', 'Fac_muj_j',
-            'Fac_muj_k', 'Fac_muj_l', 'Fac_muj_m', 'Fac_muj_n', 'Fac_muj_o',
-        ]
-    ];
+                // Buscar el valor en la columna 14 del array seleccionado
+                $valorBuscado = $this->buscarV($AE, $arraySeleccionado, 14);
 
-    // Determinar el modelo actual basado en F
-    $modelClass = $F == 1 ? Fac_hom::class : Fac_muj::class;
+                // Calcular el valor del SMMLV
+                $valorSMMLV = max($smmlv * 5, min($smmlv * 10, $AA));
 
-    // Depuración
-    Log::info("Modelo: {$modelClass}, Índice: {$indice}");
+                // Si se encuentra el valor, realizar la operación
+                if ($valorBuscado !== null) {
+                    $this->AM = $valorBuscado * $valorSMMLV;
+                    return $valorBuscado * $valorSMMLV;
+                }
+            }
+        }
 
-    // Seleccionar el campo basado en el índice
-    if (isset($campos[$modelClass]) && $indice >= 1 && $indice <= count($campos[$modelClass])) {
-        return $campos[$modelClass][$indice - 1];
+        // Si alguna condición no se cumple o ocurre un error, devolver 0
+        $this->AM = 0;
+        return 0;
     }
 
-    // Depuración
-    Log::error("Índice no válido: {$indice} para el modelo {$modelClass}.");
-    return null; // Valor por defecto si el índice no es válido
-}
+    public $AN;
+    public function getAN($F, $G, $K, $W)
+    {
+        $AD = $this->AD;
+        $AE = intval($this->AE);
+        $AH = intval($this->AH);
 
-public $AN;
-public $F;
-public function getAN($F, $G, $K, $W)
-{
-    // Convertir $AD a una instancia de Carbon
-    $fechaAD = Carbon::parse($this->AD);
+        if ($W > 0 && $AD > 0) {
+            if ($G == 4 || $G == 5) {
+                return 0;
+            }
 
-    // Verificar las condiciones
-    if ($W > 0 && $fechaAD->gt(Carbon::now()->startOfDay())) {
+            // Selección del array correcto basado en F
+            $arraySeleccionado = ($F == 1) ? $this->fac_muj : $this->fac_hom;
+
+            // Buscar el valor en la columna 7 del array seleccionado
+            $valorBuscado = $this->buscarV($AH, $arraySeleccionado, 7);
+
+            // Ajuste de columna para la búsqueda en Axy
+            $columnaAjustada = $AH - 13; // Ajuste -13
+
+            if ($F == 1) {
+                if ($K == 1) {
+                    $valorK = $this->buscarEnAxy($AE, $columnaAjustada);
+                } else {
+                    $valorK = $this->buscarEnAxyHiMv($AE, $columnaAjustada);
+                }
+            } else {
+                if ($K == 1) {
+                    $valorK = $this->buscarEnAxy($AE, $columnaAjustada);
+                } else {
+                    $valorK = $this->buscarEnAxyHvMi($AE, $columnaAjustada);
+                }
+            }
+
+            // Calcular el resultado final
+            if ($valorBuscado !== null && $valorK !== null) {
+                $this->AN = round($valorBuscado - $valorK, 4);
+                return round($valorBuscado - $valorK, 5);
+            }
+        }
+        $this->AN = 0;
+        return 0;
+    }
+
+    private function buscarEnAxy($valor, $columna)
+    {
+        $column = 'axy_' . $this->numeroACadenaColumna($columna);
+        return Axy::where('axy_a', $valor)->value($column);
+    }
+
+    private function buscarEnAxyHiMv($valor, $columna)
+    {
+        $column = 'axy_hi_mv_' . $this->numeroACadenaColumna($columna);
+        return Axy_hi_mv::where('axy_hi_mv_a', $valor)->value($column);
+    }
+
+    private function buscarEnAxyHvMi($valor, $columna)
+    {
+        $column = 'axy_hv_mi_' . $this->numeroACadenaColumna($columna);
+        return Axy_hv_mi::where('axy_hv_mi_a', $valor)->value($column);
+    }
+
+    public $AO;
+    public function getAO($H, $AA)
+    {
+        $AJ = $this->AJ; // 1
+        $AN = $this->AN; // 3.15653
+        $parametros17 = $this->parametrosd17; // Por ejemplo, 0.05 para 5%
+        $AA = intval($AA); // 2342057
+
+        // Convertir el porcentaje K_ a decimal
+        $K_ = 0.04; // 4%
+
+        // Condición inicial
+        $condicionInicial = ($H == 3) ? 1 : 0;
+
+        // Calcular el factor multiplicador
+        $factorMultiplicador = 12 * (1 + (11 / 24) * $K_) + 1;
+
+        // Calcular el resultado final
+        $resultado = $condicionInicial * $factorMultiplicador * $AA * $AN * (1 + $parametros17) * $AJ;
+
+        $this->AO = $resultado;
+        return $resultado;
+    }
+
+    public $AP;
+    public function getAP()
+    {
+        // Valores de ejemplo (ajustar según la realidad de tu aplicación)
+        $K_ = $this->K_; // Por ejemplo, 0.04 (4%)
+        $AN = $this->AN; // Por ejemplo, 3.15653
+
+        // Cálculo de acuerdo con la fórmula
+        $resultado = (1 + (1 / 4) * $K_) * $AN * 2 - $AN;
+        $this->AP = $resultado;
+        return $resultado;
+    }
+
+    public $AQ;
+    public function getAQ($G, $W, $AA)
+    {
+        $AA = intval($AA);
+        $AJ = $this->AJ;
+        $AP = $this->AP;
+        $parametros17 = $this->parametrosd17;
+
+        // Verificar la condición
+        $condicion = ($G == 4 || $G == 5 || $W == 13) ? 0 : 1;
+
+        // Calcular el resultado
+        $resultado = $condicion * $AA * $AP * (1 + $parametros17) * $AJ;
+        $this->AQ = $resultado;
+        return $resultado;
+    }
+
+    public $AR;
+    public function getAR()
+    {
+        $AO = $this->AO;
+        $AK = $this->AK;
+
+        $resultado = $AK + $AO;
+        $this->AR = intval($resultado);
+        return intval($resultado);
+    }
+
+    public $AS;
+    public function getAS()
+    {
+        $AL = $this->AL;
+        $AQ = $this->AQ;
+
+        $resultado = $AL + $AQ;
+        $this->AS = $resultado;
+        return $resultado;
+    }
+
+    public $AT;
+    public function getAT()
+    {
+        $this->AT = $this->AM;
+        return $this->AT;
+    }
+
+    public $AU;
+    public function getAU($G, $J)
+    {
+        if ($G != 6) {
+            $this->AU = "Inmediata";
+            return "Inmediata";
+        } else {
+            if (is_string($J)) {
+                $J = new DateTime($J);
+            }
+
+            $daysToAdd = 55 * 365.25;
+            $J->modify("+{$daysToAdd} days");
+
+            $this->AU = $J->format('Y-m-d');
+            return $J->format('Y-m-d');
+        }
+    }
+
+    public $AV;
+    public function getAV($F, $G, $J)
+    {
+        if ($G <= 4) {
+            $this->AV = "Vitalicia";
+            return "Vitalicia";
+        } elseif ($J > 0) {
+            // Convertir $J a un objeto DateTime si es necesario
+            if (is_string($J)) {
+                $J = new DateTime($J);
+            }
+
+            if ($G == 5) {
+                // Añadir 25 años (365.25 días por año)
+                $daysToAdd = 25 * 365.25;
+                $J->modify("+{$daysToAdd} days");
+            } else {
+                // Añadir años según el valor de $F (365.25 días por año)
+                $yearsToAdd = ($F == 1) ? 62 : 57;
+                $daysToAdd = $yearsToAdd * 365.25;
+                $J->modify("+{$daysToAdd} days");
+            }
+
+            // Devolver la fecha modificada en formato adecuado
+            $this->AV = $J->format('Y-m-d');
+            return $J->format('Y-m-d');
+        }
+        $this->AV = '';
+        return null; // Retornar null si ninguna condición se cumple
+    }
+
+    public $AW;
+    public function getAW()
+    {
+        $AE = intval($this->AE); // Convertir $AE a un número entero si no lo es
+
+        // Calcular el valor de 15 - $AE
+        $result = 15 - $AE;
+
+        // Devolver el máximo entre 0 y el resultado
+        $this->AW = max(0, $result);
+        return max(0, $result);
+    }
+
+    public $AX;
+    public function getAX()
+    {
+        $AW = $this->AW;
+        $j = $this->j;
+        $js = $this->js;
+        $jm = $this->jm;
+
+        // Check if AW is greater than 0
+        if ($AW > 0) {
+            // Calculate the expression (j/jm + j/js)
+            $result = ($jm != 0 && $js != 0) ? ($j / $jm) + ($j / $js) : 0;
+        } else {
+            // If AW is not greater than 0, return 0
+            $result = 0;
+        }
+        $this->AX = $result;
+        return $result;
+    }
+
+    public $AY;
+    public function getAY()
+    {
+        $AW = $this->AW;
+        $i = $this->i;
+
+        // Ensure i is not zero to avoid division by zero
+        if ($i != 0) {
+            // Calculate the formula (1 - (1 + i)^-AW) / i
+            $result = (1 - pow((1 + $i), -$AW)) / $i;
+        } else {
+            // Handle the case where i is zero to avoid division by zero
+            $result = 0;
+        }
+        $this->AY = $result;
+        return $result;
+    }
+
+    public $AZ;
+    public function getAZ($F)
+    {
+        $AE = intval($this->AE); // Should be 62
+        $F = intval($F); // Should be 1
+        $arraySeleccionado = ($F == 1) ? $this->fac_hom : $this->fac_muj;
+
+        // Buscar el valor 25 en la columna 2 del array seleccionado
+        $valor25 = $this->buscarV(25, $arraySeleccionado, 2);
+
+        // Buscar el valor máximo entre 15 y AE en la columna 2 del array seleccionado
+        $valorMaxAE = $this->buscarV(max(15, $AE), $arraySeleccionado, 2);
+        // Calcular el resultado
+        if ($valorMaxAE != 0) {
+            $resultado = $valor25 / $valorMaxAE;
+        } else {
+            $resultado = 0;
+        }
+        $this->AZ = round($resultado, 5);
+        return round($resultado, 5);
+    }
+
+    public $BA;
+    public function getBA($F)
+    {
+        $AE = $this->AE;
+        $AF = $this->AF;
+
+        // Check if AF is greater than 0
+        if ($AF > 0) {
+            // Determine which array to use based on $F
+            $arraySeleccionado = ($F == 1) ? $this->fac_hom : $this->fac_muj;
+
+            // Find the maximum value between AE and AF
+            $valorMax = max($AE, $AF);
+
+            // Perform lookups in the selected array
+            $valorMaxAE = $this->buscarV($valorMax, $arraySeleccionado, 2);
+            $valorAE = $this->buscarV($AE, $arraySeleccionado, 2);
+
+            // Avoid division by zero
+            if ($valorAE != 0) {
+                $resultado = $valorMaxAE / $valorAE;
+            } else {
+                $resultado = 0; // Return 0 if the denominator is zero
+            }
+        } else {
+            $resultado = 1; // Return 1 if AF is not greater than 0
+        }
+        $this->BA = $resultado;
+        return $resultado;
+    }
+
+    public $BB;
+    public function getBB($F, $K, $R, $S, $V)
+    {
+        $AE = intval($this->AE);
+        $AF = intval($this->AF);
+        $BA = $this->BA;
+
+        // Verifica si la suma de R y S es cero
+        if (($R + $S) == 0) {
+            return 0;
+        }
+
+        // Determina el modelo a usar basado en $F
+        if ($F == 1) {
+            $arraySeleccionado = $this->fac_hom;
+            $modelo = ($V == 14) ? 'Fach_inv' : 'Facm_inv';
+        } else {
+            $arraySeleccionado = $this->fac_muj;
+            $modelo = ($V == 14) ? 'Fach_inv' : 'Facm_inv';
+        }
+
+        // Realiza la búsqueda en el array/modelo seleccionado
+        $columna = ($V == 14) ? 12 : 13;
+        $valorMax = $this->buscarV(max($AE, $AF), $arraySeleccionado, $columna);
+
+        // Realiza la búsqueda en el modelo de base de datos
+        $valorMaxDB = ($modelo == 'Fach_inv') ? $this->buscarEnFachInv(max($AE, $AF), $columna) : $this->buscarEnFacmInv(max($AE, $AF), $columna);
+
+        // Evita la división por cero
+        if ($valorMaxDB != 0) {
+            $resultado = $valorMax * $BA * ($R + $S);
+        } else {
+            $resultado = 0; // Retorna 0 si el divisor es 0
+        }
+        $this->BB = intval($resultado);
+        return intval($resultado);
+    }
+
+    private function buscarEnFachInv($valor, $columna)
+    {
+        // Convierte el número de columna a letras
+        $columnaNombre = $this->numeroACadenaColumna($columna);
+        return Fach_inv::where("Fach_inv_a", $valor)->value("Fach_inv_{$columnaNombre}");
+    }
+
+    private function buscarEnFacmInv($valor, $columna)
+    {
+        // Convierte el número de columna a letras
+        $columnaNombre = $this->numeroACadenaColumna($columna);
+
+        // Busca el valor en el modelo Facm_inv
+        return Facm_inv::where("Facm_inv_a", $valor)->value("Facm_inv_{$columnaNombre}");
+    }
+
+    public $BC;
+    public function getBC($F, $K, $AB)
+    {
+        $AE = intval($this->AE); // Valor de AE
+        $AF = intval($this->AF); // Valor de AF
+        $AB = floatval($AB);     // Valor de AB
+        $BA = $this->BA;         // Valor de BA
+
+        // Determina cuál tabla usar basándote en el valor de $F
+        $tabla = ($F == 1) ? ($K == 1 ? $this->fac_hom : $this->fac_muj) : ($K == 1 ? $this->fac_hom : $this->fac_muj);
+
+        // Realiza la búsqueda en la tabla seleccionada
+        $valorBusqueda = $this->buscarV(max($AE, $AF), $tabla, 15);
+
+        // Calcula el resultado final
+        $resultado = $valorBusqueda * $AB * $BA;
+        $this->BC = intval($resultado);
+        return intval($resultado);
+    }
+
+    public $BD;
+    public function getBD($F, $K, $U)
+    {
+        $AE = intval($this->AE); // Valor de AE
+        $AF = intval($this->AF); // Valor de AF
+        $BA = $this->BA;         // Valor de BA
+        $U = floatval($U);       // Valor de U
+
+        // Determina cuál tabla/modelo usar basándote en el valor de $F
+        if ($F == 1) {
+            // Si $F es 1, usa fac_hom o fac_muj
+            $tabla = ($K == 1) ? $this->fac_hom : $this->fac_muj;
+            // Realiza la búsqueda en el array seleccionado
+            $valorBusqueda = $this->buscarV(max($AE, $AF), $tabla, 7);
+        } else {
+            // Si $F no es 1, usa fach_inv o facm_inv
+            $valorBusqueda = ($K == 1) ?
+                $this->buscarEnFachInv(max($AE, $AF), 7) :
+                $this->buscarEnFacmInv(max($AE, $AF), 7);
+        }
+
+        // Calcula el resultado final
+        $resultado = $valorBusqueda * $U * $BA;
+        $this->BD = $resultado;
+        return $resultado;
+    }
+
+    public $BE;
+    public function getBE($F, $K, $T, $V)
+    {
+        $AE = intval($this->AE); // Valor de AE
+        $AF = intval($this->AF); // Valor de AF
+        $BA = $this->BA;         // Valor de BA
+        $T = floatval($T);       // Valor de T
+        $V = intval($V);         // Valor de V
+
+        // Verifica si T es 0
+        if ($T == 0) {
+            return 0;
+        }
+
+        // Determina cuál tabla/modelo usar basado en $F
+        if ($F == 1) {
+            // Si $F es 1, usa fac_hom o Fac_muj
+            $tabla = ($K == 1) ? $this->fac_hom : $this->fac_muj;
+        } else {
+            // Si $F no es 1, usa Fach_inv o Facm_inv
+            $modelo = ($K == 1) ? 'Fach_inv' : 'Facm_inv';
+            $columna = ($V == 14) ? 12 : 13;
+
+            // Realiza la búsqueda en el modelo seleccionado
+            $valorBusqueda = ($modelo == 'Fach_inv')
+                ? $this->buscarEnFachInv(max($AE, $AF), $columna)
+                : $this->buscarEnFacmInv(max($AE, $AF), $columna);
+        }
+
+        if ($F == 1) {
+            // Realiza la búsqueda en el array seleccionado
+            $columna = ($V == 14) ? 12 : 13;
+            $valorBusqueda = $this->buscarV(max($AE, $AF), $tabla, $columna);
+        }
+
+        // Calcula el resultado final
+        $resultado = $valorBusqueda * $BA * $T;
+        $this->BE = $resultado;
+        return $resultado;
+    }
+
+    public $BF;
+    public function getBF($F, $G, $H, $K, $R, $Y)
+    {
+        $AE = intval($this->AE); // Valor de AE
+        $Y = floatval($Y);       // Valor de Y
+
+        // Verifica si R es 0
+        if ($R == 0) {
+            $this->BF = 0;
+            return 0;
+        }
+
+        // Verifica si G es 4, G es 5 o H es 2
+        if (in_array($G, [4, 5]) || $H == 2) {
+            $this->BF = 0;
+            return 0;
+        }
+
+        // Determina qué array/modelo usar basado en el valor de $F
+        if ($F == 1) {
+            // Si $F es 1, usa fac_hom o Fac_Muj
+            $tabla = ($K == 1) ? $this->fac_hom : $this->fac_muj;
+        } else {
+            // Si $F no es 1, usa Fach_inv o Facm_inv
+            $modelo = ($K == 1) ? 'Fach_inv' : 'Facm_inv';
+            $columna = 14;
+
+            // Realiza la búsqueda en el modelo seleccionado
+            $valorBusqueda = ($modelo == 'Fach_inv')
+                ? $this->buscarEnFachInv($AE, $columna)
+                : $this->buscarEnFacmInv($AE, $columna);
+        }
+
+        if ($F == 1) {
+            // Realiza la búsqueda en el array seleccionado
+            $valorBusqueda = $this->buscarV($AE, $tabla, 14);
+        }
+
+        // Calcula el resultado final
+        $resultado = $valorBusqueda * $Y;
+        $this->BF = $resultado;
+        return $resultado;
+    }
+
+    public $BG;
+    public function getBG($F, $K, $AC)
+    {
+        $AE = intval($this->AE); // Valor de AE
+        $AF = intval($this->AF); // Valor de AF
+        $BA = $this->BA;         // Valor de BA
+        $AC = floatval($AC);    // Valor de AC
+
+        // Determina qué array/modelo usar basado en el valor de $F y $K
+        if ($K == 1) {
+            // Si $K es 1, usa Fac_hom o Fac_Muj
+            $tabla = ($F == 1) ? $this->fac_hom : $this->fac_muj;
+        } else {
+            // Si $K no es 1, usa Fach_inv o Facm_inv
+            $modelo = ($F == 1) ? 'Fach_inv' : 'Facm_inv';
+            $columna = 6;
+
+            // Realiza la búsqueda en el modelo seleccionado
+            $valorBusqueda = ($modelo == 'Fach_inv')
+                ? $this->buscarEnFachInv(max($AE, $AF), $columna)
+                : $this->buscarEnFacmInv(max($AE, $AF), $columna);
+        }
+
+        if ($K == 1) {
+            // Realiza la búsqueda en el array seleccionado
+            $valorBusqueda = $this->buscarV(max($AE, $AF), $tabla, 6);
+        }
+
+        // Calcula el resultado final
+        $resultado = $valorBusqueda * $AC * $BA;
+        $this->BG = $resultado;
+        return $resultado;
+    }
+
+    public $BH;
+    public function getBH($F, $G, $K)
+    {
+        $AE = intval($this->AE);   // Valor de AE
+        $AH = intval($this->AH);   // Valor de AH
+
+        // Verifica la condición basada en G
         if ($G == 4 || $G == 5) {
             return 0;
         }
 
-        // Seleccionar el modelo según $F
-        $modelClass = $F == 1 ? Fac_muj::class : Fac_hom::class;
-
-        // Buscar el valor usando el modelo seleccionado
-        $valorBuscado = $this->buscarValorEnTablaN($modelClass, $this->AH);
-
-        // Determinar el rango para la búsqueda
-        $rango = $this->AH - 13;
-
-        // Verificar el valor de $K para elegir la función de búsqueda
-        if ($K == 1) {
-            $valor = $this->buscarValorPorIndice($this->AE, $rango, $modelClass);
+        // Determina cuál tabla usar para la primera parte de la fórmula
+        if ($F == 1) {
+            $valorBusqueda = $this->buscarV($AH, $this->fac_muj, 7);
         } else {
-            $valor = $this->buscarValorPorIndice($this->AE, $rango, $modelClass, true);
+            $valorBusqueda = $this->buscarV($AH, $this->fac_hom, 7);
         }
 
-        // Calcular el resultado final
-        return $valorBuscado - $valor;
+        // Determina cuál base de datos/modelo usar para la segunda parte de la fórmula
+        if ($F == 1) {
+            if ($K == 1) {
+                $valorBusqueda2 = $this->buscarEnAxy($AE, $AH - 13);
+            } else {
+                $valorBusqueda2 = $this->buscarEnAxyHiMv($AE, $AH - 13);
+            }
+        } else {
+            if ($K == 1) {
+                $valorBusqueda2 = $this->buscarEnAxy($AE, $AH - 13);
+            } else {
+                $valorBusqueda2 = $this->buscarEnAxyHvMi($AE, $AH - 13);
+            }
+        }
+
+        // Calcula el resultado final
+        $resultado = $valorBusqueda - $valorBusqueda2;
+        $this->BH = $resultado;
+        return round($resultado, 5);
     }
 
-    return 0;
-}
+    public $BJ;
+    public function getBJ()
+    {
+        // Obtiene los valores necesarios
+        $BH = $this->BH;
+        $K_ = $this->K_;
 
-public function buscarValorEnTablaN($modelClass, $valor)
-{
-    // Asumiendo que la búsqueda se realiza en el campo correspondiente
-    $campo = $this->obtenerCampoPorIndiceeN($this->AH);
-
-    if ($campo === null) {
-        return 0;
+        // Aplica la fórmula
+        $resultado = ((1 + (1 / 4) * $K_) * $BH) * 2 - $BH;
+        $this->BJ = $resultado;
+        return $resultado;
     }
 
-    $record = $modelClass::where($campo, $valor)->first();
+    public $BI;
+    public function getBI($G, $R, $S)
+    {
+        $BH = $this->BH; // Valor de BH
+        $BJ = $this->BJ; // Valor de BJ
+        $K_ = 0.04;      // Valor de K_
 
-    return $record && isset($record->$campo) ? $record->$campo : 0;
-}
+        // Verifica si G es 4 o 5
+        if ($G == 4 || $G == 5) {
+            return 0;
+        }
 
-public function buscarValorPorIndice($valor, $rango, $modelClass, $esBuscarH = false)
-{
-    // Aquí debes implementar la lógica específica para la búsqueda, 
-    // dependiendo de si es una búsqueda horizontal o vertical.
-    // Ejemplo: 
-    if ($esBuscarH) {
-        // Implementar búsqueda horizontal
-        return $this->buscarH($valor, $rango, $modelClass);
+        // Calcula la primera parte de la fórmula
+        $parte1 = (12 * ((1 + (11 / 24) * $K_)) + 1) * $BH * ($R + $S);
+
+        // Calcula la segunda parte de la fórmula
+        $parte2 = ((1 + (11 / 24) * $K_)) * $BJ * ($R + $S);
+
+        // Suma ambas partes
+        $resultado = $parte1 + $parte2;
+        $this->BI = $resultado;
+        return intval($resultado);
     }
 
-    // Implementar búsqueda vertical
-    return $this->buscarV($valor, $rango, $modelClass);
-}
+    public $BK;
+    public function getBK($G, $AB)
+    {
+        $BJ = $this->BJ; // Valor de BJ
+        $AB = floatval($AB); // Valor de AB
 
-public function obtenerCampoPorIndiceeN($indice)
-{
-    $campos = [
-        Fac_hom::class => [
-            'Fac_hom_a', 'Fac_hom_b', 'Fac_hom_c', 'Fac_hom_d', 'Fac_hom_e',
-            'Fac_hom_f', 'Fac_hom_g', 'Fac_hom_h', 'Fac_hom_i', 'Fac_hom_j',
-            'Fac_hom_k', 'Fac_hom_l', 'Fac_hom_m', 'Fac_hom_n', 'Fac_hom_o',
-        ],
-        Fac_muj::class => [
-            'Fac_muj_a', 'Fac_muj_b', 'Fac_muj_c', 'Fac_muj_d', 'Fac_muj_e',
-            'Fac_muj_f', 'Fac_muj_g', 'Fac_muj_h', 'Fac_muj_i', 'Fac_muj_j',
-            'Fac_muj_k', 'Fac_muj_l', 'Fac_muj_m', 'Fac_muj_n', 'Fac_muj_o',
-        ]
-    ];
-
-    $modelClass = $this->F == 1 ? Fac_muj::class : Fac_hom::class;
-
-    if (isset($campos[$modelClass]) && $indice >= 1 && $indice <= count($campos[$modelClass])) {
-        return $campos[$modelClass][$indice - 1];
+        // Calcula el resultado basado en G5
+        if ($G == 4 || $G == 5) {
+            $this->BK = 0;
+            return 0;
+        } else {
+            $this->BK = intval($AB * $BJ);
+            return intval($AB * $BJ);
+        }
     }
 
-    return null; // Valor por defecto si el índice no es válido
-}
+    public $BL;
+    public function getBL($G, $U)
+    {
+        $BJ = $this->BJ; // Valor de BJ
+        $U = floatval($U); // Valor de U
 
-// Aquí debes implementar las funciones buscarV y buscarH según la lógica que necesitas
-public function buscarV($valor, $rango, $modelClass)
-{
-    // Implementa la lógica de búsqueda vertical
-}
+        // Calcula el resultado basado en G5
+        if ($G == 4 || $G == 5) {
+            $this->BL = 0;
+            return 0;
+        } else {
+            $this->BL = $U * $BJ;
+            return $U * $BJ;
+        }
+    }
 
-public function buscarH($valor, $rango, $modelClass)
-{
-    // Implementa la lógica de búsqueda horizontal
-}
-public $AO;
+    public $BM;
+    public function getBM($G, $T)
+    {
+        $BH = $this->BH;  // Valor de BH
+        $K_ = 0.04;       // Valor de K_ (4%)
+        $T = floatval($T); // Valor de T
 
-public function getAO($H, $AA)
-{
+        // Calcula el resultado basado en G5
+        if ($G == 4 || $G == 5) {
+            $this->BM = 0;
+            return 0;
+        } else {
+            $this->BM = 12 * (1 + (11 / 24) * $K_) * $BH * $T;
+            return 12 * (1 + (11 / 24) * $K_) * $BH * $T;
+        }
+    }
+
+    public $BN;
+
+    public function getBN($G, $AC)
+    {
+        $BJ = $this->BJ;  // Valor de BJ
+        $AC = floatval($AC); // Valor de AC
+
+        // Calcula el resultado basado en G5
+        if ($G == 4 || $G == 5) {
+            $this->BN = 0;
+            return 0;
+        } else {
+            $this->BN = $AC * $BJ;
+            return $AC * $BJ;
+        }
+    }
+
+    public $BO;
+    public function getBO()
+    {
+        $BB = $this->BB;
+        $BC = $this->BC;
+        $BR = $this->BE;
+        $BF = $this->BF;
+        $BI = $this->BI;
+        $BK = $this->BK;
+        $BM = $this->BM;
+        $resultado = $BB + $BC + $BR + $BF + $BI + $BK + $BM;
+        $this->BO = $resultado;
+        return $resultado;
+    }
+
+    public $BP;
+    public function getBP()
+    {
+        // Obtén los valores necesarios
+        $BB = $this->BB;  // Valor de BB
+        $BE = $this->BE;  // Valor de BE
+        $BI = $this->BI;  // Valor de BI
+        $BM = $this->BM;  // Valor de BM
+
+        // Calcula la suma de BB, BE, BI, y BM
+        $suma = $BB + $BE + $BI + $BM;
+
+        // Retorna el máximo entre la suma y 0
+        $this->BP = max($suma, 0);
+        return max($suma, 0);
+    }
+
+    public $BQ;
+    public function getBQ()
+    {
+        $BC = $this->BC;
+        $BK = $this->BK;
+        $this->BQ = $BC + $BK;
+        return $BC + $BK;
+    }
+
+    public $BR;
+    public function getBR()
+    {
+        $BL = $this->BL;
+        $BD = $this->BD;
+        $this->BR = $BL + $BD;
+        return $BL + $BD;
+    }
+
+    public $BS;
+    public function getBS()
+    {
+        $BF = $this->BF;
+        $this->BS = $BF;
+        return $BF;
+    }
+
+    public $BT;
+    public function getBT()
+    {
+        $BG = $this->BG;
+        $BN = $this->BN;
+
+        $resultado = $BG + $BN;
+        $this->BT = $resultado;
+        return $resultado;
+    }
+
+    public $BU;
+    public function getBU()
+    {
+        $BP = $this->BP;
+        $BQ = $this->BQ;
+        $BR = $this->BR;
+        $BS = $this->BS;
+
+        $resultado = $BP + $BQ + $BR + $BS;
+
+        return $resultado;
+    }
+
+    public $BV;
+    public function getBV()
+    {
+        // Obtén los valores necesarios
+        $AK = $this->AK;  // Valor de AK
+        $AL = $this->AL;  // Valor de AL
+        $BB = $this->BB;  // Valor de BB
+        $BC = $this->BC;  // Valor de BC (no se utiliza en esta fórmula)
+        $BD = $this->BD;  // Valor de BD (no se utiliza en esta fórmula)
+        $BE = $this->BE;  // Valor de BE
+
+        // Calcula la suma de BB, BC, BD y BE
+        $sumaBB_BE = $BB + $BC + $BD + $BE;
+
+        // Calcula la suma de AK y AL
+        $sumaAK_AL = $AK + $AL;
+
+        // Calcula el resultado final
+        $resultado = $sumaBB_BE - $sumaAK_AL;
+
+        // Retorna el máximo entre el resultado y 0
+        $this->BV = max($resultado, 0);
+        return max($resultado, 0);
+    }
+
+    public $BW;
+    public function getBW()
+    {
+        // Obtén los valores necesarios
+        $AO = $this->AO;  // Valor de AO
+        $AQ = $this->AQ;  // Valor de AQ
+        $BI = $this->BI;  // Valor de BI
+        $BK = $this->BK;  // Valor de BK
+        $BL = $this->BL;  // Valor de BL (no se utiliza en esta fórmula)
+        $BM = $this->BM;  // Valor de BM
+
+        // Calcula la suma de BI, BK y BM
+        $sumaBI_BK_BM = $BI + $BK + $BM;
+
+        // Calcula la suma de AO y AQ
+        $sumaAO_AQ = $AO + $AQ;
+
+        // Calcula el resultado final
+        $resultado = $sumaBI_BK_BM - $sumaAO_AQ;
+
+        // Retorna el máximo entre el resultado y 0
+        $this->BW = max($resultado, 0);
+        return max($resultado, 0);
+    }
+
+    public $BX;
+    public function getBX()
+    {
+        // Obtén los valores necesarios
+        $BS = $this->BS;  // Valor de BS
+        $AT = $this->AT;  // Valor de AT
+
+        // Calcula la diferencia
+        $diferencia = $BS - $AT;
+
+        // Retorna el máximo entre la diferencia y 0
+        $this->BX = max($diferencia, 0);
+        return max($diferencia, 0);
+    }
+
+    public $BY;
+    public function getBY()
+    {
+        $BV = $this->BV;
+        $BW = $this->BW;
+        $BX = $this->BX;
+        $this->BY = $BV + $BW + $BX;
+        return $BV + $BW + $BX;
+    }
     
-    // Convertir $AD a una instancia de Carbon
-    $fechaAD = Carbon::parse($this->AD);
-    // Evaluar la condición H == 3
-    $condicionH = ($H == 3) ? 1 : 0;
+    public $BZ;
+    public function getBZ($H, $X)
+    {
+       
+        // Verificar si $H es igual a 3
+        if ($H == 3) {
+            $this->BZ = $X;
+            return $X; // Retorna $X si $H es igual a 3
+        } else {
+            $this->BZ = 0;
+            return 0; // Retorna 0 si $H no es igual a 3
+        }
+       
+    }
+    
+    public $BAZ;
 
-    // Calcular la expresión interna
-    $expresionInterna = 12 * ((1 + (11 / 24) * 0.04) + 1);
+    public function getBAZ($R)
+    
+        {
+            $BZ = $this->BZ; // Por ejemplo, 20
+            $SMMLV = 1160000; // Salario mínimo legal, por ejemplo
+            $TTM = 0.0054917; // Tasa técnica mensual
+    
+            if ($BZ > 0) {
+                $percentage = 0.16;
+    
+                if ($R > 4 * $SMMLV) {
+                    $percentage += 0.01;
+                }
+    
+                if ($R >= 16 * $SMMLV) {
+                    $additional_percentage = 0.002 * min(max(intval($R / $SMMLV - 15), 0), 5);
+                    $percentage += $additional_percentage;
+                }
+    
+                $VA_value = intval(round($this->calculateVA($TTM, $BZ, 1)));
+                $result = $R * $percentage * $VA_value;
+            } else {
+                $result = 0;
+            }
+            $this->BAZ = $result;
+            return $result;
 
-    // Calcular el resultado final
-    $resultado = $condicionH * $expresionInterna * $AA * $this->AN * (1 + 0) * $this->AJ;
+            
+        }
+    
+        function calculateVA($rate, $nper, $pmt, $fv = 0, $type = 0)
+        {
+            if ($rate != 0) {
+                return ($pmt * (1 - pow(1 + $rate, -$nper)) / $rate) + ($fv * pow(1 + $rate, -$nper));
+            } else {
+                return ($pmt * $nper) + $fv;
+            }
+        }
+    public $CG;
 
+    public function getCG($Q, $R, $S, $T, $U, $V, $AB)
+    {
+        $resultado = ($R + $S) * $V + 0 * 12 + 0 + $AB + $Q * 0.16 * 12;
+        
+    $this->CG = $resultado;
     return $resultado;
-}
-
-
-}
+    }
     
+        
+        
+
+    public function updateState($id){
+        $studio = Study::find($id);
+        $studio->update([
+            'user_id' => auth()->user()->id,
+            'studies_ad' => $this->AD,
+            'studies_ae' => $this->AE,
+            'studies_af' => $this->AF,
+            'studies_ag' => $this->AG,
+            'studies_ah' => $this->AH,
+            'studies_ai' => $this->AI,
+            'studies_aj' => $this->AJ,
+            'studies_ak' => $this->AK,
+            'studies_al' => $this->AL,
+            'studies_am' => $this->AM,
+            'studies_an' => $this->AN,
+            'studies_ao' => $this->AO,
+            'studies_ap' => $this->AP,
+            'studies_aq' => $this->AQ,
+            'studies_ar' => $this->AR,
+            'studies_as' => $this->AS,
+            'studies_at' => $this->AT,
+            'studies_au' => $this->AU,
+            'studies_av' => $this->AV,
+            'studies_aw' => $this->AW,
+            'studies_ax' => $this->AX,
+            'studies_ay' => $this->AY,
+            'studies_az' => $this->AZ,
+            'studies_ba' => $this->BA,
+            'studies_bb' => $this->BB,
+            'studies_bc' => $this->BC,
+            'studies_bd' => $this->BD,
+            'studies_be' => $this->BE,
+            'studies_bf' => $this->BF,
+            'studies_bg' => $this->BG,
+            'studies_bh' => $this->BH,
+            'studies_bi' => $this->BI,
+            'studies_bj' => $this->BJ,
+            'studies_bk' => $this->BK,
+            'studies_bl' => $this->BL,
+            'studies_bm' => $this->BM,
+            'studies_bn' => $this->BN,
+            'studies_bo' => $this->BO,
+            'studies_bp' => $this->BP,
+            'studies_bq' => $this->BQ,
+            'studies_br' => $this->BR,
+            'studies_bs' => $this->BS,
+            'studies_bt' => $this->BT,
+            'studies_bu' => $this->BU,
+            'studies_bv' => $this->BV,
+            'studies_bw' => $this->BW,
+            'studies_bx' => $this->BX,
+            'studies_by' => $this->BY,
+            'studies_bz' => $this->BZ,
+            'studies_baz' => $this->BAZ,
+            'studies_cg' => $this->CG,
+        ]);
+    }
+}  
     

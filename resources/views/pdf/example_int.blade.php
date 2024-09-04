@@ -367,7 +367,7 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
 <h3>6.RESULTADOS:</h3>
 <p>{{$item->name}}</p>
 <p>Calculo Actuarial Normal Internacional - NIIF</p>
-<p>Resolucion 533 del 2015 de la contaduria general de la nacion, version 09</p>
+<p>Resolucion 533 del 2015 de la contaduria general de la nacion, version 09</p><br><br><br><br>
 <table>
 <tr>
 <th>Grupo pensionales</th>
@@ -390,59 +390,20 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
 
   <tr>
    
-    <td> {{$dato->col3}}</td>
+    <td> {{$dato->actuarial_group->name}}</td>
     <td>{{$dato->total_count}}</td>
 
-    <td>${{number_format($dato->total_amount, 0, '.', '.')}}</td>
+    <td>${{number_format($dato->total_amount_bv, 0, '.', '.')}}</td>
+    <td>${{number_format($dato->total_amount_bw, 0, '.', '.')}}</td>
+     <td>${{number_format($dato->total_amount_bx, 0, '.', '.')}}</td>
+     <td>${{$dato->total_amount_bx+$dato->total_amount_bw+$dato->total_amount_bv}}</td>
+     <td>${{number_format($dato->total_amount_baz, 0, '.', '.')}}</td>
+     <td>${{$dato->total_amount_baz+($dato->total_amount_bx+$dato->total_amount_bw+$dato->total_amount_bv)}}</td>
     
     
     
     
   </tr>
-  {{-- <tr>
-   
-    <td>PERSONAL JUBILADO CON PENSION COMPARTIDA</td>
-    <td>91</td>
-
-    <td>$8.104.119.280</td>
-    <td>$4.976.729.859</td>
-    <td>$</td>
-    <td>$13.080.849.139</td>
-
-    <td>$956.039.692</td>
-    <td>$12.124.809.447</td>
-   
-  </tr>
-
-  <tr>
-   
-    <td>PESONAL BENEFICIARIO VITALICIO TOTALMENTE A CARGO DE LA EMPRESA</td>
-    <td>3</td>
-
-    <td>$435.333.574</td>
-    <td>$</td>
-    <td>$</td>
-    <td>$435.333.574</td>
-
-    <td>$</td>
-    <td>$435.333.574</td>
-    
-  </tr>
-
-  <tr>
-   
-    <td>PERSONAL BENEFICIARIO VITALICIO COMPARTIDO CON COLPENSIONES</td>
-    <td>107</td>
-
-    <td>$16.189.169.013</td>
-    <td>$</td>
-    <td>$</td>
-    <td>$16.189.169.013</td>
-
-    <td>$1.438.294.798</td>
-    <td>$14.750.874.215</td>
-    
-  {{-- </tr> --}}
   
   
     
@@ -452,18 +413,21 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
     <td><b>Total General</b></td>
     <td><b>{{$conteoTotal}}</b></td>
 
-    <td><b>${{number_format($sumTotal, 0, '.', '.')}}</b></td>
-    <td><b>$5.074.378.639</b></td>
-    <td><b>$</b></td>
-    <td><b>$29.971.627.086</b></td>
-
-    <td><b>$2.394.334.490</b></td>
-    <td><b>$27.677.292.596</b></td>
+    <td><b>${{round($sumTotal_bv)}}</b></td>
+     <td><b>${{round($sumTotal_bw)}}</b></td>
+     <td><b>${{round($sumTotal_bx)}}</b></td>
+     <td><b>${{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)}}</b></td>
+     <td><b>${{round($sumTotal_baz)}}</b></td>
+    
+    
+    <td><b>${{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</b></td>
+    
+    
     
   </tr> 
 </table>
 
- @endforeach
+
       
 
 <h3>7.REVELACIONES CONTABLES:</h3>
@@ -479,24 +443,26 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
 <tr>
     <th></th>
     <th>2023</th>
-    <th>2024</th>
-</tr>    
+    {{-- <th>2024</th> --}}
+</tr>  
+ 
 <tr>
     <td>Cargo a resultados</td>
-    <td>$1.671.606.861</td>
-    <td>$1.656.379.582</td>
+    <td><b>${{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)}}</b></td>
+    {{-- <td>$1.656.379.582</td> --}}
 </tr>   
 <tr>
     <td>Cuenta de otros resultados integrables</td>
-    <td>$2.766.896.086</td>
-    <td>$3.786.528.444</td>
+    <td>$--Falta sacar el dato del 2022---</td>
+    {{-- <td>$3.786.528.444</td> --}}
 </tr>
 <tr>
     <td>Pasivo neto al final del periodo</td>
-    <td>$16.782.375.995</td>
-    <td>$14.594.244.400</td>
+    <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
+    {{-- <td>$14.594.244.400</td> --}}
 </tr>
 </table>
+ 
 
 <p>Base de datos con corte a diciembre de 2023. </p>
 <table>
@@ -508,9 +474,9 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
 <tr>
 <tr>
  <td>Pensiones</td>
- <td>103</td>
- <td>$16.782.375.995</td>
- <td>8.60</td>
+ <td><b>{{$conteoTotal}}</b></td>
+ <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
+ <td>8.60-Duda</td>
 </tr>
 <tr>
  <td><b>Total</b></td>
@@ -527,7 +493,7 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
 <tr>
 <tr>
   <td>Pesonal Jubilado</td>
-  <td>103</td>
+  <td>{{$conteoTotal}}</td>
 <tr>
 <tr>
   <td>Edad media Jubilado</td>
@@ -539,7 +505,7 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
 <tr>
 <tr>
   <td><b>Valor total plan pension</b></td>
-  <td><b>$16.782.375.995</b></td>
+  <td><b>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</b></td>
 </tr>
 </table>
 
@@ -608,8 +574,8 @@ x: Cambio en la tasa de interés (100 pb)
   </tr>
   <tr>
     <td>Oblicacion por beneficios definidos</td>
-    <td>$16.782.375.995</td>
-    <td>$14.594.244.400</td>
+    <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
+    <td>$--Falta el dato del 2022</td>
 
   </tr>
   <tr>
@@ -620,8 +586,8 @@ x: Cambio en la tasa de interés (100 pb)
   </tr>
   <tr>
     <td>Deficit</td>
-    <td>$16.782.375.995</td>
-    <td>$14.594.244.400</td>
+    <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
+    <td>$--Falta el dato del 2022</td>
     
   </tr>
   <tr>
@@ -632,8 +598,8 @@ x: Cambio en la tasa de interés (100 pb)
   </tr>
   <tr>
     <td>Pasivo (Activo) neto reconocido</td>
-    <td>$16.782.375.995</td>
-    <td>$14.594.244.400</td>
+    <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
+    <td>$--Falta el dato del 2022</td>
     
   </tr>
 </table><br><br>
@@ -714,7 +680,7 @@ x: Cambio en la tasa de interés (100 pb)
 <tr>
   <td></td>
   <th>31-12-23</th>
-  <th>31-12-22</th>
+  {{-- <th>31-12-22</th> --}}
 </tr>  
 <tr>
   <td>Conciliacion de la obligacion por Benficios definidos</td>
@@ -723,8 +689,8 @@ x: Cambio en la tasa de interés (100 pb)
 </tr>  
 <tr>
   <td>Obligacion inicio del periodo</td>
-  <td>$14.594.244.400</td>
-  <td>$19.094.424.049</td>
+  {{-- <td>$14.594.244.400</td> --}}
+  {{-- <td>$19.094.424.049</td> --}}
 </tr>  
 <tr>
   <td>Costo de los servicios del periodo corriente</td>
@@ -748,8 +714,8 @@ x: Cambio en la tasa de interés (100 pb)
 </tr> 
 <tr>
   <td>Costo por interes</td>
-  <td>$1.671.606.861</td>
-  <td>$1.656.379.582</td>
+  <td><b>${{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</b></td>
+  
 </tr>  
 <tr>
   <td>Flujo de Efectivo</td>
@@ -758,13 +724,13 @@ x: Cambio en la tasa de interés (100 pb)
 </tr>  
 <tr>
   <td>a.Beneficios pagados del plan</td>
-  <td></td>
+  <td>$</td>
   <td></td>
 </tr>  
 <tr>
-  <td>b.Beneficios pagados directamente por la empresa</td>
-  <td>$2.250.371.352</td>
-  <td>$2.370.030.787</td>
+  <td>b.Beneficiarios pagados directamente por la empresa</td>
+  <td>${{$sumTotal_cg}}</td>
+  <td></td>
 </tr>  
 <tr>
   <td>c.Pagos de liquidaciones anticipadas</td>
@@ -813,11 +779,11 @@ x: Cambio en la tasa de interés (100 pb)
 </tr>
 <tr>
   <td><b>Obligacion al final del periodo</b></td>
-  <td><b>$16.782.375.995</b></td>
-  <td><b>$14.594.244.400</b></td>
+  <td><b>${{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</b></td>
+  {{-- <td><b>$14.594.244.400</b></td> --}}
 </tr>
 </table>
-
+@endforeach
 
 <p>Proyecciones</p>
 
@@ -1173,7 +1139,7 @@ PENSIONADOS FALLECIDOS
 </tr>    
 <tr>
     <td>Cargo a resultados</td>
-    <td>$665.048.050</td>
+    <td>{{$total}}</td>
     <td>$451.601.619</td>
 </tr>   
 <tr>

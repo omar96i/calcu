@@ -25,6 +25,8 @@ class StudiesTable extends Component
 
     public $fecha_calculo = '2023';
 
+    public $fecha_calculo2 = '2023-01-01';
+
     public $parametrosd17 = 0;
 
     public $smmlv = 1160000;
@@ -43,9 +45,9 @@ class StudiesTable extends Component
 
     public $recalcular;
 
-    public function mount($fecha, $parametro = false, $smmlv = false, $k = false, $j = false, $js = false, $jm = false, $i = false, $ttm = false, $recalcular){
+    public function mount($fecha, $parametro = false, $smmlv = false, $k = false, $j = false, $js = false, $jm = false, $i = false, $ttm = false, $recalcular, $fecha_calculo2){
         $this->fecha_calculo = $fecha;
-        if($recalcular == 'NO'){
+        if($recalcular == 'SI'){
             $this->parametrosd17 = $parametro;
             $this->smmlv = $smmlv;
             $this->K_ = $k;
@@ -54,6 +56,7 @@ class StudiesTable extends Component
             $this->jm = $jm;
             $this->i = $i;
             $this->TTM = $ttm;
+            $this->fecha_calculo2 = $fecha_calculo2;
         }
 
         $this->recalcular = $recalcular;
@@ -305,7 +308,7 @@ class StudiesTable extends Component
     public function getAE($J)
     {
         // Valores internos de la función
-        $fechaCalculo = '2023-01-01';
+        $fechaCalculo = $this->fecha_calculo2;
         $diasAno = 365.25;
 
         // Convertir $J y $fechaCalculo a instancias de Carbon
@@ -337,7 +340,7 @@ class StudiesTable extends Component
 
     public function getAF($G, $J)
     {
-        $fecha_calculo = Carbon::parse('2023-01-01');
+        $fecha_calculo = Carbon::parse($this->fecha_calculo2);
         $Dias_año = 365;
 
         // Asegurarse de que $J es una instancia de Carbon para poder manipular la fecha
@@ -392,7 +395,7 @@ class StudiesTable extends Component
 
     public function getAH($L)
     {
-        $fecha_calculo = Carbon::parse('2023-01-01');
+        $fecha_calculo = Carbon::parse($this->fecha_calculo2);
         $Dias_año = 365;
 
         // Asegurarse de que $L es una instancia de Carbon para poder manipular la fecha

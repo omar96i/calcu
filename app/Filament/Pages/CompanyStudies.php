@@ -63,6 +63,8 @@ class CompanyStudies extends Page
 
     public $yeartoimport;
 
+    public $fecha_calculo2 = '2023-01-01';
+
 
     public function mount(){
         $this->studies = Study::get();

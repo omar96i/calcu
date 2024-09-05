@@ -97,6 +97,12 @@
                                     <x-filament::input type="text" wire:model.live="TTM" />
                                 </x-filament::input.wrapper>
                             </div>
+                            <div class="mt-3">
+                                <label for="">Fecha de calculo</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input type="date" wire:model.live="fecha_calculo2" />
+                                </x-filament::input.wrapper>
+                            </div>
                         </div>
 
                     </x-filament::fieldset>
@@ -108,7 +114,7 @@
                 Buscar
             </x-filament::button>
             @if ($showTable)
-                <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_" :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM" :recalcular="$calcular"/>
+                <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_" :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM" :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2"/>
             @endif
 
         </x-filament::section>

@@ -113,6 +113,9 @@
             <x-filament::button class="w-full mt-3" icon="heroicon-m-magnifying-glass" wire:click="showTableFunct()">
                 Buscar
             </x-filament::button>
+            <x-filament::button class="w-full mt-3"  wire:click="dowloadExport()">
+                Export to excel
+            </x-filament::button>
             @if ($showTable)
                 <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_" :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM" :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2"/>
             @endif

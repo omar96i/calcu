@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\StudyExport;
 use App\Models\CompanyStudy;
 use App\Imports\CompanyStudyImport;
 use Filament\Notifications\Notification;
@@ -105,6 +106,10 @@ class CompanyStudies extends Page
             $this->file = null;
         }
         $this->loading = false;
+    }
+
+    public function dowloadExport(){
+        return Excel::download(new StudyExport($this->year_calculation), 'studies.xlsx');
     }
 }
 

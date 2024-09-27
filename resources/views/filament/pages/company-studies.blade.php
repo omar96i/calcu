@@ -33,6 +33,15 @@
                         </x-filament::input.select>
                     </x-filament::input.wrapper>
                 </div>
+                <div>
+                    <label for="">Selecciona el tipo de reporte</label>
+                    <x-filament::input.wrapper>
+                        <x-filament::input.select wire:model.live="report_type" wire:change="closeTable()">
+                            <option value="normal">normal</option>
+                            <option value="normal2">normal2</option>
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
                 <div class="mt-3">
                     <label for="">Calcular?</label>
                     <x-filament::input.wrapper>
@@ -113,11 +122,13 @@
             <x-filament::button class="w-full mt-3" icon="heroicon-m-magnifying-glass" wire:click="showTableFunct()">
                 Buscar
             </x-filament::button>
-            <x-filament::button class="w-full mt-3"  wire:click="dowloadExport()">
+            <x-filament::button class="w-full mt-3" wire:click="dowloadExport()">
                 Export to excel
             </x-filament::button>
             @if ($showTable)
-                <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_" :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM" :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2"/>
+                <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_"
+                    :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM"
+                    :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2" :report_type="$report_type"/>
             @endif
 
         </x-filament::section>
@@ -135,6 +146,17 @@
                 <x-filament::input type="text" wire:model.live="yeartoimport" />
             </x-filament::input.wrapper>
         </div>
+        <div class="mt-3">
+            <label for="">Tipo de reporte</label>
+
+            <x-filament::input.wrapper>
+                <x-filament::input.select wire:model.live="report_type">
+                    <option value="normal">normal</option>
+                    <option value="normal2">normal2</option>
+                </x-filament::input.select>
+            </x-filament::input.wrapper>
+        </div>
+
         <x-filament::fieldset>
             <x-slot name="label">
                 Archivo

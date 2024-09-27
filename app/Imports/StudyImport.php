@@ -10,10 +10,12 @@ class StudyImport implements ToModel
 {
 
     public $date;
+    public $report_type;
 
-    public function __construct($date)
+    public function __construct($date, $report_type)
     {
         $this->date = $date;
+        $this->report_type = $report_type;
     }
     /**
     * @param array $row
@@ -60,6 +62,7 @@ class StudyImport implements ToModel
             'allowance_14' => $row[25],
             'school_help' => $row[26],
             'year' => $this->date,
+            'report_type' => $this->report_type
         ]);
     }
 }

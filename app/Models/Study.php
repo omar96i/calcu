@@ -97,7 +97,8 @@ class Study extends Model
         'studies_bz',
         'studies_baz',
         'studies_cg',
-        'year'
+        'year',
+        'report_type'
     ];
 
 

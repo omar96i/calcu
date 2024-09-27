@@ -66,6 +66,8 @@ class CompanyStudies extends Page
 
     public $fecha_calculo2 = '2023-01-01';
 
+    public $report_type = 'normal';
+
 
     public function mount(){
         $this->studies = Study::get();
@@ -97,7 +99,7 @@ class CompanyStudies extends Page
 
         if($this->file){
             $this->loading = true;
-            Excel::import(new StudyImport($this->yeartoimport), $this->file);
+            Excel::import(new StudyImport($this->yeartoimport, $this->report_type), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()
@@ -109,7 +111,7 @@ class CompanyStudies extends Page
     }
 
     public function dowloadExport(){
-        return Excel::download(new StudyExport($this->year_calculation), 'studies.xlsx');
+        return Excel::download(new StudyExport($this->year_calculation, $this->report_type), 'studies.xlsx');
     }
 }
 

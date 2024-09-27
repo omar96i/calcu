@@ -120,7 +120,7 @@
 
             </div>
             <x-filament::button class="w-full mt-3" icon="heroicon-m-magnifying-glass" wire:click="showTableFunct()">
-                Buscar
+                Buscar/Calcular
             </x-filament::button>
             <x-filament::button class="w-full mt-3" wire:click="dowloadExport()">
                 Export to excel

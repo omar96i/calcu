@@ -396,7 +396,7 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
     <td>${{number_format($dato->total_amount_bv, 0, '.', '.')}}</td>
     <td>${{number_format($dato->total_amount_bw, 0, '.', '.')}}</td>
      <td>${{number_format($dato->total_amount_bx, 0, '.', '.')}}</td>
-     <td>${{$dato->total_amount_bx+$dato->total_amount_bw+$dato->total_amount_bv}}</td>
+     <td>${{$sumTotal_2023}}</td>
      <td>${{number_format($dato->total_amount_baz, 0, '.', '.')}}</td>
      <td>${{$dato->total_amount_baz+($dato->total_amount_bx+$dato->total_amount_bw+$dato->total_amount_bv)}}</td>
     
@@ -448,12 +448,12 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
  
 <tr>
     <td>Cargo a resultados</td>
-    <td><b>${{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)}}</b></td>
+    <td><b>${{$sumTotal_2023}}</b></td>
     {{-- <td>$1.656.379.582</td> --}}
 </tr>   
 <tr>
     <td>Cuenta de otros resultados integrables</td>
-    <td>$--Falta sacar el dato del 2022---</td>
+    <td>${{$sumTotal_2022}}</td>
     {{-- <td>$3.786.528.444</td> --}}
 </tr>
 <tr>
@@ -476,7 +476,7 @@ RCol   = Rj  +  Rs  +  RAF + RS/ Col</p>
  <td>Pensiones</td>
  <td><b>{{$conteoTotal}}</b></td>
  <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
- <td>8.60-Duda</td>
+ <td>{{$duration}}</td>
 </tr>
 <tr>
  <td><b>Total</b></td>
@@ -575,7 +575,7 @@ x: Cambio en la tasa de interés (100 pb)
   <tr>
     <td>Oblicacion por beneficios definidos</td>
     <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
-    <td>$--Falta el dato del 2022</td>
+    <td>$16789098</td>
 
   </tr>
   <tr>
@@ -587,7 +587,7 @@ x: Cambio en la tasa de interés (100 pb)
   <tr>
     <td>Deficit</td>
     <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
-    <td>$--Falta el dato del 2022</td>
+    <td>$16789098</td>
     
   </tr>
   <tr>
@@ -599,7 +599,7 @@ x: Cambio en la tasa de interés (100 pb)
   <tr>
     <td>Pasivo (Activo) neto reconocido</td>
     <td>{{round($sumTotal_bx+$sumTotal_bw+$sumTotal_bv)+$sumTotal_baz}}</td>
-    <td>$--Falta el dato del 2022</td>
+    <td>$16789098</td>
     
   </tr>
 </table><br><br>

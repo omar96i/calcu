@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Exports\StudyExport;
+use App\Exports\TemplateExport;
 use App\Models\CompanyStudy;
 use App\Imports\CompanyStudyImport;
 use Filament\Notifications\Notification;
@@ -55,6 +56,10 @@ class CompanyStudies extends Page
     public $i = 0.06793;
 
     public $TTM = 0.0054917;
+
+    public $step = 1;
+
+    public $activeTab;
 
     public $calcular = "NO";
 
@@ -112,6 +117,11 @@ class CompanyStudies extends Page
 
     public function dowloadExport(){
         return Excel::download(new StudyExport($this->year_calculation, $this->report_type), 'studies.xlsx');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplateExport, 'plantilla.xlsx');
     }
 }
 

@@ -28,7 +28,7 @@ class Study extends Model
         'causative_state',
         'date_of_birth_spouse',
         'spouse_gender',
-        'spouse_gender',
+        'spouse_status',
         'company_entry_date',
         'company_withdrawal_date',
         'base_income_contribution',

@@ -11,6 +11,7 @@ class StudyImport implements ToModel
 
     public $date;
     public $report_type;
+    private $rowNumber = 0; // Contador de filas
 
     public function __construct($date, $report_type)
     {
@@ -24,6 +25,12 @@ class StudyImport implements ToModel
     */
     public function model(array $row)
     {
+        $this->rowNumber++; // Incrementa el número de fila
+
+        // Omitir la primera fila (el encabezado)
+        if ($this->rowNumber === 1) {
+            return null;
+        }
 
         $date1 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[7]);
         $newDate1 = $date1->format('Y-m-d');
@@ -45,7 +52,7 @@ class StudyImport implements ToModel
             'causative_state' => $row[8],
             'date_of_birth_spouse' => $newDate2,
             'spouse_gender' => $row[10],
-            'spouse_gender' => $row[11],
+            'spouse_status' => $row[11],
             'company_entry_date' => $newDate3,
             'company_withdrawal_date' => $row[13],
             'base_income_contribution' => $row[14],

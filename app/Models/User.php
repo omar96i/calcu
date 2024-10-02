@@ -11,6 +11,8 @@ use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Spatie\Permission\Traits\HasRoles;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -64,5 +66,15 @@ class User extends Authenticatable implements FilamentUser
     public function parametros(): BelongsTo
     {
         return $this->belongsTo(GeneralData::class);
+    }
+
+    /**
+     * Get all of the data_generals for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function data_generals(): HasMany
+    {
+        return $this->hasMany(DataGeneral::class);
     }
 }

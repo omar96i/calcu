@@ -10,6 +10,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use App\Filament\Pages\Settings;
 use App\Imports\StudyImport;
+use App\Models\DataGeneral;
 use App\Models\Study;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -45,13 +46,13 @@ class CompanyStudies extends Page
 
     public $smmlv = 1160000;
 
-    public $K_ = 0.04;
+    public $K_ = 0;
 
-    public $j = 0.11064;
+    public $j = 0;
 
-    public $js = 0.05387;
+    public $js = 0;
 
-    public $jm = 0.00878;
+    public $jm = 0;
 
     public $i = 0.06793;
 
@@ -83,6 +84,28 @@ class CompanyStudies extends Page
     }
 
     public function closeTable(){
+        $aux = DataGeneral::where('user_id', auth()->user()->id)->where('year', $this->year_calculation)->where('type', $this->report_type)->get()->first();
+        if($aux){
+            $this->parametrosd17 = floatval($aux->parametros_17);
+            $this->smmlv = floatval($aux->smmlv);
+            $this->K_ = floatval($aux->k);
+            $this->j = floatval($aux->j);
+            $this->js = floatval($aux->js);
+            $this->jm = floatval($aux->jm);
+            $this->i = floatval($aux->i);
+            $this->TTM = floatval($aux->ttm);
+            $this->fecha_calculo2 = $aux->fecha_calculo;
+        }else{
+            $this->parametrosd17 = 0;
+            $this->smmlv = 0;
+            $this->K_ = 0;
+            $this->j = 0;
+            $this->js = 0;
+            $this->jm = 0;
+            $this->i = 0;
+            $this->TTM = 0;
+            $this->fecha_calculo2 = '';
+        }
         $this->showTable = false;
 
     }
@@ -122,6 +145,10 @@ class CompanyStudies extends Page
     public function downloadTemplate()
     {
         return Excel::download(new TemplateExport, 'plantilla.xlsx');
+    }
+
+    public function getDefaultValue(){
+
     }
 }
 

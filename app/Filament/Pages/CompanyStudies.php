@@ -44,7 +44,7 @@ class CompanyStudies extends Page
 
     public $parametrosd17 = 0;
 
-    public $smmlv = 1160000;
+    public $smmlv = 0;
 
     public $K_ = 0;
 
@@ -54,9 +54,9 @@ class CompanyStudies extends Page
 
     public $jm = 0;
 
-    public $i = 0.06793;
+    public $i = 0;
 
-    public $TTM = 0.0054917;
+    public $TTM = 0;
 
     public $step = 1;
 
@@ -70,7 +70,7 @@ class CompanyStudies extends Page
 
     public $yeartoimport;
 
-    public $fecha_calculo2 = '2023-01-01';
+    public $fecha_calculo2 = '';
 
     public $report_type = 'normal';
 

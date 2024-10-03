@@ -15,26 +15,28 @@ class ListUsers extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [
-            
+        $actions = [
             Action::make('createPDF')
-            ->label('Descargar Nota técnica COLGAAP')
-            ->color('warning')
-            
-            ->url(
-                fn():string => route('pdf.example', ['user' => Auth::user()]),
-                shouldOpenInNewTab: true
-            ),
+                ->label('Descargar Nota técnica COLGAAP')
+                ->color('warning')
+                ->url(
+                    fn(): string => route('pdf.example', ['user' => Auth::user()]),
+                    shouldOpenInNewTab: true
+                ),
 
-            //Actions\CreateAction::make(),
-            Action::make('createPDF')
-            ->label('Descargar Nota técnica NIIF')
-            ->color('warning')
-            
-            ->url(
-                fn():string => route('pdf.example_int', ['user' => Auth::user()]),
-                shouldOpenInNewTab: true
-            ),
+            Action::make('createPDF_int')
+                ->label('Descargar Nota técnica NIIF')
+                ->color('warning')
+                ->url(
+                    fn(): string => route('pdf.example_int', ['user' => Auth::user()]),
+                    shouldOpenInNewTab: true
+                ),
         ];
+
+        // Verificar si el usuario autenticado tiene el rol 'super_admin'
+        if (Auth::user()->hasRole('super_admin')) {
+            $actions[] = Actions\CreateAction::make();
+        }
+        return $actions;
     }
 }

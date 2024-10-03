@@ -75,13 +75,13 @@
                             <x-slot name="label">Valores requeridos para calcular</x-slot>
                             <div class="grid grid-cols-3 gap-4">
                                 <div class="mt-3">
-                                    <label for="">K_</label>
+                                    <label for="">K de corte =</label>
                                     <x-filament::input.wrapper>
                                         <x-filament::input type="text" wire:model.live="K_" readOnly/>
                                     </x-filament::input.wrapper>
                                 </div>
                                 <div class="mt-3">
-                                    <label for="">I</label>
+                                    <label for="">Tasa ténica anual (I)</label>
                                     <x-filament::input.wrapper>
                                         <x-filament::input type="text" wire:model.live="i" readOnly/>
                                     </x-filament::input.wrapper>

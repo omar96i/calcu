@@ -75,57 +75,15 @@
                             <x-slot name="label">Valores requeridos para calcular</x-slot>
                             <div class="grid grid-cols-3 gap-4">
                                 <div class="mt-3">
-                                    <label for="">Parámetros</label>
-                                    <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="parametrosd17" />
-                                    </x-filament::input.wrapper>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="">SMMLV</label>
-                                    <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="smmlv" />
-                                    </x-filament::input.wrapper>
-                                </div>
-                                <div class="mt-3">
                                     <label for="">K_</label>
                                     <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="K_" />
-                                    </x-filament::input.wrapper>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="">J</label>
-                                    <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="j" />
-                                    </x-filament::input.wrapper>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="">JS</label>
-                                    <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="js" />
-                                    </x-filament::input.wrapper>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="">JM</label>
-                                    <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="jm" />
+                                        <x-filament::input type="text" wire:model.live="K_" readOnly/>
                                     </x-filament::input.wrapper>
                                 </div>
                                 <div class="mt-3">
                                     <label for="">I</label>
                                     <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="i" />
-                                    </x-filament::input.wrapper>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="">TTM</label>
-                                    <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="TTM" />
-                                    </x-filament::input.wrapper>
-                                </div>
-                                <div class="mt-3">
-                                    <label for="">Fecha de cálculo</label>
-                                    <x-filament::input.wrapper>
-                                        <x-filament::input type="date" wire:model.live="fecha_calculo2" />
+                                        <x-filament::input type="text" wire:model.live="i" readOnly/>
                                     </x-filament::input.wrapper>
                                 </div>
                             </div>

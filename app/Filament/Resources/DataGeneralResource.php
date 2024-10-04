@@ -58,10 +58,10 @@ class DataGeneralResource extends Resource
                     }),
                 Forms\Components\TextInput::make('parametros_17')->label('parametros')
                     ->maxLength(191),
-                Forms\Components\TextInput::make('smmlv')
+                Forms\Components\TextInput::make('smmlv')->label('SMMLV')
                     ->maxLength(191),
                 Forms\Components\TextInput::make('k')
-                    ->label('K')
+                    ->label('K de corte =')
                     ->required()
                     ->numeric() // Asegura que solo se introduzcan números
                     ->live()
@@ -80,7 +80,7 @@ class DataGeneralResource extends Resource
                     }),
 
                 Forms\Components\TextInput::make('i')
-                    ->label('I')
+                    ->label('Tasa ténica anual (I)')
                     ->required()
                     ->numeric() // Asegura que solo se introduzcan números
                     ->live()
@@ -118,12 +118,12 @@ class DataGeneralResource extends Resource
                         $set('ttm', $ttm);
                     }),
                 Forms\Components\TextInput::make('j')
-                    ->label('J'),
+                    ->label('Tasa de interes anual estimada (J)'),
                 Forms\Components\TextInput::make('js')
-                    ->label('JS'),
-                Forms\Components\TextInput::make('jm'),
+                    ->label('Tasa de interes semestral estimada (JS)'),
+                Forms\Components\TextInput::make('jm')->label('Tasa de interes mensual estimada (JM)'),
 
-                Forms\Components\TextInput::make('ttm'),
+                Forms\Components\TextInput::make('ttm')->label('Tasa técnica mensual (TTM)'),
                 Forms\Components\DatePicker::make('fecha_calculo'),
             ]);
     }

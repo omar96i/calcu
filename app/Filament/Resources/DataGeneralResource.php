@@ -136,24 +136,30 @@ class DataGeneralResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')->label('tipo de parametros')
-                    ->searchable(),
+                    ->searchable()->formatStateUsing(function ($state) {
+                        return match ($state) {
+                            'normal' => 'COLGAAP',
+                            'normal2' => 'NIIF',
+                            default => 'Desconocido',
+                        };
+                    }),
                 Tables\Columns\TextColumn::make('year')->label('año')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('parametros_17')->label('parametros')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('smmlv')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('k')
+                Tables\Columns\TextColumn::make('k')->label('K de corte =')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('j') // se puede calcular
+                Tables\Columns\TextColumn::make('j')->label('Tasa de interes anual estimada (J)')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('js') // se puede calcular
+                Tables\Columns\TextColumn::make('js')->label('Tasa de interes semestral estimada (JS)')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('jm') // se puede calcular
+                Tables\Columns\TextColumn::make('jm')->label('Tasa de interes mensual estimada (JM)')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('i') // se puede calcular
+                Tables\Columns\TextColumn::make('i')->label('Tasa ténica anual (I)')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('ttm') // se puede calcular
+                Tables\Columns\TextColumn::make('ttm')->label('Tasa técnica mensual (TTM)')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('fecha_calculo')
                     ->searchable(),

@@ -75,17 +75,20 @@ class CompanyStudies extends Page
     public $report_type = 'normal';
 
 
-    public function mount(){
+    public function mount()
+    {
         $this->studies = Study::get();
     }
 
-    public function showTableFunct(){
+    public function showTableFunct()
+    {
         $this->showTable = true;
     }
 
-    public function closeTable(){
-        $aux = DataGeneral::where('user_id', auth()->user()->id)->where('year', $this->year_calculation)->where('type', $this->report_type)->get()->first();
-        if($aux){
+    public function closeTable()
+    {
+        $aux = DataGeneral::where('year', $this->year_calculation)->where('type', $this->report_type)->where('type_company', auth()->user()->liquidated)->get()->first();
+        if ($aux) {
             $this->parametrosd17 = floatval($aux->parametros_17);
             $this->smmlv = floatval($aux->smmlv);
             $this->K_ = floatval($aux->k);
@@ -95,7 +98,7 @@ class CompanyStudies extends Page
             $this->i = floatval($aux->i);
             $this->TTM = floatval($aux->ttm);
             $this->fecha_calculo2 = $aux->fecha_calculo;
-        }else{
+        } else {
             $this->parametrosd17 = 0;
             $this->smmlv = 0;
             $this->K_ = 0;
@@ -107,7 +110,16 @@ class CompanyStudies extends Page
             $this->fecha_calculo2 = '';
         }
         $this->showTable = false;
+    }
 
+    public function updateStates()
+    {
+        if ($this->j) {
+            $this->i = ($this->j / (1 + $this->K_)) - 1;
+            $this->js = pow((1 + $this->j), 1 / 2) - 1;
+            $this->jm = pow((1 + $this->j), 1 / 12) - 1;
+            $this->TTM = pow((1 + $this->i), 1 / 12) - 1;
+        }
     }
 
     public function getTitle(): string
@@ -115,17 +127,20 @@ class CompanyStudies extends Page
         return '';
     }
 
-    public function openModal(){
+    public function openModal()
+    {
         $this->dispatch('open-modal', id: 'upload-file');
     }
 
-    public function setPage($newPage){
+    public function setPage($newPage)
+    {
         $this->page = $newPage;
     }
 
-    public function importData(){
+    public function importData()
+    {
 
-        if($this->file){
+        if ($this->file) {
             $this->loading = true;
             Excel::import(new StudyImport($this->yeartoimport, $this->report_type), $this->file);
             Notification::make()
@@ -138,7 +153,8 @@ class CompanyStudies extends Page
         $this->loading = false;
     }
 
-    public function dowloadExport(){
+    public function dowloadExport()
+    {
         return Excel::download(new StudyExport($this->year_calculation, $this->report_type), 'studies.xlsx');
     }
 
@@ -147,8 +163,5 @@ class CompanyStudies extends Page
         return Excel::download(new TemplateExport, 'plantilla.xlsx');
     }
 
-    public function getDefaultValue(){
-
-    }
+    public function getDefaultValue() {}
 }
-

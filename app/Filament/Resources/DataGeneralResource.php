@@ -32,98 +32,150 @@ class DataGeneralResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('user_id')->label('compañia')
-                    ->relationship('user', 'name')
-                    ->required(),
                 Forms\Components\Select::make('type')
                     ->options([
                         'normal' => 'COLGAAP',
                         'normal2' => 'NIIF'
-                    ]),
-                Forms\Components\TextInput::make('year')->label('Año')
-                    ->required()
-                    ->maxLength(191)
+                    ])
+                    ->live()
+                    ->afterStateUpdated(function (callable $set) {
+                        $set('k', null);
+                        $set('i', null);
+                        $set('j', null);
+                        $set('js', null);
+                        $set('jm', null);
+                        $set('ttm', null);
+                    }),
+
+                Forms\Components\Select::make('type_company')->label('tipo de compañia')
+                    ->options([
+                        'si' => 'Liquidada',
+                        'no' => 'Activa'
+                    ])
                     ->live()
                     ->afterStateUpdated(function ($state, callable $set) {
-                        if ($state) {
-                            // Consultamos los datos en la base de datos
-                            $generalData = \App\Models\GeneralData::where('calculation_year', $state)->first();
+                        if($state == 'si'){
+                            $set('k', 0.04);
+                        }else{
+                            $set('k', 0.048);
 
-                            if ($generalData) {
-
-                                $set('fecha_calculo', $generalData->calculation_date);
-                                $set('smmlv', $generalData->minimum_salary);
-                            }
                         }
                     }),
+
+                Forms\Components\TextInput::make('year')->label('Año')
+                    ->required()
+                    ->maxLength(191),
+
                 Forms\Components\TextInput::make('parametros_17')->label('parametros')
                     ->maxLength(191),
+
                 Forms\Components\TextInput::make('smmlv')->label('SMMLV')
                     ->maxLength(191),
-                Forms\Components\TextInput::make('k')
-                    ->label('K de corte =')
-                    ->required()
-                    ->numeric() // Asegura que solo se introduzcan números
-                    ->live()
-                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                        // Obtener el valor de 'i'
-                        $i = $get('i');
 
-                        // Si 'i' está definido, calculamos 'j'
-                        if ($i !== null) {
-                            $k = $state;
-                            $j = ((1 + $k) * (1 + $i)) - 1;
 
-                            // Asignar el valor calculado a 'j'
-                            $set('j', $j);
-                        }
-                    }),
 
-                Forms\Components\TextInput::make('i')
-                    ->label('Tasa ténica anual (I)')
-                    ->required()
-                    ->numeric() // Asegura que solo se introduzcan números
-                    ->live()
-                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                        // Obtener el valor de 'k'
-                        $k = $get('k');
+                Forms\Components\Section::make('Datos a calcular')
+                    ->schema([
+                        Forms\Components\TextInput::make('k')
+                            ->label('K de corte =')
+                            ->required()
+                            ->numeric()
+                            ->live()
+                            ->readOnly(true)
+                            ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                $type = $get('type');
+                                $i = $get('i');
+                                if ($type === 'normal') {
+                                    if ($i !== null) {
+                                        $k = $state;
+                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                        $set('j', $j);
+                                    }
+                                } else if ($type === 'normal2') {
+                                    $j = $get('j');
+                                    $k = $state;
+                                    if ($j !== null) {
+                                        $i = ($j / (1 + $k)) - 1;
+                                        $set('i', $i);
+                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                        $set('j', $j);
+                                        $js = pow((1 + $j), 1 / 2) - 1;
+                                        $set('js', $js);
+                                        $jm = pow((1 + $j), 1 / 12) - 1;
+                                        $set('jm', $jm);
+                                    }
+                                }
+                            }),
+                        Forms\Components\TextInput::make('i')
+                            ->label('Tasa ténica anual (I)')
+                            ->required()
+                            ->numeric()
+                            ->live()
+                            ->readOnly(fn(callable $get) => $get('type') === 'normal2')
+                            ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                $k = $get('k');
+                                $type = $get('type');
+                                $i = $state;
+                                if ($type === 'normal') {
+                                    if ($k !== null) {
+                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                        $set('j', $j);
+                                        $js = pow((1 + $j), 1 / 2) - 1;
+                                        $set('js', $js);
+                                        $jm = pow((1 + $j), 1 / 12) - 1;
+                                        $set('jm', $jm);
+                                    }
+                                } else if ($type === 'normal2') {
+                                    $j = $get('j');
+                                    if ($k !== null) {
+                                        $i = ($j / (1 + $k)) - 1;
+                                        $set('i', $i);
+                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                        $set('j', $j);
+                                        $js = pow((1 + $j), 1 / 2) - 1;
+                                        $set('js', $js);
+                                        $jm = pow((1 + $j), 1 / 12) - 1;
+                                        $set('jm', $jm);
+                                    }
+                                }
+                                $ttm = pow((1 + $i), 1 / 12) - 1;
+                                $set('ttm', $ttm);
+                            }),
 
-                        // Si 'k' está definido, calculamos 'j', 'js', 'jm' y 'ttm'
-                        if ($k !== null) {
-                            $i = $state;
+                        Forms\Components\TextInput::make('j')
+                            ->label('Tasa de interes anual estimada (J)')
+                            ->numeric()
+                            ->readOnly(fn(callable $get) => $get('type') === 'normal')
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                $k = $get('k');
+                                $type = $get('type');
+                                if ($type === 'normal2' && $state !== null && $k !== null) {
+                                    $i = ($state / (1 + $k)) - 1;
+                                    $set('i', $i);
+                                    $js = pow((1 + $state), 1 / 2) - 1;
+                                    $set('js', $js);
+                                    $jm = pow((1 + $state), 1 / 12) - 1;
+                                    $set('jm', $jm);
+                                    $ttm = pow((1 + $i), 1 / 12) - 1;
+                                    $set('ttm', $ttm);
+                                }
+                            }),
+                    ])->columns(3),
 
-                            // Cálculo de 'j' con la fórmula ((1 + k) * (1 + i)) - 1
-                            $j = ((1 + $k) * (1 + $i)) - 1;
 
-                            // Asignar el valor calculado a 'j'
-                            $set('j', $j);
-
-                            // Cálculo de 'js' con la fórmula (1 + j)^(1/2) - 1
-                            $js = pow((1 + $j), 1 / 2) - 1;
-
-                            // Asignar el valor calculado a 'js'
-                            $set('js', $js);
-
-                            // Cálculo de 'jm' con la fórmula (1 + j)^(1/12) - 1
-                            $jm = pow((1 + $j), 1 / 12) - 1;
-
-                            // Asignar el valor calculado a 'jm'
-                            $set('jm', $jm);
-                        }
-
-                        // Cálculo de 'ttm' con la fórmula (1 + i)^(1/12) - 1
-                        $ttm = pow((1 + $i), 1 / 12) - 1;
-
-                        // Asignar el valor calculado a 'ttm'
-                        $set('ttm', $ttm);
-                    }),
-                Forms\Components\TextInput::make('j')
-                    ->label('Tasa de interes anual estimada (J)'),
                 Forms\Components\TextInput::make('js')
-                    ->label('Tasa de interes semestral estimada (JS)'),
-                Forms\Components\TextInput::make('jm')->label('Tasa de interes mensual estimada (JM)'),
+                    ->label('Tasa de interes semestral estimada (JS)')
+                    ->readOnly(true),
 
-                Forms\Components\TextInput::make('ttm')->label('Tasa técnica mensual (TTM)'),
+                Forms\Components\TextInput::make('jm')
+                    ->label('Tasa de interes mensual estimada (JM)')
+                    ->readOnly(true),
+
+                Forms\Components\TextInput::make('ttm')
+                    ->label('Tasa técnica mensual (TTM)')
+                    ->readOnly(true),
+
                 Forms\Components\DatePicker::make('fecha_calculo'),
             ]);
     }
@@ -132,14 +184,11 @@ class DataGeneralResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user.name')->label('compañia')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('type')->label('tipo de parametros')
                     ->searchable()->formatStateUsing(function ($state) {
                         return match ($state) {
-                            'normal' => 'COLGAAP',
-                            'normal2' => 'NIIF',
+                            'normal' => 'COLGAAP', // local se pide K y I
+                            'normal2' => 'NIIF', // Internacional se pide K y J y se calcula el resto  =(J/(1+K_))-1
                             default => 'Desconocido',
                         };
                     }),

@@ -79,16 +79,17 @@ class UserResource extends Resource
                     ->maxLength(191),
                 Forms\Components\Textarea::make('national_legal_considerations')
                 ->label('Consideraciones Legales Nacionales')
-                   
+
                     ->maxLength(191),
                 Forms\Components\Textarea::make('Consideraciones Legales Internacionales')
                 ->label('Consideraciones Legales Internacionales')
-                
-                    ->maxLength(191),    
-                Forms\Components\TextInput::make('liquidated')
-                ->label('Liquidado')
-                    ->required()
+
                     ->maxLength(191),
+                Forms\Components\Select::make('liquidated')->label('Liquidada')
+                ->options([
+                    'si' => 'SI',
+                    'no' => 'NO'
+                ]),
 
 
                 Forms\Components\TextInput::make('type')
@@ -143,13 +144,13 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')::make('national_legal_considerations')
                 ->label('Consid. Nacional')
-                    ->searchable(),    
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('international_legal_considerations')
                         ->label('Consid. Internacional')
                         ->searchable(),
                 Tables\Columns\TextColumn::make('liquidated')
                 ->label('Liquidada')
-                    ->searchable(),    
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -163,14 +164,14 @@ class UserResource extends Resource
                 ]),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -178,5 +179,5 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
-    }    
+    }
 }

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('data_generals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
             $table->string('type');
+            $table->string('type_company');
             $table->string('year')->nullable();
             $table->string('parametros_17')->nullable();
             $table->string('smmlv')->nullable();

@@ -68,13 +68,4 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(GeneralData::class);
     }
 
-    /**
-     * Get all of the data_generals for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function data_generals(): HasMany
-    {
-        return $this->hasMany(DataGeneral::class);
-    }
 }

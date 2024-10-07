@@ -7,7 +7,7 @@
             Descargar plantilla / Importar datos
         </x-filament::tabs.item>
     </x-filament::tabs>
-    <x-filament::badge size="xs" >
+    <x-filament::badge size="xs">
         1. Descarga la plantilla, agrega tus datos y luego impórtala. <br>
         2. Selecciona el año y tipo de reporte, y súbelo. <br>
         3. Para calcular, selecciona el año y reporte importado, ingresa los parámetros y haz clic en "Calcular". <br>
@@ -77,15 +77,24 @@
                                 <div class="mt-3">
                                     <label for="">K de corte =</label>
                                     <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="K_" readOnly/>
+                                        <x-filament::input type="text" wire:model.live="K_" readOnly />
                                     </x-filament::input.wrapper>
                                 </div>
                                 <div class="mt-3">
                                     <label for="">Tasa ténica anual (I)</label>
                                     <x-filament::input.wrapper>
-                                        <x-filament::input type="text" wire:model.live="i" readOnly/>
+                                        <x-filament::input type="text" wire:model.live="i" readOnly />
                                     </x-filament::input.wrapper>
                                 </div>
+                                @if ($report_type == 'normal2')
+                                    <div class="mt-3">
+                                        <label for="">Tasa de interes anual estimada (J)</label>
+                                        <x-filament::input.wrapper>
+                                            <x-filament::input type="text" wire:model.live="j" wire:keydown="updateStates()"  />
+                                        </x-filament::input.wrapper>
+                                    </div>
+                                @endif
+
                             </div>
                         </x-filament::fieldset>
                     </div>

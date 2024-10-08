@@ -53,13 +53,18 @@ class DataGeneralResource extends Resource
                         'no' => 'Activa'
                     ])
                     ->live()
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        if($state == 'si'){
+                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                        if($get('type') == 'normal2'){
                             $set('k', 0.04);
                         }else{
-                            $set('k', 0.048);
+                            if($state == 'si'){
+                                $set('k', 0.04);
+                            }else{
+                                $set('k', 0.048);
 
+                            }
                         }
+
                     }),
 
                 Forms\Components\TextInput::make('year')->label('Año')

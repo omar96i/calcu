@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DataGeneralResource\Pages;
 use App\Filament\Resources\DataGeneralResource\RelationManagers;
 use App\Models\DataGeneral;
+use App\Models\StudyParametro;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -38,13 +39,16 @@ class DataGeneralResource extends Resource
                         'normal2' => 'NIIF'
                     ])
                     ->live()
-                    ->afterStateUpdated(function (callable $set) {
+                    ->afterStateUpdated(function (callable $set, $state) {
                         $set('i', null);  // i es la nueva k
                         $set('k', null);  // k es la nueva i
                         $set('j', null);
                         $set('js', null);
                         $set('jm', null);
                         $set('ttm', null);
+                        if($state == 'normal2'){
+                            $set('i', 0.04);
+                        }
                     }),
 
                 Forms\Components\Select::make('type_company')->label('tipo de compañia')
@@ -55,7 +59,7 @@ class DataGeneralResource extends Resource
                     ->live()
                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
                         if ($get('type') == 'normal2') {
-                            $set('i', 0.04);  // Ahora se asigna i en lugar de k
+                            $set('i', 0.04);
                         } else {
                             if ($state == 'si') {
                                 $set('i', 0.04);
@@ -67,7 +71,47 @@ class DataGeneralResource extends Resource
 
                 Forms\Components\TextInput::make('year')->label('Año')
                     ->required()
-                    ->maxLength(191),
+                    ->maxLength(191)
+                    ->live()
+                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                        $type = $get('type');
+                        if ($type == 'normal') {
+                            // Obtener el año ingresado
+                            $year = (int) $state;
+
+                            // Buscar los valores del año ingresado y dos años anteriores
+                            $parametros = StudyParametro::whereIn('year', [$year, $year - 1, $year - 2])
+                                ->orderBy('year', 'desc')
+                                ->pluck('ipc_anual', 'year');
+
+                            // Verificar que existan los 3 valores necesarios
+                            if ($parametros->count() === 3) {
+                                $ipc_anual_2023 = $parametros[$year] ?? 0;
+                                $ipc_anual_2022 = $parametros[$year - 1] ?? 0;
+                                $ipc_anual_2021 = $parametros[$year - 2] ?? 0;
+
+                                // Aplicar la fórmula para calcular 'k'
+                                $k = (3 * $ipc_anual_2023 + 2 * $ipc_anual_2022 + $ipc_anual_2021) / 6;
+
+                                // Establecer el valor calculado en el campo 'k'
+                                $set('k', $k);
+
+                                $i = $get('i');
+                                $k = $get('k');
+                                $j = ((1 + $i) * (1 + $k)) - 1;
+                                $set('j', $j);
+                                $js = pow((1 + $j), 1 / 2) - 1;
+                                $set('js', $js);
+                                $jm = pow((1 + $j), 1 / 12) - 1;
+                                $set('jm', $jm);
+                                $ttm = pow((1 + $k), 1 / 12) - 1;
+                                $set('ttm', $ttm);
+                            } else {
+                                // Manejar el caso en que falten datos
+                                $set('k', 0);
+                            }
+                        }
+                    }),
 
                 Forms\Components\TextInput::make('parametros_17')->label('parametros')
                     ->maxLength(191),
@@ -82,85 +126,39 @@ class DataGeneralResource extends Resource
                             ->required()
                             ->numeric()
                             ->live()
-                            ->readOnly(true)
-                            ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                $type = $get('type');
-                                $k = $get('k');  // k reemplaza a i en los cálculos
-                                if ($type === 'normal') {
-                                    if ($k !== null) {
-                                        $i = $state;
-                                        $j = ((1 + $i) * (1 + $k)) - 1;
-                                        $set('j', $j);
-                                    }
-                                } else if ($type === 'normal2') {
-                                    $j = $get('j');
-                                    $i = $state;
-                                    if ($j !== null) {
-                                        $k = ($j / (1 + $i)) - 1;
-                                        $set('k', $k);
-                                        $j = ((1 + $i) * (1 + $k)) - 1;
-                                        $set('j', $j);
-                                        $js = pow((1 + $j), 1 / 2) - 1;
-                                        $set('js', $js);
-                                        $jm = pow((1 + $j), 1 / 12) - 1;
-                                        $set('jm', $jm);
-                                    }
-                                }
-                            }),
-
+                            ->readOnly(true),
                         Forms\Components\TextInput::make('k')  // k reemplaza a i
                             ->label('K de corte =')
                             ->required()
                             ->numeric()
                             ->live()
-                            ->readOnly(fn(callable $get) => $get('type') === 'normal2')
-                            ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                $i = $get('i');  // Intercambiado en los cálculos
-                                $type = $get('type');
-                                $k = $state;
-                                if ($type === 'normal') {
-                                    if ($i !== null) {
-                                        $j = ((1 + $i) * (1 + $k)) - 1;
-                                        $set('j', $j);
-                                        $js = pow((1 + $j), 1 / 2) - 1;
-                                        $set('js', $js);
-                                        $jm = pow((1 + $j), 1 / 12) - 1;
-                                        $set('jm', $jm);
-                                    }
-                                } else if ($type === 'normal2') {
-                                    $j = $get('j');
-                                    if ($i !== null) {
-                                        $k = ($j / (1 + $i)) - 1;
-                                        $set('k', $k);
-                                        $j = ((1 + $i) * (1 + $k)) - 1;
-                                        $set('j', $j);
-                                        $js = pow((1 + $j), 1 / 2) - 1;
-                                        $set('js', $js);
-                                        $jm = pow((1 + $j), 1 / 12) - 1;
-                                        $set('jm', $jm);
-                                    }
-                                }
-                                $ttm = pow((1 + $k), 1 / 12) - 1;  // Actualización a k
-                                $set('ttm', $ttm);
-                            }),
-
-                        Forms\Components\TextInput::make('j')
+                            ->readOnly(true),
+                            Forms\Components\TextInput::make('j')
                             ->label('Tasa de interes anual estimada (J)')
                             ->numeric()
-                            ->readOnly(fn(callable $get) => $get('type') === 'normal')
                             ->live()
+                            ->readOnly(fn(callable $get) => $get('type') === 'normal')
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                $i = $get('i');  // Ahora usa i
                                 $type = $get('type');
-                                if ($type === 'normal2' && $state !== null && $i !== null) {
-                                    $k = ($state / (1 + $i)) - 1;
-                                    $set('k', $k);
-                                    $js = pow((1 + $state), 1 / 2) - 1;
-                                    $set('js', $js);
-                                    $jm = pow((1 + $state), 1 / 12) - 1;
-                                    $set('jm', $jm);
-                                    $ttm = pow((1 + $k), 1 / 12) - 1;
-                                    $set('ttm', $ttm);
+                                $i = $get('i');
+                                if ($type === 'normal2' && $i !== null) {
+                                    $j = $state;
+                                    if($j !== null){
+                                        $k = ($j / (1 + $i)) - 1;
+                                        $set('k', $k);
+                                        $js = pow((1 + $j), 1 / 2) - 1;
+                                        $set('js', $js);
+                                        $jm = pow((1 + $j), 1 / 12) - 1;
+                                        $set('jm', $jm);
+                                        $ttm = pow((1 + $k), 1 / 12) - 1;
+                                        $set('ttm', $ttm);
+                                    }else{
+                                        $set('k', null);
+                                        $set('js', null);
+                                        $set('jm', null);
+                                        $set('ttm', null);
+                                    }
+
                                 }
                             }),
                     ])->columns(3),

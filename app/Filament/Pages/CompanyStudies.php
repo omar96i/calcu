@@ -115,10 +115,10 @@ class CompanyStudies extends Page
     public function updateStates()
     {
         if ($this->j) {
-            $this->i = ($this->j / (1 + $this->K_)) - 1;
+            $this->K_ = ($this->j / (1 + $this->i)) - 1;
             $this->js = pow((1 + $this->j), 1 / 2) - 1;
             $this->jm = pow((1 + $this->j), 1 / 12) - 1;
-            $this->TTM = pow((1 + $this->i), 1 / 12) - 1;
+            $this->TTM = pow((1 + $this->K_), 1 / 12) - 1;
         }
     }
 

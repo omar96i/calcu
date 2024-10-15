@@ -39,8 +39,8 @@ class DataGeneralResource extends Resource
                     ])
                     ->live()
                     ->afterStateUpdated(function (callable $set) {
-                        $set('k', null);
-                        $set('i', null);
+                        $set('i', null);  // i es la nueva k
+                        $set('k', null);  // k es la nueva i
                         $set('j', null);
                         $set('js', null);
                         $set('jm', null);
@@ -54,17 +54,15 @@ class DataGeneralResource extends Resource
                     ])
                     ->live()
                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                        if($get('type') == 'normal2'){
-                            $set('k', 0.04);
-                        }else{
-                            if($state == 'si'){
-                                $set('k', 0.04);
-                            }else{
-                                $set('k', 0.048);
-
+                        if ($get('type') == 'normal2') {
+                            $set('i', 0.04);  // Ahora se asigna i en lugar de k
+                        } else {
+                            if ($state == 'si') {
+                                $set('i', 0.04);
+                            } else {
+                                $set('i', 0.048);
                             }
                         }
-
                     }),
 
                 Forms\Components\TextInput::make('year')->label('Año')
@@ -77,32 +75,30 @@ class DataGeneralResource extends Resource
                 Forms\Components\TextInput::make('smmlv')->label('SMMLV')
                     ->maxLength(191),
 
-
-
                 Forms\Components\Section::make('Datos a calcular')
                     ->schema([
-                        Forms\Components\TextInput::make('k')
-                            ->label('K de corte =')
+                        Forms\Components\TextInput::make('i')  // i reemplaza a k
+                            ->label('Tasa ténica anual (I)')
                             ->required()
                             ->numeric()
                             ->live()
                             ->readOnly(true)
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
                                 $type = $get('type');
-                                $i = $get('i');
+                                $k = $get('k');  // k reemplaza a i en los cálculos
                                 if ($type === 'normal') {
-                                    if ($i !== null) {
-                                        $k = $state;
-                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                    if ($k !== null) {
+                                        $i = $state;
+                                        $j = ((1 + $i) * (1 + $k)) - 1;
                                         $set('j', $j);
                                     }
                                 } else if ($type === 'normal2') {
                                     $j = $get('j');
-                                    $k = $state;
+                                    $i = $state;
                                     if ($j !== null) {
-                                        $i = ($j / (1 + $k)) - 1;
-                                        $set('i', $i);
-                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                        $k = ($j / (1 + $i)) - 1;
+                                        $set('k', $k);
+                                        $j = ((1 + $i) * (1 + $k)) - 1;
                                         $set('j', $j);
                                         $js = pow((1 + $j), 1 / 2) - 1;
                                         $set('js', $js);
@@ -111,19 +107,20 @@ class DataGeneralResource extends Resource
                                     }
                                 }
                             }),
-                        Forms\Components\TextInput::make('i')
-                            ->label('Tasa ténica anual (I)')
+
+                        Forms\Components\TextInput::make('k')  // k reemplaza a i
+                            ->label('K de corte =')
                             ->required()
                             ->numeric()
                             ->live()
                             ->readOnly(fn(callable $get) => $get('type') === 'normal2')
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                $k = $get('k');
+                                $i = $get('i');  // Intercambiado en los cálculos
                                 $type = $get('type');
-                                $i = $state;
+                                $k = $state;
                                 if ($type === 'normal') {
-                                    if ($k !== null) {
-                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                    if ($i !== null) {
+                                        $j = ((1 + $i) * (1 + $k)) - 1;
                                         $set('j', $j);
                                         $js = pow((1 + $j), 1 / 2) - 1;
                                         $set('js', $js);
@@ -132,10 +129,10 @@ class DataGeneralResource extends Resource
                                     }
                                 } else if ($type === 'normal2') {
                                     $j = $get('j');
-                                    if ($k !== null) {
-                                        $i = ($j / (1 + $k)) - 1;
-                                        $set('i', $i);
-                                        $j = ((1 + $k) * (1 + $i)) - 1;
+                                    if ($i !== null) {
+                                        $k = ($j / (1 + $i)) - 1;
+                                        $set('k', $k);
+                                        $j = ((1 + $i) * (1 + $k)) - 1;
                                         $set('j', $j);
                                         $js = pow((1 + $j), 1 / 2) - 1;
                                         $set('js', $js);
@@ -143,7 +140,7 @@ class DataGeneralResource extends Resource
                                         $set('jm', $jm);
                                     }
                                 }
-                                $ttm = pow((1 + $i), 1 / 12) - 1;
+                                $ttm = pow((1 + $k), 1 / 12) - 1;  // Actualización a k
                                 $set('ttm', $ttm);
                             }),
 
@@ -153,21 +150,20 @@ class DataGeneralResource extends Resource
                             ->readOnly(fn(callable $get) => $get('type') === 'normal')
                             ->live()
                             ->afterStateUpdated(function ($state, callable $get, callable $set) {
-                                $k = $get('k');
+                                $i = $get('i');  // Ahora usa i
                                 $type = $get('type');
-                                if ($type === 'normal2' && $state !== null && $k !== null) {
-                                    $i = ($state / (1 + $k)) - 1;
-                                    $set('i', $i);
+                                if ($type === 'normal2' && $state !== null && $i !== null) {
+                                    $k = ($state / (1 + $i)) - 1;
+                                    $set('k', $k);
                                     $js = pow((1 + $state), 1 / 2) - 1;
                                     $set('js', $js);
                                     $jm = pow((1 + $state), 1 / 12) - 1;
                                     $set('jm', $jm);
-                                    $ttm = pow((1 + $i), 1 / 12) - 1;
+                                    $ttm = pow((1 + $k), 1 / 12) - 1;
                                     $set('ttm', $ttm);
                                 }
                             }),
                     ])->columns(3),
-
 
                 Forms\Components\TextInput::make('js')
                     ->label('Tasa de interes semestral estimada (JS)')

@@ -90,7 +90,7 @@
                                     <div class="mt-3">
                                         <label for="">Tasa de interes anual estimada (J)</label>
                                         <x-filament::input.wrapper>
-                                            <x-filament::input type="text" wire:model.live="j" wire:keydown="updateStates()"  />
+                                            <x-filament::input type="text" wire:model.live="j" wire:keydown="updateStates()" readOnly />
                                         </x-filament::input.wrapper>
                                     </div>
                                 @endif

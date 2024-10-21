@@ -8,12 +8,20 @@ use Maatwebsite\Excel\Concerns\ToModel;
 class TitleCalculationImport implements ToModel
 {
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
+    private $rowNumber = 0; // Contador de filas
     public function model(array $row)
     {
+        $this->rowNumber++; // Incrementa el número de fila
+
+        // Omitir la primera fila (el encabezado)
+        if ($this->rowNumber === 1) {
+            return null;
+        }
+
         $date1 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4]);
         $newDate1 = $date1->format('Y-m-d');
         $date2 = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[7]);

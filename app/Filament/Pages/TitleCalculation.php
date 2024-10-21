@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\TemplateExportTitleCalculation;
 use App\Imports\TitleCalculationImport;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -29,6 +30,8 @@ class TitleCalculation extends Page
 
     public $page = 'calculo-masivo';
 
+    public $step = 1;
+
     public function getTitle(): string
     {
         return '';
@@ -55,6 +58,11 @@ class TitleCalculation extends Page
             $this->file = null;
         }
         $this->loading = false;
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplateExportTitleCalculation, 'plantilla_titulos.xlsx');
     }
 
 }

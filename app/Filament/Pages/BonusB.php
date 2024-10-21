@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\TemplateExportBonusB;
 use App\Imports\BonusBImport;
 use App\Models\BonusB as ModelsBonusB;
 use App\Models\DTFP;
@@ -93,6 +94,8 @@ class BonusB extends Page
     public $loading = false;
 
     public $page = 'bonus-b';
+
+    public $step = 1;
 
 
 
@@ -190,6 +193,11 @@ class BonusB extends Page
 
     public function setPage($newPage){
         $this->page = $newPage;
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplateExportBonusB, 'plantilla_bonus_b.xlsx');
     }
 
     public function importData(){

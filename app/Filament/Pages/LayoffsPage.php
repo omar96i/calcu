@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\TemplateExportCesantias;
 use App\Imports\LayoffImport;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -31,6 +32,8 @@ class LayoffsPage extends Page
 
     public $data;
 
+    public $step = 1;
+
     public function getTitle(): string
     {
         return '';
@@ -57,5 +60,10 @@ class LayoffsPage extends Page
             $this->file = null;
         }
         $this->loading = false;
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplateExportCesantias, 'plantilla_cesantias.xlsx');
     }
 }

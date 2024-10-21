@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Exports\TemplateExportFiveYearCalculation;
 use App\Imports\FiveYearCalculationImport;
 use App\Models\FiveYearCalculation;
 use Filament\Notifications\Notification;
@@ -32,6 +33,8 @@ class FiveYearCalculationPage extends Page
 
     public $data;
 
+    public $step = 1;
+
     public function mount(){
     }
 
@@ -61,5 +64,10 @@ class FiveYearCalculationPage extends Page
             $this->file = null;
         }
         $this->loading = false;
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplateExportFiveYearCalculation, 'plantilla_quinquenio.xlsx');
     }
 }

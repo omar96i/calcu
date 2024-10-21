@@ -20,6 +20,7 @@ class LayoffImport implements ToModel
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
+
     public function model(array $row)
     {
 

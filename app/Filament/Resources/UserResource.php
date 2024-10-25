@@ -31,7 +31,12 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('id', Auth::user()->id);
+        if(Auth::user()->hasRole('super_admin')){
+            return parent::getEloquentQuery();
+        }else{
+            return parent::getEloquentQuery()->where('id', Auth::user()->id);
+        }
+
     }
 
 
@@ -81,7 +86,7 @@ class UserResource extends Resource
                 ->label('Consideraciones Legales Nacionales')
 
                     ->maxLength(191),
-                Forms\Components\Textarea::make('Consideraciones Legales Internacionales')
+                Forms\Components\Textarea::make('international_legal_considerations')
                 ->label('Consideraciones Legales Internacionales')
 
                     ->maxLength(191),
@@ -90,7 +95,6 @@ class UserResource extends Resource
                     'si' => 'SI',
                     'no' => 'NO'
                 ]),
-
 
                 Forms\Components\TextInput::make('type')
                 ->label('Tipo')

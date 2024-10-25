@@ -70,6 +70,7 @@ class StudiesTable extends Component
         $data = Study::with('actuarial_group')
         ->where('year', $this->fecha_calculo)
         ->where('report_type', $this->report_type)
+        ->where('user_id', auth()->user()->id)
         ->paginate($this->perPage);
         return view('livewire.studies-table', ['data' => $data]);
     }

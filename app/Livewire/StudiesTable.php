@@ -332,8 +332,8 @@ class StudiesTable extends Component
             $resultado = round($resultado) + 1;
 
             // Retornar el valor mínimo entre 15 y el resultado calculado
-            $this->AE = max(15, $resultado);
-            return max(15, $resultado);
+            $this->AE = max(15, $resultado)+1;
+            return max(15, $resultado)+1;
         }
 
         // Si $J no es una fecha válida, retornar 0
@@ -416,8 +416,8 @@ class StudiesTable extends Component
             $days_difference = $fecha_calculo->diffInDays($L) + 1;
             $result = floor(($days_difference / $Dias_año) + 0.5);
         }
-        $this->AH = $result + 1;
-        return $result + 1;
+        $this->AH = $result + 2;
+        return $result + 2;
     }
 
     public $AI;

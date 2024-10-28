@@ -329,7 +329,7 @@ class StudiesTable extends Component
             $resultado = $diferenciaDias / $diasAno;
 
             // Redondear el resultado al entero más cercano y sumar 1 año
-            $resultado = round($resultado) + 1;
+            $resultado = round($resultado);
 
             // Retornar el valor mínimo entre 15 y el resultado calculado
             $this->AE = max(15, $resultado);
@@ -413,11 +413,11 @@ class StudiesTable extends Component
 
         // Verificar si $L es mayor a 0
         if ($L->isAfter(Carbon::create(0))) {
-            $days_difference = $fecha_calculo->diffInDays($L) + 1;
+            $days_difference = $fecha_calculo->diffInDays($L);
             $result = floor(($days_difference / $Dias_año) + 0.5);
         }
-        $this->AH = $result + 1;
-        return $result + 1;
+        $this->AH = $result;
+        return $result;
     }
 
     public $AI;

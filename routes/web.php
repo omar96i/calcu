@@ -22,6 +22,10 @@ Route::get('/', function(){
     return redirect('/company');
 });
 
+Route::get('/admin/login', function(){
+    return redirect('/company');
+})->name('filament.admin.auth.login');
+
 Route::get('/test', function(){
     $company = CompanyStudyAux::get();
     return view('table', compact('company'));

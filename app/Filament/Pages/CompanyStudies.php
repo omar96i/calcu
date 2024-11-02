@@ -12,6 +12,7 @@ use App\Filament\Pages\Settings;
 use App\Imports\StudyImport;
 use App\Models\DataGeneral;
 use App\Models\Study;
+use App\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 
 class CompanyStudies extends Page
@@ -74,10 +75,16 @@ class CompanyStudies extends Page
 
     public $report_type = 'normal';
 
+    public $companies = [];
+
+    public $selectedCompany = 0;
+
 
     public function mount()
     {
         $this->studies = Study::get();
+        $this->companies = User::get();
+        $this->selectedCompany = auth()->user()->id;
     }
 
     public function showTableFunct()
@@ -87,27 +94,30 @@ class CompanyStudies extends Page
 
     public function closeTable()
     {
-        $aux = DataGeneral::where('year', $this->year_calculation)->where('type', $this->report_type)->where('type_company', auth()->user()->liquidated)->get()->first();
-        if ($aux) {
-            $this->parametrosd17 = floatval($aux->parametros_17);
-            $this->smmlv = floatval($aux->smmlv);
-            $this->K_ = floatval($aux->k);
-            $this->j = floatval($aux->j);
-            $this->js = floatval($aux->js);
-            $this->jm = floatval($aux->jm);
-            $this->i = floatval($aux->i);
-            $this->TTM = floatval($aux->ttm);
-            $this->fecha_calculo2 = $aux->fecha_calculo;
-        } else {
-            $this->parametrosd17 = 0;
-            $this->smmlv = 0;
-            $this->K_ = 0;
-            $this->j = 0;
-            $this->js = 0;
-            $this->jm = 0;
-            $this->i = 0;
-            $this->TTM = 0;
-            $this->fecha_calculo2 = '';
+        $user = User::find($this->selectedCompany);
+        if ($user) {
+            $aux = DataGeneral::where('year', $this->year_calculation)->where('type', $this->report_type)->where('type_company', $user->liquidated)->get()->first();
+            if ($aux) {
+                $this->parametrosd17 = floatval($aux->parametros_17);
+                $this->smmlv = floatval($aux->smmlv);
+                $this->K_ = floatval($aux->k);
+                $this->j = floatval($aux->j);
+                $this->js = floatval($aux->js);
+                $this->jm = floatval($aux->jm);
+                $this->i = floatval($aux->i);
+                $this->TTM = floatval($aux->ttm);
+                $this->fecha_calculo2 = $aux->fecha_calculo;
+            } else {
+                $this->parametrosd17 = 0;
+                $this->smmlv = 0;
+                $this->K_ = 0;
+                $this->j = 0;
+                $this->js = 0;
+                $this->jm = 0;
+                $this->i = 0;
+                $this->TTM = 0;
+                $this->fecha_calculo2 = '';
+            }
         }
         $this->showTable = false;
     }
@@ -142,7 +152,7 @@ class CompanyStudies extends Page
 
         if ($this->file) {
             $this->loading = true;
-            Excel::import(new StudyImport($this->yeartoimport, $this->report_type), $this->file);
+            Excel::import(new StudyImport($this->yeartoimport, $this->report_type, $this->selectedCompany), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()
@@ -155,7 +165,7 @@ class CompanyStudies extends Page
 
     public function dowloadExport()
     {
-        return Excel::download(new StudyExport($this->year_calculation, $this->report_type), 'studies.xlsx');
+        return Excel::download(new StudyExport($this->year_calculation, $this->report_type, $this->selectedCompany), 'studies.xlsx');
     }
 
     public function downloadTemplate()

@@ -47,9 +47,12 @@ class StudiesTable extends Component
 
     public $report_type = 'normal';
 
-    public function mount($fecha, $parametro = false, $smmlv = false, $k = false, $j = false, $js = false, $jm = false, $i = false, $ttm = false, $recalcular, $fecha_calculo2, $report_type){
+    public $user_id;
+
+    public function mount($fecha, $parametro = false, $smmlv = false, $k = false, $j = false, $js = false, $jm = false, $i = false, $ttm = false, $recalcular, $fecha_calculo2, $report_type, $userId){
         $this->fecha_calculo = $fecha;
         $this->report_type = $report_type;
+        $this->user_id = $userId;
         if($recalcular == 'SI'){
             $this->parametrosd17 = $parametro;
             $this->smmlv = $smmlv;
@@ -70,7 +73,7 @@ class StudiesTable extends Component
         $data = Study::with('actuarial_group')
         ->where('year', $this->fecha_calculo)
         ->where('report_type', $this->report_type)
-        ->where('user_id', auth()->user()->id)
+        ->where('user_id', $this->user_id)
         ->paginate($this->perPage);
         return view('livewire.studies-table', ['data' => $data]);
     }

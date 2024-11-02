@@ -11,10 +11,12 @@ class StudyExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $year;
     protected $report_type;
+    protected $user_id;
 
-    public function __construct($year, $report_type)
+    public function __construct($year, $report_type, $user_id)
     {
         $this->year = $year;
+        $this->user_id = $user_id;
         $this->report_type = $report_type;
     }
 
@@ -26,6 +28,7 @@ class StudyExport implements FromCollection, WithHeadings, WithMapping
         return Study::with('actuarial_group')
             ->where('year', $this->year)
             ->where('report_type', $this->report_type)
+            ->where('user_id', $this->user_id)
             ->get();
     }
 

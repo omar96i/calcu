@@ -11,12 +11,14 @@ class StudyImport implements ToModel
 
     public $date;
     public $report_type;
+    public $user_id;
     private $rowNumber = 0; // Contador de filas
 
-    public function __construct($date, $report_type)
+    public function __construct($date, $report_type, $user_id)
     {
         $this->date = $date;
         $this->report_type = $report_type;
+        $this->user_id = $user_id;
     }
     /**
      * @param array $row
@@ -48,7 +50,7 @@ class StudyImport implements ToModel
         $group = ActuarialGroup::where('name', $row[2])->first();
 
         return new Study([
-            'user_id' => auth()->user()->id,
+            'user_id' => $this->user_id,
             'actuarial_group_id' => $group ? $group->id : 1,
             'cc' => $row[0],
             'name' => $row[1],

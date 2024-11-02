@@ -31,12 +31,11 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        if(Auth::user()->hasRole('super_admin')){
+        if (Auth::user()->hasRole('super_admin')) {
             return parent::getEloquentQuery();
-        }else{
+        } else {
             return parent::getEloquentQuery()->where('id', Auth::user()->id);
         }
-
     }
 
 
@@ -51,13 +50,13 @@ class UserResource extends Resource
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('email')
-                ->label('Correo Electronico')
+                    ->label('Correo Electronico')
                     ->email()
                     ->required()
                     ->maxLength(191),
-               // Forms\Components\DateTimePicker::make('email_verified_at'),
+                // Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
-                   ->label('Contraseña')
+                    ->label('Contraseña')
                     ->password()
                     ->required()
                     ->maxLength(191),
@@ -66,42 +65,42 @@ class UserResource extends Resource
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('phone')
-                ->label('Telefono')
+                    ->label('Telefono')
                     ->tel()
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('address')
-                ->label('Direccion')
+                    ->label('Direccion')
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('city')
-                ->label('Ciudad')
+                    ->label('Ciudad')
                     ->required()
                     ->maxLength(191),
                 Forms\Components\TextInput::make('country')
-                ->label('Pais')
+                    ->label('Pais')
                     ->required()
                     ->maxLength(191),
                 Forms\Components\Textarea::make('national_legal_considerations')
-                ->label('Consideraciones Legales Nacionales')
+                    ->label('Consideraciones Legales Nacionales')
 
                     ->maxLength(191),
                 Forms\Components\Textarea::make('international_legal_considerations')
-                ->label('Consideraciones Legales Internacionales')
+                    ->label('Consideraciones Legales Internacionales')
 
                     ->maxLength(191),
                 Forms\Components\Select::make('liquidated')->label('Liquidada')
-                ->options([
-                    'si' => 'SI',
-                    'no' => 'NO'
-                ]),
+                    ->options([
+                        'si' => 'SI',
+                        'no' => 'NO'
+                    ]),
 
                 Forms\Components\TextInput::make('type')
-                ->label('Tipo')
+                    ->label('Tipo')
                     ->required()
                     ->maxLength(191),
                 Forms\Components\Select::make('roles')
-                ->label('Roles')
+                    ->label('Roles')
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->preload()
@@ -135,32 +134,43 @@ class UserResource extends Resource
                     ->label('Nit')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
-                     ->label('Telefono')
+                    ->label('Telefono')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('address')
-                ->label('Dirección')
+                    ->label('Dirección')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('city')
-                     ->label('Ciudad')
+                    ->label('Ciudad')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('country')
-                ->label('Pais')
+                    ->label('Pais')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')::make('national_legal_considerations')
-                ->label('Consid. Nacional')
+                    ->label('Consid. Nacional')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('international_legal_considerations')
-                        ->label('Consid. Internacional')
-                        ->searchable(),
-                Tables\Columns\TextColumn::make('liquidated')
-                ->label('Liquidada')
+                    ->label('Consid. Internacional')
                     ->searchable(),
-            ])
-            ->filters([
-                //
+                Tables\Columns\TextColumn::make('liquidated')
+                    ->label('Liquidada')
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('createPDF')
+                    ->label('Descargar Nota técnica COLGAAP')
+                    ->color('warning')
+                    ->url(
+                        fn($record): string => route('pdf.example', ['user' => $record->id]),
+                        shouldOpenInNewTab: true
+                    ),
+                Tables\Actions\Action::make('createPDF_int')
+                    ->label('Descargar Nota técnica NIIF')
+                    ->color('warning')
+                    ->url(
+                        fn($record): string => route('pdf.example_int', ['user' => $record->id]),
+                        shouldOpenInNewTab: true
+                    ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

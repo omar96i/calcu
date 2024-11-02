@@ -40,6 +40,20 @@
                         reflejando los cálculos realizados.
                     </x-slot>
                     <div class="gap-4">
+                        @if (auth()->user()->hasRole('super_admin'))
+                            <div>
+                                <label for="">Selecciona la empresa</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input.select wire:model.live="selectedCompany"
+                                        wire:change="closeTable()">
+                                        <option value="">Selecciona una opción</option>
+                                        @foreach ($companies as $company)
+                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </x-filament::input.select>
+                                </x-filament::input.wrapper>
+                            </div>
+                        @endif
                         <div>
                             <label for="">Selecciona el año</label>
                             <x-filament::input.wrapper>
@@ -90,7 +104,8 @@
                                     <div class="mt-3">
                                         <label for="">Tasa de interes anual estimada (J)</label>
                                         <x-filament::input.wrapper>
-                                            <x-filament::input type="text" wire:model.live="j" wire:keydown="updateStates()" readOnly />
+                                            <x-filament::input type="text" wire:model.live="j"
+                                                wire:keydown="updateStates()" readOnly />
                                         </x-filament::input.wrapper>
                                     </div>
                                 @endif
@@ -124,6 +139,20 @@
                         mostrados reflejan el estado actual sin modificaciones o cálculos adicionales.
                     </x-slot>
                     <div class="gap-4">
+                        @if (auth()->user()->hasRole('super_admin'))
+                            <div>
+                                <label for="">Selecciona la empresa</label>
+                                <x-filament::input.wrapper>
+                                    <x-filament::input.select wire:model.live="selectedCompany"
+                                        wire:change="closeTable()">
+                                        <option value="">Selecciona una opción</option>
+                                        @foreach ($companies as $company)
+                                            <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                        @endforeach
+                                    </x-filament::input.select>
+                                </x-filament::input.wrapper>
+                            </div>
+                        @endif
                         <div>
                             <label for="">Selecciona el año</label>
                             <x-filament::input.wrapper>
@@ -168,7 +197,7 @@
                 @if ($showTable)
                     <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_"
                         :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM"
-                        :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2" :report_type="$report_type" />
+                        :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2" :report_type="$report_type" :userId="$selectedCompany" />
                 @endif
             @endif
 
@@ -203,6 +232,19 @@
                 </x-filament::button>
             </div>
         @elseif ($step == 2)
+            @if (auth()->user()->hasRole('super_admin'))
+                <div>
+                    <label for="">Selecciona la empresa</label>
+                    <x-filament::input.wrapper>
+                        <x-filament::input.select wire:model.live="selectedCompany" wire:change="closeTable()">
+                            <option value="">Selecciona una opción</option>
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                            @endforeach
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
+            @endif
             <div class="mt-3">
                 <label for="">Año a calcular</label>
                 <x-filament::input.wrapper>

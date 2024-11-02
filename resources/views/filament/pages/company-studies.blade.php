@@ -128,7 +128,7 @@
                 @if ($showTable)
                     <livewire:studies-table :fecha="$year_calculation" :parametro="$parametrosd17" :smmlv="$smmlv" :k="$K_"
                         :j="$j" :js="$js" :jm="$jm" :i="$i" :ttm="$TTM"
-                        :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2" :report_type="$report_type" />
+                        :recalcular="$calcular" :fecha_calculo2="$fecha_calculo2" :report_type="$report_type" :userId="$selectedCompany"/>
                 @endif
             @elseif($calcular === 'NO')
                 <!-- Mostrar solo los campos básicos -->

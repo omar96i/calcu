@@ -213,10 +213,17 @@ class LayoffTable extends Component
 
     public $W;
 
+    public $user_id;
 
+    public $year_calculation;
+
+    public function mount($user_id, $year){
+        $this->user_id = $user_id;
+        $this->year_calculation = $year;
+    }
     public function render()
     {
-        return view('livewire.layoff-table', ['data' => Layoff::paginate($this->perPage)]);
+        return view('livewire.layoff-table', ['data' => Layoff::where('user_id', $this->user_id)->where('year', $this->year_calculation)->paginate($this->perPage)]);
     }
 
     public function getI($E)

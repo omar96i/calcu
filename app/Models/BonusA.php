@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BonusA extends Model
 {
@@ -59,5 +60,16 @@ class BonusA extends Model
         'bonus_a_au',
         'bonus_a_av',
         'bonus_a_aw',
+        'year'
     ];
+
+    /**
+     * Get the user that owns the BonusA
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

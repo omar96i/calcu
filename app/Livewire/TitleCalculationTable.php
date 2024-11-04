@@ -290,12 +290,20 @@ class TitleCalculationTable extends Component
 
     public $AH;
 
+    public $user_id;
+
+    public $year;
+
+    public function mount($user_id, $year){
+        $this->user_id = $user_id;
+        $this->year = $year;
+    }
 
 
     public function render()
     {
         return view('livewire.title-calculation-table', [
-            'data' => TitleCalculation::paginate($this->perPage),
+            'data' => TitleCalculation::where('user_id', $this->user_id)->where('year', $this->year)->paginate($this->perPage),
         ]);
     }
 

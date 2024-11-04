@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Exports\TemplateExportTitleCalculation;
 use App\Imports\TitleCalculationImport;
+use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Maatwebsite\Excel\Facades\Excel;
@@ -32,24 +33,40 @@ class TitleCalculation extends Page
 
     public $step = 1;
 
+    public $companies = [];
+
+    public $selectedCompany = 0;
+
+    public $year_calculation = '2023';
+
+    public $closeTable = false;
+
+    public function mount(){
+        $this->companies = User::get();
+        $this->selectedCompany = auth()->user()->id;
+    }
+
     public function getTitle(): string
     {
         return '';
     }
 
-    public function openModal(){
+    public function openModal()
+    {
         $this->dispatch('open-modal', id: 'upload-file');
     }
 
-    public function setPage($newPage){
+    public function setPage($newPage)
+    {
         $this->page = $newPage;
     }
 
-    public function importData(){
+    public function importData()
+    {
 
-        if($this->file){
+        if ($this->file) {
             $this->loading = true;
-            Excel::import(new TitleCalculationImport, $this->file);
+            Excel::import(new TitleCalculationImport($this->selectedCompany, $this->year_calculation), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()
@@ -64,5 +81,4 @@ class TitleCalculation extends Page
     {
         return Excel::download(new TemplateExportTitleCalculation, 'plantilla_titulos.xlsx');
     }
-
 }

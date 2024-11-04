@@ -40,5 +40,6 @@ class FiveYearCalculation extends Model
         'five_aa',
         'five_ab',
         'status',
+        'year'
     ];
 }

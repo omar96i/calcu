@@ -7,11 +7,19 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class BonusBImport implements ToModel
 {
+    public $date;
+    public $user_id;
+
+    public function __construct($date, $user_id)
+    {
+        $this->date = $date;
+        $this->user_id = $user_id;
+    }
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     private $rowNumber = 0; // Contador de filas
     public function model(array $row)
     {
@@ -41,6 +49,8 @@ class BonusBImport implements ToModel
             'out_date' => $newDate3,
             'days_leaves' => $row[9],
             'interims' => $row[10],
+            'user_id' => $this->user_id,
+            'year' => $this->date
         ]);
     }
 }

@@ -7,6 +7,14 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class TitleCalculationImport implements ToModel
 {
+    public $date;
+    public $user_id;
+
+    public function __construct($user_id, $year)
+    {
+        $this->date = $year;
+        $this->user_id = $user_id;
+    }
     /**
      * @param array $row
      *
@@ -46,6 +54,8 @@ class TitleCalculationImport implements ToModel
             'at' => $newDate4,
             'to' => $newDate5,
             'dnr' => $row[12],
+            'user_id' => $this->user_id,
+            'year' => $this->date
         ]);
     }
 }

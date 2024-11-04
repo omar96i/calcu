@@ -7,19 +7,27 @@ use Maatwebsite\Excel\Concerns\ToModel;
 
 class FiveYearCalculationImport implements ToModel
 {
+    public $date;
+    public $user_id;
+
+    public function __construct($user_id, $year)
+    {
+        $this->date = $year;
+        $this->user_id = $user_id;
+    }
 
     /**
-    * @return int
-    */
+     * @return int
+     */
     public function startRow(): int
     {
         return 2;
     }
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
 
@@ -46,6 +54,8 @@ class FiveYearCalculationImport implements ToModel
             '10_year' => ($newDate4 != '1970-01-01') ? $newDate4 : null,
             '15_year' => ($newDate5 != '1970-01-01') ? $newDate5 : null,
             'coment' => $row[10],
+            'user_id' => $this->user_id,
+            'year' => $this->date
         ]);
     }
 }

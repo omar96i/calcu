@@ -9,6 +9,7 @@ use App\Models\DTFP;
 use App\Models\Fac_A;
 use App\Models\GeneralData;
 use App\Models\NationalAverageSalary;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -38,6 +39,14 @@ class BonusA extends Page
 
     public $step = 1;
 
+    public $companies = [];
+
+    public $selectedCompany = 0;
+
+    public $year_calculation = '2023';
+
+    public $closeTable = false;
+
     public function mount()
     {
         $this->smn =
@@ -55,7 +64,8 @@ class BonusA extends Page
             ['tele' => 'TELENARIÑO', 'fc' => '1994-04-01'],
             ['tele' => 'TELETOLIMA', 'fc' => '1994-04-01'],
         ];
-        $this->bonus = ModelsBonusA::all();
+        $this->companies = User::get();
+        $this->selectedCompany = auth()->user()->id;
     }
 
     public function getSmn($item_edad_referencia)
@@ -78,7 +88,7 @@ class BonusA extends Page
 
         if ($this->file) {
             $this->loading = true;
-            Excel::import(new BonusAImport(), $this->file);
+            Excel::import(new BonusAImport($this->year_calculation, $this->selectedCompany), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()
@@ -211,5 +221,14 @@ class BonusA extends Page
     public function downloadTemplate()
     {
         return Excel::download(new TemplateExportBonusA, 'plantilla_bonus_a.xlsx');
+    }
+
+    public function closeTableAction(){
+        $this->closeTable = false;
+    }
+
+    public function showTableFunct(){
+        $this->bonus = ModelsBonusA::where('year', $this->year_calculation)->where('user_id', $this->selectedCompany)->get();
+        $this->closeTable = true;
     }
 }

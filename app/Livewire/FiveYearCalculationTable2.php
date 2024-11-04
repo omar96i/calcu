@@ -122,14 +122,20 @@ class FiveYearCalculationTable2 extends Component
 
     public $AB;
 
-    public function mount(){
+    public $user_id;
+
+    public function mount($year, $date, $user_id)
+    {
+        $this->yearCalcule = $year;
+        $this->date = $date;
+        $this->user_id = $user_id;
         $this->aux_table = AuxTable::get();
     }
 
     public function render()
     {
         return view('livewire.five-year-calculation-table2', [
-            'data' => ModelsFiveYearCalculation::paginate($this->perPage),
+            'data' => ModelsFiveYearCalculation::where('user_id', $this->user_id)->where('year', $this->yearCalcule)->paginate($this->perPage),
         ]);
     }
 
@@ -148,10 +154,11 @@ class FiveYearCalculationTable2 extends Component
         return $result;
     }
 
-    public function getM(){
+    public function getM()
+    {
         $result = $this->L / $this->dayYears;
         $this->M = $result;
-        return number_format($result,2);
+        return number_format($result, 2);
     }
 
     public function getN($C)
@@ -223,7 +230,7 @@ class FiveYearCalculationTable2 extends Component
         // Tomar el máximo entre 0 y el resultado de la fórmula
         $result = max(0, $result);
         $this->P = $result;
-        return number_format($result,0);
+        return number_format($result, 0);
     }
 
     public function getQ()
@@ -263,7 +270,7 @@ class FiveYearCalculationTable2 extends Component
 
         // Asignar el resultado a $this->S
         $this->S = $result;
-        return number_format($result,0);
+        return number_format($result, 0);
     }
 
     public function getT($F)
@@ -285,7 +292,8 @@ class FiveYearCalculationTable2 extends Component
         }
     }
 
-    public function getU(){
+    public function getU()
+    {
         $O_date = Carbon::parse($this->O);
 
         // Extraer el año de la fecha $this->O
@@ -309,7 +317,8 @@ class FiveYearCalculationTable2 extends Component
         }
     }
 
-    public function getY($I){
+    public function getY($I)
+    {
         $Y_date = Carbon::parse($I);
         $yearY = $Y_date->year;
         $result = max(0, $yearY - intval($this->yearCalcule));
@@ -323,7 +332,8 @@ class FiveYearCalculationTable2 extends Component
         }
     }
 
-    public function getAA($J){
+    public function getAA($J)
+    {
         $Y_date = Carbon::parse($J);
         $yearY = $Y_date->year;
         $result = max(0, $yearY - intval($this->yearCalcule));
@@ -363,7 +373,7 @@ class FiveYearCalculationTable2 extends Component
         }
         $this->X = $resultado;
 
-        return number_format($resultado,0);
+        return number_format($resultado, 0);
     }
 
 
@@ -394,7 +404,7 @@ class FiveYearCalculationTable2 extends Component
             $resultado = 0;
         }
         $this->Z = $resultado;
-        return number_format($resultado,0);
+        return number_format($resultado, 0);
     }
 
     public function getAB($D, $E, $H)
@@ -422,7 +432,7 @@ class FiveYearCalculationTable2 extends Component
             $resultado = 0;
         }
         $this->AB = $resultado;
-        return number_format($resultado,0);
+        return number_format($resultado, 0);
     }
 
     public function buscarVArray($valor, $tabla, $indice)
@@ -463,6 +473,6 @@ class FiveYearCalculationTable2 extends Component
         $suma = $X + $Z + $AB;
 
         // Retornar el máximo entre 0 y la suma calculada
-        return number_format(max(0, $suma),0);
+        return number_format(max(0, $suma), 0);
     }
 }

@@ -121,14 +121,19 @@ class FiveYearCalculation extends Component
 
     public $AB;
 
-    public function mount(){
+    public $user_id;
+
+    public function mount($year, $date, $user_id){
+        $this->yearCalcule = $year;
+        $this->date = $date;
+        $this->user_id = $user_id;
         $this->aux_table = AuxTable::get();
     }
 
     public function render()
     {
         return view('livewire.five-year-calculation', [
-            'data' => ModelsFiveYearCalculation::paginate($this->perPage),
+            'data' => ModelsFiveYearCalculation::where('user_id', $this->user_id)->where('year', $this->yearCalcule)->paginate($this->perPage),
         ]);
     }
 

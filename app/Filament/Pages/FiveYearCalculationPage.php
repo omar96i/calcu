@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Exports\TemplateExportFiveYearCalculation;
 use App\Imports\FiveYearCalculationImport;
 use App\Models\FiveYearCalculation;
+use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Maatwebsite\Excel\Facades\Excel;
@@ -35,7 +36,20 @@ class FiveYearCalculationPage extends Page
 
     public $step = 1;
 
-    public function mount(){
+    public $companies = [];
+
+    public $selectedCompany = 0;
+
+    public $year_calculation = '2023';
+
+    public $closeTable = false;
+
+    public $fecha_calculo = '2023-12-31';
+
+    public function mount()
+    {
+        $this->companies = User::get();
+        $this->selectedCompany = auth()->user()->id;
     }
 
     public function getTitle(): string
@@ -43,19 +57,22 @@ class FiveYearCalculationPage extends Page
         return '';
     }
 
-    public function openModal(){
+    public function openModal()
+    {
         $this->dispatch('open-modal', id: 'upload-file');
     }
 
-    public function setPage($newPage){
+    public function setPage($newPage)
+    {
         $this->page = $newPage;
     }
 
-    public function importData(){
+    public function importData()
+    {
 
-        if($this->file){
+        if ($this->file) {
             $this->loading = true;
-            Excel::import(new FiveYearCalculationImport, $this->file);
+            Excel::import(new FiveYearCalculationImport($this->selectedCompany, $this->year_calculation), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()
@@ -69,5 +86,13 @@ class FiveYearCalculationPage extends Page
     public function downloadTemplate()
     {
         return Excel::download(new TemplateExportFiveYearCalculation, 'plantilla_quinquenio.xlsx');
+    }
+
+    public function closeTableAction(){
+        $this->closeTable = false;
+    }
+
+    public function showTableFunct(){
+        $this->closeTable = true;
     }
 }

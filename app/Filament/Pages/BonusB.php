@@ -8,11 +8,13 @@ use App\Models\BonusB as ModelsBonusB;
 use App\Models\DTFP;
 use App\Models\FacB;
 use App\Models\GeneralData;
+use App\Models\User;
 use DateInterval;
 use DateTime;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Maatwebsite\Excel\Facades\Excel;
+
 class BonusB extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -97,10 +99,18 @@ class BonusB extends Page
 
     public $step = 1;
 
+    public $companies = [];
+
+    public $selectedCompany = 0;
+
+    public $year_calculation = '2023';
+
+    public $closeTable = false;
 
 
-    public function mount(){
-        $this->bonusB = ModelsBonusB::get();
+
+    public function mount()
+    {
         $this->dtfp = DTFP::get();
         $this->salary = GeneralData::get();
         $this->fact = FacB::get();
@@ -185,13 +195,29 @@ class BonusB extends Page
             ['FC' => 'Telenariño', 'Fecha' => '1994-04-01'],
             ['FC' => 'Teletolima', 'Fecha' => '1994-04-01']
         ];
+
+        $this->companies = User::get();
+        $this->selectedCompany = auth()->user()->id;
     }
 
-    public function openModal(){
+    public function openModal()
+    {
         $this->dispatch('open-modal', id: 'upload-file');
     }
 
-    public function setPage($newPage){
+    public function closeTableAction()
+    {
+        $this->closeTable = false;
+    }
+
+    public function showTableFunct()
+    {
+        $this->bonusB = ModelsBonusB::where('year', $this->year_calculation)->where('user_id', $this->selectedCompany)->get();
+        $this->closeTable = true;
+    }
+
+    public function setPage($newPage)
+    {
         $this->page = $newPage;
     }
 
@@ -200,11 +226,12 @@ class BonusB extends Page
         return Excel::download(new TemplateExportBonusB, 'plantilla_bonus_b.xlsx');
     }
 
-    public function importData(){
+    public function importData()
+    {
 
-        if($this->file){
+        if ($this->file) {
             $this->loading = true;
-            Excel::import(new BonusBImport(), $this->file);
+            Excel::import(new BonusBImport($this->year_calculation, $this->selectedCompany), $this->file);
             Notification::make()
                 ->title('Importación completa')
                 ->success()
@@ -215,7 +242,8 @@ class BonusB extends Page
         $this->loading = false;
     }
 
-    public function getFB($date1, $date2){
+    public function getFB($date1, $date2)
+    {
         if ($date1 > $this->baseDate) {
             $result = $date1;
         } elseif ($date1 <=  $this->baseDate && $date2 != '0000-00-00') {
@@ -227,7 +255,8 @@ class BonusB extends Page
         return $result;
     }
 
-    public function getFC($entity){
+    public function getFC($entity)
+    {
         foreach ($this->parameters as $parameter) {
             if (mb_strtolower($parameter['FC']) == mb_strtolower($entity)) {
                 $this->o = $parameter['Fecha'];
@@ -237,16 +266,17 @@ class BonusB extends Page
         $this->o = $this->Fco;
         return $this->Fco;
     }
-    public function getSB($salary){
+    public function getSB($salary)
+    {
         // Primero, buscamos los valores correspondientes en DTFP y Salarios Min.
 
         $dtfp_o = DTFP::whereDate('date', '<=', $this->o)
-        ->orderByRaw("ABS(DATEDIFF(date, '{$this->o}'))")
-        ->first();
+            ->orderByRaw("ABS(DATEDIFF(date, '{$this->o}'))")
+            ->first();
 
         $dtfp_m = DTFP::whereDate('date', '<=', $this->m)
-        ->orderByRaw("ABS(DATEDIFF(date, '{$this->m}'))")
-        ->first();
+            ->orderByRaw("ABS(DATEDIFF(date, '{$this->m}'))")
+            ->first();
 
         $salario_min = collect($this->salary_min)->firstWhere('year', date('Y', strtotime($this->o)));
 
@@ -260,8 +290,9 @@ class BonusB extends Page
         return number_format(max($multiplicacion, $salario_min['Salario']));
     }
 
-    public function getEFC($birthdate){
-         // Primero, convertimos las fechas a objetos DateTime.
+    public function getEFC($birthdate)
+    {
+        // Primero, convertimos las fechas a objetos DateTime.
         $date_o = new DateTime($this->o);
         $date_birthdate = new DateTime($birthdate);
 
@@ -275,7 +306,8 @@ class BonusB extends Page
         return $years;
     }
 
-    public function getTT($entry_date){
+    public function getTT($entry_date)
+    {
         // Primero, convertimos las fechas a objetos DateTime.
         $date1 = new DateTime($entry_date);
         $date2 = new DateTime('1994-04-01');
@@ -294,7 +326,8 @@ class BonusB extends Page
         }
     }
 
-    public function getTE($E2, $G2){
+    public function getTE($E2, $G2)
+    {
         // Primero, convertimos las fechas a objetos DateTime.
         $date_V_L100 = new DateTime('1994-04-01');
         $date_G2 = new DateTime($G2);
@@ -316,7 +349,8 @@ class BonusB extends Page
         }
     }
 
-    public function getTSP(){
+    public function getTSP()
+    {
         if ($this->r == "SI" || $this->s == "SI") {
             $this->q = "SI";
             return "SI";
@@ -326,8 +360,9 @@ class BonusB extends Page
         }
     }
 
-    public function getFR1($E, $G){
-         // Primero, convertimos la fecha a un objeto DateTime.
+    public function getFR1($E, $G)
+    {
+        // Primero, convertimos la fecha a un objeto DateTime.
         $date_G = new DateTime($G);
 
         // Luego, calculamos el número de días para sumar basado en $E y $this->q.
@@ -343,8 +378,9 @@ class BonusB extends Page
         return $date_G->format('Y-m-d');
     }
 
-    public function getFR2($G, $I, $J, $K, $L){
-         // Convertir las fechas a objetos DateTime
+    public function getFR2($G, $I, $J, $K, $L)
+    {
+        // Convertir las fechas a objetos DateTime
         $I = new DateTime($I);
         $J = new DateTime($J);
         $G = new DateTime($G);
@@ -387,7 +423,8 @@ class BonusB extends Page
         return $result;
     }
 
-    public function getFRSFC(){
+    public function getFRSFC()
+    {
         // t == $this->t
         // u == $this->u
         $result = $this->t > $this->u ? $this->t : $this->u;
@@ -395,7 +432,8 @@ class BonusB extends Page
         return $result;
     }
 
-    public function getER($G){
+    public function getER($G)
+    {
         // Convertir $G a un objeto DateTime
         $GDate = new DateTime($G);
 
@@ -410,7 +448,7 @@ class BonusB extends Page
             $this->w = $this->p;
             return number_format($this->p, 2); // Redondear a dos decimales
         } else {
-            $this->w = number_format($result,2);
+            $this->w = number_format($result, 2);
             return number_format($result, 2); // Redondear a dos decimales
         }
     }
@@ -423,14 +461,15 @@ class BonusB extends Page
         // Calcular la diferencia entre $this->w y su parte entera
         $difference = $this->w - $integerPart;
         $this->x = $difference;
-        if($this->x >= 1){
+        if ($this->x >= 1) {
             $this->x = 0;
             return number_format(0, 4);
         }
-        return number_format($difference,4);
+        return number_format($difference, 4);
     }
 
-    public function getTimeTotal($I, $K, $L){
+    public function getTimeTotal($I, $K, $L)
+    {
         $IDate = new DateTime($I);
         $ODate = new DateTime($this->o);
 
@@ -444,7 +483,8 @@ class BonusB extends Page
     }
 
     public $z;
-    public function getTimeTotalYears(){
+    public function getTimeTotalYears()
+    {
         $result = $this->y / 365.25;
         $this->z = $result;
         return $result;
@@ -462,7 +502,7 @@ class BonusB extends Page
 
         // Obtiene la cantidad de días en la diferencia
         $daysDifference = $interval->days;
-        if($ODate > $VDate){
+        if ($ODate > $VDate) {
             $this->aa = 0;
             return 0;
         }
@@ -491,19 +531,22 @@ class BonusB extends Page
     }
 
     public $ac;
-    public function getTCompanyYears(){
+    public function getTCompanyYears()
+    {
         $result = $this->ab / 365.25;
         $this->ac = $result;
         return $result;
     }
 
-    public function getNT(){
+    public function getNT()
+    {
         $result = $this->y + $this->aa;
         $this->ad = $result;
         return $result;
     }
 
-    public function getF(){
+    public function getF()
+    {
         // Obtener los valores de $this->ad y $this->q
         $ad = $this->ad;
         $q = $this->q;
@@ -524,13 +567,15 @@ class BonusB extends Page
         return $result;
     }
     // Esta funcion es generica
-    public function getAF(){
+    public function getAF()
+    {
         $this->af = $this->n;
         $this->af++; // Incrementa af en 1
         return $this->af;
     }
 
-    public function getAG(){
+    public function getAG()
+    {
         // Obtener el año de la fecha $this->o
         $year = (int)date('Y', strtotime($this->o));
 
@@ -555,7 +600,8 @@ class BonusB extends Page
         return $result;
     }
 
-    public function getAH(){
+    public function getAH()
+    {
         // Obtener el año de la fecha $this->o
         $year = (int)date('Y', strtotime($this->o));
 
@@ -583,7 +629,8 @@ class BonusB extends Page
         return $result;
     }
 
-    public function getAI(){
+    public function getAI()
+    {
         // Obtener el año de la fecha $this->o
         $year = (int)date('Y', strtotime($this->o));
 
@@ -622,10 +669,10 @@ class BonusB extends Page
         // Realizar cálculos basados en la condición proporcionada
         if ($E == "M") {
             $result = $this->getSearchValue($w, 'm_fac_1') * (1 - $x)
-                    + $this->getSearchValue($w + 1, 'm_fac_1') * $x;
+                + $this->getSearchValue($w + 1, 'm_fac_1') * $x;
         } else {
             $result = $this->getSearchValue($w, 'f_fac_1') * (1 - $x)
-                    + $this->getSearchValue($w + 1, 'f_fac_1') * $x;
+                + $this->getSearchValue($w + 1, 'f_fac_1') * $x;
         }
         $this->aj = $result;
         return $result;
@@ -653,7 +700,8 @@ class BonusB extends Page
         return $defaultValue;
     }
 
-    public function getAK($E){
+    public function getAK($E)
+    {
         // Redondear el valor de $this->w para convertirlo en un entero
         $w = round($this->w);
 
@@ -665,7 +713,7 @@ class BonusB extends Page
 
         // Realizar cálculos basados en la condición proporcionada
         $result = $this->getSearchValueAK($w, $column) * (1 - $x)
-                + $this->getSearchValueAK($w + 1, $column) * $x;
+            + $this->getSearchValueAK($w + 1, $column) * $x;
 
         $this->ak = $result;
 
@@ -688,7 +736,8 @@ class BonusB extends Page
         return $defaultValue;
     }
 
-    public function getAL(){
+    public function getAL()
+    {
         // Obtener el valor de $this->aa
         $aa = $this->aa;
 
@@ -698,7 +747,8 @@ class BonusB extends Page
         return $result;
     }
     public $am;
-    public function getAM(){
+    public function getAM()
+    {
         // Obtener los valores de las columnas relevantes
         $AH = $this->ah;
         $AJ = $this->aj;
@@ -739,7 +789,8 @@ class BonusB extends Page
     }
 
     public $ao;
-    public function getAO($G){
+    public function getAO($G)
+    {
         //Fcal = $this->Fcal
         $dateFcal = new DateTime($this->Fcal);
         $dateBonoBG2 = new DateTime($G);
@@ -753,7 +804,8 @@ class BonusB extends Page
         return $years;
     }
     public $ap;
-    public function getAP($E){
+    public function getAP($E)
+    {
         if (($E == "M" && $this->ao > 75) || ($E == "F" && $this->ao > 70)) {
             $this->ap = 0.5;
             return 0.5;
@@ -782,14 +834,14 @@ class BonusB extends Page
         if ($an2 > $Fcal) {
             $busqueda1 = $this->getDTFP($Fcal->format('Y-m-d'))->dtfp_4;
             $resultado = $am2 * ($busqueda1 / $busqueda2);
-        }else {
+        } else {
             $busqueda1 = $this->getDTFP($an2->format('Y-m-d'))->dtfp_4;
             $valorFcal = $this->getDTFP($Fcal->format('Y-m-d'))->accumulated;
             // 4677.377384
             $valorAn2 = $this->getDTFP($an2->format('Y-m-d'))->accumulated;
 
             //1958,862419
-            $resultado = $am2*$busqueda1/$busqueda2*$valorFcal/$valorAn2*$this->ap;
+            $resultado = $am2 * $busqueda1 / $busqueda2 * $valorFcal / $valorAn2 * $this->ap;
         }
         // ¿Qué sucede si ninguna de las condiciones se cumple?
         // Si no hay un caso claro, podrías agregar un else aquí.
@@ -839,8 +891,9 @@ class BonusB extends Page
         return ($fechaJ > $fechaO2) ? $O2 : $J;
     }
     public $at;
-    public function getAT($K){
-       // Obtener las fechas de AR2 y AS2 desde la base de datos o de donde sea que las estés obteniendo
+    public function getAT($K)
+    {
+        // Obtener las fechas de AR2 y AS2 desde la base de datos o de donde sea que las estés obteniendo
         $ar = $this->ar;
         $as = $this->as;
 
@@ -873,20 +926,23 @@ class BonusB extends Page
     }
 
     public $au;
-    public function getAU(){
+    public function getAU()
+    {
         // Calcular el resultado multiplicando los dos valores
         $resultado = $this->am * $this->at;
         $this->au = $resultado;
         return $resultado;
     }
     public $av;
-    public function getAV(){
+    public function getAV()
+    {
         $resultado = $this->at * $this->aq;
         $this->av = $resultado;
         return $resultado;
     }
     public $aw;
-    public function getAW(){
+    public function getAW()
+    {
         $fechaAN = new DateTime($this->an);
 
         // Extraer el año de la fecha
@@ -896,7 +952,8 @@ class BonusB extends Page
     }
 
     public $ax;
-    public function getAX(){
+    public function getAX()
+    {
         $Fcal = new DateTime('2022-12-31');
         $valorAW2 = $this->aw;
         $valorAV2 = $this->av;
@@ -906,7 +963,8 @@ class BonusB extends Page
         return $resultado;
     }
 
-    public function updateState($id){
+    public function updateState($id)
+    {
         $bonus = ModelsBonusB::find($id);
         $bonus->update([
             'user_id' => auth()->user()->id,
@@ -947,5 +1005,4 @@ class BonusB extends Page
             'bonus_b_ax' => $this->ax,
         ]);
     }
-
 }

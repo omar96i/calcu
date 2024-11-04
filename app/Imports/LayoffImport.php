@@ -8,18 +8,26 @@ use Maatwebsite\Excel\Concerns\WithStartRow;
 
 class LayoffImport implements ToModel
 {
+    public $date;
+    public $user_id;
+
+    public function __construct($user_id, $year)
+    {
+        $this->date = $year;
+        $this->user_id = $user_id;
+    }
     /**
-    * @return int
-    */
+     * @return int
+     */
     public function startRow(): int
     {
         return 2;
     }
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
 
     public function model(array $row)
     {
@@ -40,6 +48,8 @@ class LayoffImport implements ToModel
             'suspension' => $row[5],
             'import_salary' => $row[6],
             'advance' => $row[7],
+            'user_id' => $this->user_id,
+            'year' => $this->date
         ]);
     }
 }

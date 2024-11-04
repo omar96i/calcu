@@ -50,6 +50,7 @@ class Layoff extends Model
         'liquidation_2037',
         'liquidation_2038',
         'liquidation_2039',
-        'status'
+        'status',
+        'year'
     ];
 }

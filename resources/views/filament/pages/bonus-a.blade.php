@@ -9,8 +9,57 @@
         </x-filament::tabs.item>
     </x-filament::tabs>
 
+    <x-filament::section>
+        <x-slot name="heading">Cálculo de Datos</x-slot>
+        <x-slot name="description">
+            En este apartado, deberá ingresar la información requerida para llevar a cabo los cálculos
+            necesarios. Los resultados obtenidos serán utilizados para actualizar los datos consultados,
+            reflejando los cálculos realizados.
+        </x-slot>
+        <div class="gap-4">
+            @if (auth()->user()->hasRole('super_admin'))
+                <div>
+                    <label for="">Selecciona la empresa</label>
+                    <x-filament::input.wrapper>
+                        <x-filament::input.select wire:model.live="selectedCompany" wire:change="closeTableAction()">
+                            <option value="">Selecciona una opción</option>
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                            @endforeach
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
+            @endif
+            <div>
+                <label for="">Selecciona el año</label>
+                <x-filament::input.wrapper>
+                    <x-filament::input.select wire:model.live="year_calculation" wire:change="closeTableAction()">
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                    </x-filament::input.select>
+                </x-filament::input.wrapper>
+            </div>
+        </div>
+        <!-- Botones de acción -->
+        <x-filament::button class="w-full mt-3" icon="heroicon-m-magnifying-glass" wire:click="showTableFunct()">
+            Buscar/Calcular
+        </x-filament::button>
 
-    @if ($page == 'bonus-a')
+        {{-- <x-filament::button class="w-full mt-3" wire:click="dowloadExport()">
+            Exportar a Excel
+        </x-filament::button> --}}
+    </x-filament::section>
+    @if ($closeTable)
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             {{-- <h6 colspan="9">Bonos A</th> --}}
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -512,10 +561,36 @@
                 </x-filament::button>
             </div>
         @elseif ($step == 2)
-            <div class="mt-3">
-                <label for="">Año a calcular</label>
+            @if (auth()->user()->hasRole('super_admin'))
+                <div>
+                    <label for="">Selecciona la empresa</label>
+                    <x-filament::input.wrapper>
+                        <x-filament::input.select wire:model.live="selectedCompany" wire:change="closeTable()">
+                            <option value="">Selecciona una opción</option>
+                            @foreach ($companies as $company)
+                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                            @endforeach
+                        </x-filament::input.select>
+                    </x-filament::input.wrapper>
+                </div>
+            @endif
+            <div>
+                <label for="">Selecciona el año</label>
                 <x-filament::input.wrapper>
-                    <x-filament::input type="text" wire:model.live="yeartoimport" />
+                    <x-filament::input.select wire:model.live="year_calculation" wire:change="closeTable()">
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                    </x-filament::input.select>
                 </x-filament::input.wrapper>
             </div>
 

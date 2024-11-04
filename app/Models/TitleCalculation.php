@@ -23,5 +23,7 @@ class TitleCalculation extends Model
         'at',
         'to',
         'dnr',
+        'user_id',
+        'year'
     ];
 }

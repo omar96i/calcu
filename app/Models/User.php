@@ -68,4 +68,24 @@ class User extends Authenticatable implements FilamentUser
         return $this->belongsTo(GeneralData::class);
     }
 
+    /**
+     * Get all of the bonus_as for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bonus_a_s(): HasMany
+    {
+        return $this->hasMany(BonusA::class);
+    }
+
+    /**
+     * Get all of the bonus_b_s for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bonus_b_s(): HasMany
+    {
+        return $this->hasMany(BonusB::class);
+    }
+
 }

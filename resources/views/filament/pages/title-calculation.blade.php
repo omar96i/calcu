@@ -68,7 +68,7 @@
                 Exportar a Excel
             </x-filament::button> --}}
             </x-filament::section>
-            @if ($showTable)
+            @if ($closeTable)
                 <livewire:title-calculation-table :user_id="$selectedCompany" :year="$year_calculation"/>
             @endif
 

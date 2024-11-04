@@ -81,4 +81,12 @@ class TitleCalculation extends Page
     {
         return Excel::download(new TemplateExportTitleCalculation, 'plantilla_titulos.xlsx');
     }
+
+    public function closeTableAction(){
+        $this->closeTable = false;
+    }
+
+    public function showTableFunct(){
+        $this->closeTable = true;
+    }
 }

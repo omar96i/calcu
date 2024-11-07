@@ -83,22 +83,25 @@ class UserResource extends Resource
                     ->maxLength(191),
                 Forms\Components\Textarea::make('national_legal_considerations')
                     ->label('Consideraciones Legales Nacionales')
-
-                    ->maxLength(191),
+                    ->rows(10)
+                    ->autosize(),
                 Forms\Components\Textarea::make('international_legal_considerations')
                     ->label('Consideraciones Legales Internacionales')
-
-                    ->maxLength(191),
+                    ->rows(10)
+                    ->autosize(),
                 Forms\Components\Select::make('liquidated')->label('Liquidada')
                     ->options([
                         'si' => 'SI',
                         'no' => 'NO'
                     ]),
 
-                Forms\Components\TextInput::make('type')
+                Forms\Components\Select::make('type')
                     ->label('Tipo')
-                    ->required()
-                    ->maxLength(191),
+                    ->options([
+                        'publico' => 'publico',
+                        'privado' => 'privado'
+                    ])
+                    ->required(),
                 Forms\Components\Select::make('roles')
                     ->label('Roles')
                     ->relationship('roles', 'name')

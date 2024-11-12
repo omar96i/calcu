@@ -94,7 +94,6 @@ class UserResource extends Resource
                         'si' => 'SI',
                         'no' => 'NO'
                     ]),
-
                 Forms\Components\Select::make('type')
                     ->label('Tipo')
                     ->options([

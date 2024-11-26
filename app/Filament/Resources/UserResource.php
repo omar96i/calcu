@@ -70,6 +70,7 @@ class UserResource extends Resource
                     ->options([
                         'company' => 'Empresa',
                         'employee' => 'Empleado',
+                        'admin' => 'Super admin',
                     ])
                     ->required()
                     ->live(),

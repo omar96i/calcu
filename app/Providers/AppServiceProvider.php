@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use BezhanSalleh\PanelSwitch\PanelSwitch;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,18 +25,26 @@ class AppServiceProvider extends ServiceProvider
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
 
-            ->visible(fn (): bool => auth()->user()?->hasAnyRole([
-                'super_admin',
-            ]));
+                ->visible(fn(): bool => auth()->user()?->hasAnyRole([
+                    'super_admin',
+                ]));
+        });
+
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
+            $switch
+                ->locales(['es'])
+                ->visible(outsidePanels: true)
+                ->displayLocale('es')
+                ->circular();
         });
 
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch
-            ->labels([
-                'admin' => 'Administrador',
-                'company' => 'Empresa',
-                'general_manager' => __('General Manager')
-            ]);
+                ->labels([
+                    'admin' => 'Administrador',
+                    'company' => 'Empresa',
+                    'general_manager' => __('General Manager')
+                ]);
         });
         PanelSwitch::configureUsing(function (PanelSwitch $panelSwitch) {
             $panelSwitch->icons([
@@ -45,7 +54,5 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Schema::defaultStringLength(191);
-
-
     }
 }

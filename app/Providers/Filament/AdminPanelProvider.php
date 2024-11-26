@@ -48,7 +48,6 @@ class AdminPanelProvider extends PanelProvider
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->plugins([
-                FilamentLanguageSwitchPlugin::make(),
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -35,8 +35,10 @@ class User extends Authenticatable implements FilamentUser
         'country',
         'national_legal_considerations',
         'international_legal_considerations',
-        'liquidated'
-        ];
+        'liquidated',
+        'user_id',
+        'type_user',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,6 +59,26 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get all of the users for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+
+    /**
+     * Get the user that owns the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function canAccessPanel(Panel $panel): bool
     {
@@ -87,5 +109,4 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(BonusB::class);
     }
-
 }

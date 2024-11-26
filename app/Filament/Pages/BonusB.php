@@ -197,7 +197,11 @@ class BonusB extends Page
         ];
 
         $this->companies = User::get();
-        $this->selectedCompany = auth()->user()->id;
+        if (auth()->user()->type_user === 'employee') {
+            $this->selectedCompany = auth()->user()->user_id; // Establece el 'user_id' si es 'employee'.
+        } else {
+            $this->selectedCompany = auth()->user()->id; // Establece el 'id' normal si no es 'employee'.
+        }
     }
 
     public function openModal()

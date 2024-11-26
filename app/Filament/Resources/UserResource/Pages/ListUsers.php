@@ -19,18 +19,22 @@ class ListUsers extends ListRecords
             Action::make('createPDF')
                 ->label('Descargar Nota técnica COLGAAP')
                 ->color('warning')
-                ->url(
-                    fn(): string => route('pdf.example', ['user' => Auth::user()]),
-                    shouldOpenInNewTab: true
-                ),
+                ->url(function () {
+                    $user = Auth::user();
+                    $id = $user->type_user === 'employee' ? $user->user_id : $user->id;
+                    return route('pdf.example', ['user' => $id]);
+                })
+                ->openUrlInNewTab(),
 
             Action::make('createPDF_int')
                 ->label('Descargar Nota técnica NIIF')
                 ->color('warning')
-                ->url(
-                    fn(): string => route('pdf.example_int', ['user' => Auth::user()]),
-                    shouldOpenInNewTab: true
-                ),
+                ->url(function () {
+                    $user = Auth::user();
+                    $id = $user->type_user === 'employee' ? $user->user_id : $user->id;
+                    return route('pdf.example_int', ['user' => $id]);
+                })
+                ->openUrlInNewTab(),
         ];
 
         // Verificar si el usuario autenticado tiene el rol 'super_admin'

@@ -21,7 +21,7 @@ class CompanyStudies extends Page
 
     protected static string $view = 'filament.pages.company-studies';
 
-    protected static ?string $navigationLabel = 'Calculopension';
+    protected static ?string $navigationLabel = 'Calculo pension';
 
     protected static ?string $slug = 'calculopension';
 
@@ -84,7 +84,11 @@ class CompanyStudies extends Page
     {
         $this->studies = Study::get();
         $this->companies = User::get();
-        $this->selectedCompany = auth()->user()->id;
+        if (auth()->user()->type_user === 'employee') {
+            $this->selectedCompany = auth()->user()->user_id; // Establece el 'user_id' si es 'employee'.
+        } else {
+            $this->selectedCompany = auth()->user()->id; // Establece el 'id' normal si no es 'employee'.
+        }
     }
 
     public function showTableFunct()

@@ -65,7 +65,11 @@ class BonusA extends Page
             ['tele' => 'TELETOLIMA', 'fc' => '1994-04-01'],
         ];
         $this->companies = User::get();
-        $this->selectedCompany = auth()->user()->id;
+        if (auth()->user()->type_user === 'employee') {
+            $this->selectedCompany = auth()->user()->user_id; // Establece el 'user_id' si es 'employee'.
+        } else {
+            $this->selectedCompany = auth()->user()->id; // Establece el 'id' normal si no es 'employee'.
+        }
     }
 
     public function getSmn($item_edad_referencia)
@@ -223,11 +227,13 @@ class BonusA extends Page
         return Excel::download(new TemplateExportBonusA, 'plantilla_bonus_a.xlsx');
     }
 
-    public function closeTableAction(){
+    public function closeTableAction()
+    {
         $this->closeTable = false;
     }
 
-    public function showTableFunct(){
+    public function showTableFunct()
+    {
         $this->bonus = ModelsBonusA::where('year', $this->year_calculation)->where('user_id', $this->selectedCompany)->get();
         $this->closeTable = true;
     }

@@ -41,9 +41,14 @@ class TitleCalculation extends Page
 
     public $closeTable = false;
 
-    public function mount(){
+    public function mount()
+    {
         $this->companies = User::get();
-        $this->selectedCompany = auth()->user()->id;
+        if (auth()->user()->type_user === 'employee') {
+            $this->selectedCompany = auth()->user()->user_id; // Establece el 'user_id' si es 'employee'.
+        } else {
+            $this->selectedCompany = auth()->user()->id; // Establece el 'id' normal si no es 'employee'.
+        }
     }
 
     public function getTitle(): string
@@ -82,11 +87,13 @@ class TitleCalculation extends Page
         return Excel::download(new TemplateExportTitleCalculation, 'plantilla_titulos.xlsx');
     }
 
-    public function closeTableAction(){
+    public function closeTableAction()
+    {
         $this->closeTable = false;
     }
 
-    public function showTableFunct(){
+    public function showTableFunct()
+    {
         $this->closeTable = true;
     }
 }
